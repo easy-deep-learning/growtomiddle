@@ -6,12 +6,13 @@ import GoogleProvider from 'next-auth/providers/google'
 export const authCommonOptions = {
   // Configure one or more authentication providers
   providers: [
+    /*
     // @see https://vk.com/editapp?id=51704776
     VKProvider({
       clientId: process.env.VK_ID as string,
       clientSecret: process.env.VK_SECRET as string,
     }),
-/*    FacebookProvider({
+    FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
     }),*/
