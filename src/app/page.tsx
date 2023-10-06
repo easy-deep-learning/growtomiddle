@@ -1,5 +1,3 @@
-import Link from 'next/link'
-
 import { AuthPanel } from '@/components/AuthPanel'
 
 export default function Home () {
