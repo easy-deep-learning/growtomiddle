@@ -8,7 +8,7 @@ export default function Home () {
       <AuthPanel />
       <menu>
         <ul>
-          <li><Link href="/habits">habits</Link></li>
+          <li>menu here</li>
         </ul>
       </menu>
       <h2>You desk will be here (TODO)</h2>
