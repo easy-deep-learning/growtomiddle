@@ -1,4 +1,5 @@
 import { AuthPanel } from '@/components/AuthPanel'
+import { Goal } from '@/components/Goal'
 
 export default function Home () {
   return (
@@ -9,7 +10,8 @@ export default function Home () {
           <li>menu here</li>
         </ul>
       </menu>
-      <h2>You desk will be here (TODO)</h2>
+      <h2>Начало пути</h2>
+      <Goal />
     </div>
   )
 }
