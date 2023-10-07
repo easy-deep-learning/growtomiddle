@@ -44,9 +44,46 @@ export const Goal = () => {
         <button>+</button>
 
         <h3 className={classes.header}>
-          К какому сроку получить работу
+          Пройденные собеседования
         </h3>
-        <input type="date" name="deadline" id="" />
+        <ul>
+          <li>
+            <h4>компания</h4>
+            <input type="date" name="deadline" id="" />
+            <ul>
+              <li>Что спросили?</li>
+              <li>Где нашлись пробелы?</li>
+              <li>Тестовое задание</li>
+              <li>Когда можно повторить?
+                <input type="date" name="deadline" id="" />
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h4>компания</h4>
+            <input type="date" name="deadline" id="" />
+            <ul>
+              <li>Что спросили?</li>
+              <li>Где нашлись пробелы?</li>
+              <li>Тестовое задание</li>
+              <li>Когда можно повторить?
+                <input type="date" name="deadline" id="" />
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h4>компания</h4>
+            <input type="date" name="deadline" id="" />
+            <ul>
+              <li>Что спросили?</li>
+              <li>Где нашлись пробелы?</li>
+              <li>Тестовое задание</li>
+              <li>Когда можно повторить?
+                <input type="date" name="deadline" id="" />
+              </li>
+            </ul>
+          </li>
+        </ul>
 
         <button>Сохранить</button>
       </div>
