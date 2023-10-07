@@ -1,9 +1,9 @@
 import { AuthPanel } from '@/components/AuthPanel'
 import { Goal } from '@/components/Goal'
 
-export default function Home () {
+export default function HomePage () {
   return (
-    <div>
+    <div className="HomePage">
       <AuthPanel />
       <menu>
         <ul>
