@@ -1,4 +1,4 @@
-export default function RequirementsPage = () => {
+export default function RequirementsPage() {
   return (
     <div>
 Completes clearly-defined tasks and communicates when something is blocking.
