@@ -1,4 +1,4 @@
-const RequirementsPage = () => {
+export default const RequirementsPage = () => {
   return (
     <div>
 Completes clearly-defined tasks and communicates when something is blocking.
