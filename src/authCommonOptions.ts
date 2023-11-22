@@ -1,7 +1,7 @@
-import { Session } from 'next-auth'
+import type { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google'
 
-export const authCommonOptions = {
+export const authCommonOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   providers: [
     GoogleProvider({
@@ -10,13 +10,4 @@ export const authCommonOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    // @ts-ignore
-    session: ({ session, user }): Session => {
-      if (session.user) {
-        session.user.id = user.id
-      }
-      return session
-    },
-  },
 }
