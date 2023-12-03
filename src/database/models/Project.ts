@@ -8,3 +8,39 @@
  *  "url": "https://github.com/you/your-repo/",
  *  }
  */
+
+import mongoose, { Schema, Document } from 'mongoose'
+
+export interface IProject {
+  _id: string;
+  name: string;
+  description: string;
+  features: string[];
+  url: string;
+}
+
+export interface IProjectDocument extends Omit<IProject, '_id'>, Document {}
+
+const ProjectSchema = new Schema<IProjectDocument>({
+    name: {
+      type: String,
+      required: true,
+    },
+    description: String,
+    features: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Feature',
+      },
+    ],
+    url: String,
+  },
+  {
+    timestamps: true,
+  },
+)
+
+const ProjectModel: mongoose.Model<IProjectDocument> =
+    mongoose.models.Project || mongoose.model<IProjectDocument>('Project', ProjectSchema)
+
+export default ProjectModel
