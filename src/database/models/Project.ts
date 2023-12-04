@@ -10,12 +10,13 @@
  */
 
 import mongoose, { Schema, Document } from 'mongoose'
+import { IFeature } from '@/database/models/Feature'
 
 export interface IProject {
   _id: string;
   name: string;
   description: string;
-  features: string[];
+  features: IFeature[]; // TODO: use virtuals?
   url: string;
 }
 

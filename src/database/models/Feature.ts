@@ -25,3 +25,39 @@
  *  "url": "https://github.com/you/your-repo/issues/1",
  *  }
  */
+
+import mongoose, { Schema, Document } from 'mongoose'
+
+export interface IFeature {
+  _id: string;
+  name: string;
+  description: string;
+  tasks: string[];
+  url: string;
+}
+
+export interface IFeatureDocument extends Omit<IFeature, '_id'>, Document {}
+
+const FeatureSchema = new Schema<IFeatureDocument>({
+    name: {
+      type: String,
+      required: true,
+    },
+    description: String,
+    tasks: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Task',
+      },
+    ],
+    url: String,
+  },
+  {
+    timestamps: true,
+  },
+)
+
+const FeatureModel: mongoose.Model<IFeatureDocument> =
+  mongoose.models.Feature || mongoose.model<IFeatureDocument>('Feature', FeatureSchema)
+
+export default FeatureModel

@@ -4,6 +4,7 @@ import { gql } from 'graphql-tag'
 
 import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
+import FeatureModel, { IFeature } from '@/database/models/Feature'
 
 const resolvers = {
   Query: {
@@ -14,7 +15,7 @@ const resolvers = {
     },
     project: async (parent: any, { id }: { id: string }) => {
       await mongooseConnect()
-      return ProjectModel.findById(id)
+      return ProjectModel.findById(id).populate('features')
     },
   },
   Mutation: {
@@ -28,6 +29,13 @@ const resolvers = {
       await ProjectModel.updateOne({ _id: id }, project)
       return await ProjectModel.findById(id)
     },
+    addFeature: async (parent: any, { projectId, feature }: { projectId: string; feature: IFeature }) => {
+      await mongooseConnect()
+      const newFeature = new FeatureModel(feature)
+      await newFeature.save()
+      await ProjectModel.updateOne({ _id: projectId }, { $push: { features: newFeature._id } })
+      return await ProjectModel.findById(projectId).populate('features')
+    }
   },
 }
 
@@ -66,6 +74,12 @@ const typeDefs = gql`
         tasks: [Task]
     }
 
+    input FeatureInput {
+        name: String
+        description: String
+        url: String
+    }
+
     type Task {
         _id: ID
         name: String
@@ -87,7 +101,7 @@ const typeDefs = gql`
         description: String
         url: String
     }
-
+    
     enum MaterialType {
         article
         book
@@ -101,6 +115,7 @@ const typeDefs = gql`
     type Mutation {
         createProject(project: ProjectInput): Project
         updateProject(id: ID!, project: ProjectInput): Project
+        addFeature(projectId: ID!, feature: FeatureInput): Project
     }
 `
 
