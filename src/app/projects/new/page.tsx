@@ -24,7 +24,6 @@ const ProjectNewPage: NextPage = () => {
     const formData = new FormData(event.currentTarget)
     const body = Object.fromEntries(formData)
     const response = await createProject({ variables: { project: body } })
-    console.log("response: ", response); // eslint-disable-line
   }
 
 

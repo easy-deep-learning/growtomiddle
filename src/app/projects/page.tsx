@@ -37,8 +37,6 @@ const ProjectList: FC<ProjectListPropsType> = ({ projects }) => {
 const ProjectsPage: NextPage = () => {
   const { data }: { data: { projects: IProject[] } } = useSuspenseQuery(query, { variables: {} })
 
-  console.log('data: ', data) // eslint-disable-line
-
   return (
     <div>
       <h1>Projects</h1>

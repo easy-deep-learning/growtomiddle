@@ -10,7 +10,6 @@ const resolvers = {
     projects: async () => {
       await mongooseConnect()
       const result = await ProjectModel.find({})
-      console.log("result: ", result); // eslint-disable-line
       return result
     },
     project: async (parent: any, { id }: { id: string }) => {
