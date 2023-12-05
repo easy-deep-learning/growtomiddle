@@ -1,11 +1,9 @@
 'use client'
 
 import { NextPage } from 'next'
-import { gql, useMutation } from '@apollo/client'
-import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { IProject } from '@/database/models/Project'
 import { FormEvent } from 'react'
-import { IFeature } from '@/database/models/Feature'
 
 const GET_PROJECT = gql`
     #graphql
@@ -21,7 +19,6 @@ const GET_PROJECT = gql`
         }
     }
 `
-
 const ADD_FEATURE = gql`
     #graphql
     mutation AddFeature($projectId: ID!, $feature: FeatureInput) {
@@ -42,7 +39,7 @@ type PageParams = {
 };
 
 const ProjectPage: NextPage<PageParams> = (context) => {
-  const { data }: { data: { project: IProject } } = useSuspenseQuery(GET_PROJECT, { variables: { id: context.params.project_id } })
+  const { loading, error, data } = useQuery<{ project: IProject }>(GET_PROJECT, { variables: { id: context.params.project_id } })
   const [addFeature] = useMutation(ADD_FEATURE)
 
   const handleAddFeature = async (event: FormEvent<HTMLFormElement>) => {
@@ -55,7 +52,14 @@ const ProjectPage: NextPage<PageParams> = (context) => {
         feature: body,
       },
     })
-    console.log('response: ', response) // eslint-disable-line
+  }
+
+  if (error) {
+    return <div>error</div>
+  }
+
+  if (loading || !data) {
+    return <div>loading</div>
   }
 
   return (

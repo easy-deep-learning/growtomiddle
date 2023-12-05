@@ -1,13 +1,12 @@
 'use client'
 
-import { gql } from '@apollo/client'
-import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr'
+import { gql, useQuery } from '@apollo/client'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import { IProject } from '@/database/models/Project'
 import { FC } from 'react'
 
-const query = gql`
+const GET_PROJECTS = gql`
     #graphql
     query GetProjects {
         projects {
@@ -35,7 +34,15 @@ const ProjectList: FC<ProjectListPropsType> = ({ projects }) => {
 }
 
 const ProjectsPage: NextPage = () => {
-  const { data }: { data: { projects: IProject[] } } = useSuspenseQuery(query, { variables: {} })
+  const { loading, error, data } = useQuery<{ projects: IProject[] }>(GET_PROJECTS)
+
+  if (error) {
+    return <div>error</div>
+  }
+
+  if (loading || !data) {
+    return <div>loading</div>
+  }
 
   return (
     <div>
