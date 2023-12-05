@@ -1,9 +1,11 @@
 'use client'
 
-import { NextPage } from 'next'
-import { gql, useMutation, useQuery } from '@apollo/client'
-import { IProject } from '@/database/models/Project'
 import { FormEvent } from 'react'
+import { NextPage } from 'next'
+import Link from 'next/link'
+import { gql, useMutation, useQuery } from '@apollo/client'
+
+import { IProject } from '@/database/models/Project'
 
 const GET_PROJECT = gql`
     #graphql
@@ -58,8 +60,12 @@ const ProjectPage: NextPage<PageParams> = (context) => {
     return <div>error</div>
   }
 
-  if (loading || !data) {
+  if (loading) {
     return <div>loading</div>
+  }
+
+  if (!data?.project) {
+    return <div>not found</div>
   }
 
   return (
@@ -85,7 +91,7 @@ const ProjectPage: NextPage<PageParams> = (context) => {
           {data.project.features.map((feature) => {
             return (
               <li key={feature._id}>
-                <p>{feature.name}</p>
+                <Link href={`/projects/${data.project._id}/features/${feature._id}`}>{feature.name}</Link>
               </li>
             )
           })}

@@ -27,12 +27,13 @@
  */
 
 import mongoose, { Schema, Document } from 'mongoose'
+import type { ITask } from '@/database/models/Task'
 
 export interface IFeature {
   _id: string;
   name: string;
   description: string;
-  tasks: string[];
+  tasks: ITask[];
   url: string;
 }
 

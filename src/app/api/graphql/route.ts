@@ -17,6 +17,10 @@ const resolvers = {
       await mongooseConnect()
       return ProjectModel.findById(id).populate('features')
     },
+    getFeature: async (parent: any, { id }: { id: string }) => {
+      await mongooseConnect()
+      return FeatureModel.findById(id).populate('tasks')
+    },
   },
   Mutation: {
     createProject: async (parent: any, { project }: { project: IProject }) => {
@@ -44,6 +48,7 @@ const typeDefs = gql`
     type Query {
         projects: [Project]
         project(id: ID!): Project
+        getFeature(id: ID!): Feature
     }
 
     type User {
