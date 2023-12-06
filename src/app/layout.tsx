@@ -1,5 +1,9 @@
 import React from 'react'
+import ApolloWrapper from '@/apollo/client-side-components'
+
 import { NextAuthProvider } from './providers'
+
+import '@/styles/global.css'
 
 export const metadata = {
   title: 'gymnasia',
@@ -13,11 +17,13 @@ export default function RootLayout ({
 }) {
   return (
     <html lang="en">
-      <body>
-        <NextAuthProvider>
-          {children}
-        </NextAuthProvider>
-      </body>
+    <body>
+    <NextAuthProvider>
+      <ApolloWrapper>
+        {children}
+      </ApolloWrapper>
+    </NextAuthProvider>
+    </body>
     </html>
   )
 }

@@ -4,18 +4,23 @@
   "private": true,
   "scripts": {
     "dev": "BASE_FETCH_URL=http://localhost:3000 next dev",
-    "build": "next build",
+    "build": "next experimental-compile",
+    "build-prerender": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.8",
+    "@apollo/experimental-nextjs-app-support": "^0.5.2",
+    "@as-integrations/next": "^3.0.0",
     "@auth/mongodb-adapter": "^2.0.1",
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.1",
     "next": "^14.0.3",
     "next-auth": "^4.24.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "simpledotcss": "^2.2.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

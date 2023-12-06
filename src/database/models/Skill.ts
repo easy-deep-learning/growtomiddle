@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose'
 
 /**
  * @example
@@ -11,8 +11,28 @@ import mongoose, { Schema, Document } from "mongoose";
  *  }
  */
 
-export interface ISkill extends Document {
+export interface ISkill {
   _id: string;
   name: string;
   description: string;
 }
+
+export interface ISkillDocument extends Omit<ISkill, '_id'>, Document {}
+
+const SkillSchema = new Schema<ISkillDocument>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    description: String,
+  },
+  {
+    timestamps: true,
+  },
+)
+
+const SkillModel: mongoose.Model<ISkillDocument> =
+  mongoose.models.Skill || mongoose.model<ISkillDocument>('Skill', SkillSchema)
+
+export default SkillModel

@@ -1,5 +1,5 @@
 import { AuthPanel } from '@/components/AuthPanel'
-import { Goal } from '@/components/Goal'
+import Link from 'next/link'
 
 export default function HomePage () {
   return (
@@ -7,11 +7,9 @@ export default function HomePage () {
       <AuthPanel />
       <menu>
         <ul>
-          <li>menu here</li>
+          <li><Link href="/projects">Projects</Link></li>
         </ul>
       </menu>
-      <h2>Начало пути</h2>
-      <Goal />
     </div>
   )
 }
