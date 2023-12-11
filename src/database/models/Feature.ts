@@ -28,6 +28,7 @@
 
 import mongoose, { Schema, Document } from 'mongoose'
 import type { ITask } from '@/database/models/Task'
+import TaskModel from '@/database/models/Task'
 
 export interface IFeature {
   _id: string;
@@ -48,7 +49,7 @@ const FeatureSchema = new Schema<IFeatureDocument>({
     tasks: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Task',
+        ref: TaskModel,
       },
     ],
     url: String,

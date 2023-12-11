@@ -11,6 +11,7 @@
 
 import mongoose, { Schema, Document } from 'mongoose'
 import type { ISkill } from '@/database/models/Skill'
+import SkillModel from '@/database/models/Skill'
 
 export interface ITask {
   _id: string;
@@ -31,7 +32,7 @@ const TaskSchema = new Schema<ITaskDocument>({
     skills: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Skill',
+        ref: SkillModel,
       },
     ],
     url: String,

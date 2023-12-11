@@ -1,14 +1,13 @@
 'use client'
 
 import { NextPage } from 'next'
-import { gql, useMutation, useQuery } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import type { IFeature } from '@/database/models/Feature'
-import { kMaxLength } from 'buffer'
 
-const GET_PROJECT = gql`
+const GET_FEATURE = gql`
     #graphql
     query GetFeature($id: ID!) {
-        getFeature(id: $id) {
+        feature(id: $id) {
             _id
             name
             description
@@ -28,7 +27,7 @@ type PageParams = {
 };
 
 const FeaturePage: NextPage<PageParams> = (context) => {
-  const { loading, error, data } = useQuery<{ feature: IFeature }>(GET_PROJECT, { variables: { id: context.params.feature_id } })
+  const { loading, error, data } = useQuery<{ feature: IFeature }>(GET_FEATURE, { variables: { id: context.params.feature_id } })
 
   if (error) {
     console.log("error: ", error); // eslint-disable-line
@@ -42,8 +41,6 @@ const FeaturePage: NextPage<PageParams> = (context) => {
   if (!data?.feature) {
     return <div>not found</div>
   }
-  
-  console.log("data: ", data); // eslint-disable-line
 
   return (
     <div>
