@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint"
   },
-   "engines": {
+  "engines": {
     "node": ">=20"
   },
   "dependencies": {
@@ -17,6 +17,7 @@
     "@apollo/experimental-nextjs-app-support": "^0.5.2",
     "@as-integrations/next": "^3.0.0",
     "@auth/mongodb-adapter": "^2.0.1",
+    "@sentry/nextjs": "^7.87.0",
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.1",
     "next": "^14.0.3",
