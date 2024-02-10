@@ -1,7 +1,7 @@
 'use client'
 
 import { gql, useQuery } from '@apollo/client'
-import { NextPage } from 'next'
+import type { NextPage } from 'next'
 import Link from 'next/link'
 import { IProject } from '@/database/models/Project'
 import { FC } from 'react'
