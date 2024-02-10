@@ -1,5 +1,7 @@
 import mongoose, { ConnectOptions } from 'mongoose'
 
+export const maxDuration = 60
+
 const { MONGODB_URI = '' } = process.env
 
 if (MONGODB_URI === '') {
