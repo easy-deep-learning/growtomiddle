@@ -4,6 +4,8 @@ import clientPromise from '@/database/mongodbConnect';
 import { Adapter } from 'next-auth/adapters';
 import { authCommonOptions } from '@/authCommonOptions';
 
+export const maxDuration = 60
+
 export const authOptionsMongo: NextAuthOptions = {
     adapter: MongoDBAdapter(clientPromise) as Adapter,
     ...authCommonOptions,
