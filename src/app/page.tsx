@@ -8,6 +8,7 @@ export default function HomePage () {
       <menu>
         <ul>
           <li><Link href="/projects">Projects</Link></li>
+          <li><Link href="/learn-english">learn-english</Link></li>
         </ul>
       </menu>
     </div>
