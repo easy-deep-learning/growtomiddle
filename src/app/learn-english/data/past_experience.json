@@ -1,0 +1,118 @@
+{
+  "id": 1,
+  "name": "Past Experience",
+  "description": "This is a description of the past experience",
+  "grammar": [
+    {
+      "name": "Past Simple",
+      "description": "Use the past simple tense for completed actions in the past. This is the most common tense for describing past experiences.",
+      "rules": {
+        "positive": "subject + verb + ed",
+        "negative": "subject + did not + verb",
+        "question": "did + subject + verb"
+      },
+      "examples": [
+        "I went to the store.",
+        "She played the piano.",
+        "We watched a movie."
+      ]
+    },
+    {
+      "name": "Past Continuous",
+      "description": "Use the past continuous tense for actions that were in progress at a specific time in the past.",
+      "rules": {
+        "positive": "subject + was/were + verb + ing",
+        "negative": "subject + was/were not + verb + ing",
+        "question": "was/were + subject + verb + ing"
+      },
+      "examples": [
+        "I was reading a book.",
+        "She was cooking dinner.",
+        "We were watching TV."
+      ]
+    },
+    {
+      "name": "Past Perfect",
+      "description": "Use the past perfect tense for actions that were completed before another action in the past.",
+      "rules": {
+        "positive": "subject + had + verb + ed",
+        "negative": "subject + had not + verb + ed",
+        "question": "had + subject + verb + ed"
+      },
+      "examples": [
+        "I had finished my homework before dinner.",
+        "She had already left when I arrived.",
+        "We had already eaten when the movie started."
+      ]
+    },
+    {
+      "name": "Past Perfect Continuous",
+      "description": "Use the past perfect continuous tense for actions that were in progress before another action in the past.",
+      "rules": {
+        "positive": "subject + had + been + verb + ing",
+        "negative": "subject + had not + been + verb + ing",
+        "question": "had + subject + been + verb + ing"
+      },
+      "examples": [
+        "I had been studying for two hours when she called.",
+        "She had been working all day when I saw her.",
+        "We had been waiting for an hour when the bus arrived."
+      ]
+    },
+    {
+      "name": "Used to",
+      "description": "Use 'used to' to describe past habits or states that are no longer true.",
+      "rules": {
+        "positive": "subject + used to + verb",
+        "negative": "subject + did not + use to + verb",
+        "question": "did + subject + use to + verb"
+      },
+      "examples": [
+        "I used to play the piano.",
+        "She used to live in New York.",
+        "We used to go to the beach every summer."
+      ]
+    },
+    {
+      "name": "Would",
+      "description": "Use 'would' to describe past habits or states that are no longer true.",
+      "rules": {
+        "positive": "subject + would + verb",
+        "negative": "subject + would not + verb",
+        "question": "would + subject + verb"
+      },
+      "examples": [
+        "I would play the piano.",
+        "She would live in New York.",
+        "We would go to the beach every summer."
+      ]
+    }
+  ],
+  "vocabulary": [
+    {
+      "name": "Verbs",
+      "description": "These are some common verbs used to describe past experiences.",
+      "words": [
+        "achieved",
+        "acquired",
+        "collaborated",
+        "contributed",
+        "coordinated",
+        "demonstrated",
+        "developed",
+        "implemented",
+        "initiated",
+        "led",
+        "managed",
+        "organized",
+        "participated",
+        "presented",
+        "resolved",
+        "streamlined",
+        "supervised",
+        "tackled",
+        "trained"
+      ]
+    }
+  ]
+}

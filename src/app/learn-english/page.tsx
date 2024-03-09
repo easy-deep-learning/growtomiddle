@@ -2,6 +2,15 @@ export default function LearnEnglishPage () {
   return (
     <div>
       <h1>Learn English</h1>
+
+      <h3>Situations</h3>
+
+      <section>
+        <h4>Job interview</h4>
+        <p>Some text about job interview</p>
+      </section>
+
+
       <p>Some text about learning English</p>
 
       <h3>job interview</h3>
