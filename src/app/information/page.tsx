@@ -13,6 +13,10 @@ export default function InformationPage () {
           <li>Example: A news story is information.</li>
         </ul>
         <p>Basically, anything that tells you something is information!</p>
+
+        <h3>Signal vs Noise</h3>
+        <p>Noise is any random interference that obscures or changes a message during its transmission from the sender to the receiver.
+          Essentially, it&apos;s any unwanted signal that corrupts the original data.</p>
       </main>
     </div>
   )
