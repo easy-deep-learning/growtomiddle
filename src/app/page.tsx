@@ -3,15 +3,16 @@ import Link from 'next/link'
 export default function HomePage () {
   return (
     <div className="HomePage">
+      <header>
+        <h1>How to build a web application</h1>
+      </header>
       <menu>
         <ul>
-          <li><Link href="/information">What is the information?</Link></li>
-          <li>Binary logic: why and how</li>
-          <li>Programming languages</li>
-          <li>JavaScript and its runtimes</li>
-          <li>Client-Server interactions</li>
-          <li>Server: how store and transfer data</li>
-          <li>Client: HTML/CSS, DOM and types of rendering</li>
+          <li><Link href="/static-html">The simpliest static way: HTML + CSS</Link></li>
+          <li><Link href="/static-react">The static way: React in Next.js</Link></li>
+          <li><Link href="/markdown-to-react">Markdown to data</Link></li>
+          <li><Link href="/contentful">Contentful</Link></li>
+          <li><Link href="/databases">Databases</Link></li>
         </ul>
       </menu>
     </div>
