@@ -13,6 +13,7 @@ export default function HomePage () {
           <li><Link href="/markdown-to-react">Markdown to data</Link></li>
           <li><Link href="/contentful">Contentful</Link></li>
           <li><Link href="/databases">Databases</Link></li>
+          <li><Link href="/mindset">Mindset</Link></li>
         </ul>
       </menu>
     </div>
