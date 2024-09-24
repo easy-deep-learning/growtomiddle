@@ -60,6 +60,7 @@ const typeDefs = gql`
     projects: [Project]
     project(id: ID!): Project
     feature(id: ID!): Feature
+    users: [User]
   }
 
   type User {
