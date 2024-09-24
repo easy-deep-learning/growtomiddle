@@ -1,8 +1,8 @@
-import {Footer} from '@/components/Footer/Footer';
+import { Footer } from '@/components/Footer/Footer'
 
-export default function StaticHTMLPage() {
+export default function StaticWebApplicationPage() {
   return (
-    <div className="StaticHTMLPage">
+    <div className="StaticWebApplicationPage">
       <h1>Welcome to the Static HTML Page</h1>
       <section>
         <header>
@@ -11,8 +11,9 @@ export default function StaticHTMLPage() {
         <article>
           <p>
             HTML (HyperText Markup Language) is the standard markup language for
-            documents designed to be displayed in a web browser.
-            CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a document written in HTML.
+            documents designed to be displayed in a web browser. CSS (Cascading
+            Style Sheets) is a stylesheet language used to describe the
+            presentation of a document written in HTML.
           </p>
         </article>
         <article>
@@ -21,6 +22,11 @@ export default function StaticHTMLPage() {
             HTML (HyperText Markup Language) is the standard markup language for
             documents designed to be displayed in a web browser.
           </p>
+          <section>
+            <h4>Text</h4>
+            <p>Text is very limited format of the information.</p>
+            <img src="" alt="" />
+          </section>
         </article>
         <article>
           <h3>What is CSS?</h3>
@@ -43,5 +49,5 @@ export default function StaticHTMLPage() {
         <Footer />
       </section>
     </div>
-  );
+  )
 }

@@ -13,16 +13,17 @@ import mongoose, { Schema, Document } from 'mongoose'
 import { IFeature } from '@/database/models/Feature'
 
 export interface IProject {
-  _id: string;
-  name: string;
-  description: string;
-  features: IFeature[]; // TODO: use virtuals?
-  url: string;
+  _id: string
+  name: string
+  description: string
+  features: IFeature[] // TODO: use virtuals?
+  url: string
 }
 
 export interface IProjectDocument extends Omit<IProject, '_id'>, Document {}
 
-const ProjectSchema = new Schema<IProjectDocument>({
+const ProjectSchema = new Schema<IProjectDocument>(
+  {
     name: {
       type: String,
       required: true,
@@ -38,10 +39,11 @@ const ProjectSchema = new Schema<IProjectDocument>({
   },
   {
     timestamps: true,
-  },
+  }
 )
 
 const ProjectModel: mongoose.Model<IProjectDocument> =
-    mongoose.models.Project || mongoose.model<IProjectDocument>('Project', ProjectSchema)
+  mongoose.models.Project ||
+  mongoose.model<IProjectDocument>('Project', ProjectSchema)
 
 export default ProjectModel

@@ -12,13 +12,9 @@ export const AuthPanel = () => {
   return (
     <div className={classes.component}>
       {status === 'unauthenticated' && (
-        <button onClick={() => signIn()}>
-          Войти
-        </button>
+        <button onClick={() => signIn()}>Войти</button>
       )}
-      {status === 'loading' && (
-        <div className={classes.loader}></div>
-      )}
+      {status === 'loading' && <div className={classes.loader}></div>}
       {status === 'authenticated' && (
         <>
           <p className={classes.title}>Привет, {session?.user?.name}</p>
@@ -31,9 +27,7 @@ export const AuthPanel = () => {
               />
             </Link>
             <div className={classes.menu}>
-              <Link href="/profile"
-                    className={classes.linkToProfile}
-              >
+              <Link href="/profile" className={classes.linkToProfile}>
                 Профиль
               </Link>
               <button
@@ -46,7 +40,6 @@ export const AuthPanel = () => {
               </button>
             </div>
           </div>
-
         </>
       )}
     </div>

@@ -31,16 +31,17 @@ import type { ITask } from '@/database/models/Task'
 import TaskModel from '@/database/models/Task'
 
 export interface IFeature {
-  _id: string;
-  name: string;
-  description: string;
-  tasks: ITask[];
-  url: string;
+  _id: string
+  name: string
+  description: string
+  tasks: ITask[]
+  url: string
 }
 
 export interface IFeatureDocument extends Omit<IFeature, '_id'>, Document {}
 
-const FeatureSchema = new Schema<IFeatureDocument>({
+const FeatureSchema = new Schema<IFeatureDocument>(
+  {
     name: {
       type: String,
       required: true,
@@ -56,10 +57,11 @@ const FeatureSchema = new Schema<IFeatureDocument>({
   },
   {
     timestamps: true,
-  },
+  }
 )
 
 const FeatureModel: mongoose.Model<IFeatureDocument> =
-  mongoose.models.Feature || mongoose.model<IFeatureDocument>('Feature', FeatureSchema)
+  mongoose.models.Feature ||
+  mongoose.model<IFeatureDocument>('Feature', FeatureSchema)
 
 export default FeatureModel

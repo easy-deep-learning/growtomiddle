@@ -12,9 +12,9 @@ import mongoose, { Schema, Document } from 'mongoose'
  */
 
 export interface ISkill {
-  _id: string;
-  name: string;
-  description: string;
+  _id: string
+  name: string
+  description: string
 }
 
 export interface ISkillDocument extends Omit<ISkill, '_id'>, Document {}
@@ -29,7 +29,7 @@ const SkillSchema = new Schema<ISkillDocument>(
   },
   {
     timestamps: true,
-  },
+  }
 )
 
 const SkillModel: mongoose.Model<ISkillDocument> =

@@ -12,21 +12,19 @@ export const metadata: Metadata = {
   description: 'gymnasia — education world for all',
 }
 
-export default function RootLayout ({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
     <html lang="en">
-    <body>
-    <NextAuthProvider>
-      <ApolloWrapper>
-        {children}
-      </ApolloWrapper>
-    </NextAuthProvider>
-    <Analytics />
-    </body>
+      <body>
+        <NextAuthProvider>
+          <ApolloWrapper>{children}</ApolloWrapper>
+        </NextAuthProvider>
+        <Analytics />
+      </body>
     </html>
   )
 }

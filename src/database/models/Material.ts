@@ -13,11 +13,11 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
 export interface IMaterial {
-  _id: string;
-  name: string;
-  type: string;
-  url: string;
-  description: string;
+  _id: string
+  name: string
+  type: string
+  url: string
+  description: string
 }
 
 export interface IMaterialDocument extends Omit<IMaterial, '_id'>, Document {}
@@ -30,7 +30,15 @@ const MaterialSchema = new Schema<IMaterialDocument>(
     },
     type: {
       type: String,
-      enum: ['article', 'video', 'book', 'course', 'podcast', 'documentation', 'example'],
+      enum: [
+        'article',
+        'video',
+        'book',
+        'course',
+        'podcast',
+        'documentation',
+        'example',
+      ],
       required: true,
     },
     url: String,
@@ -38,10 +46,11 @@ const MaterialSchema = new Schema<IMaterialDocument>(
   },
   {
     timestamps: true,
-  },
+  }
 )
 
 const MaterialModel: mongoose.Model<IMaterialDocument> =
-  mongoose.models.Material || mongoose.model<IMaterialDocument>('Material', MaterialSchema)
+  mongoose.models.Material ||
+  mongoose.model<IMaterialDocument>('Material', MaterialSchema)
 
 export default MaterialModel

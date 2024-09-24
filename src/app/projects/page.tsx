@@ -1,20 +1,23 @@
 'use client'
 
-import { gql, useQuery } from '@apollo/client'
-import type { NextPage } from 'next'
-import Link from 'next/link'
-import { IProject } from '@/database/models/Project'
 import { FC } from 'react'
 
+import { useQuery } from '@apollo/client'
+import { gql } from 'graphql-tag'
+import type { NextPage } from 'next'
+import Link from 'next/link'
+
+import { IProject } from '@/database/models/Project'
+
 const GET_PROJECTS = gql`
-    #graphql
-    query GetProjects {
-        projects {
-            _id
-            name
-            description
-        }
+  #graphql
+  query GetProjects {
+    projects {
+      _id
+      name
+      description
     }
+  }
 `
 
 type ProjectListPropsType = {
@@ -34,7 +37,9 @@ const ProjectList: FC<ProjectListPropsType> = ({ projects }) => {
 }
 
 const ProjectsPage: NextPage = () => {
-  const { loading, error, data } = useQuery<{ projects: IProject[] }>(GET_PROJECTS)
+  const { loading, error, data } = useQuery<{ projects: IProject[] }>(
+    GET_PROJECTS
+  )
 
   if (error) {
     return <div>error</div>

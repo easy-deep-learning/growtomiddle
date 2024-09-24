@@ -14,16 +14,17 @@ import type { ISkill } from '@/database/models/Skill'
 import SkillModel from '@/database/models/Skill'
 
 export interface ITask {
-  _id: string;
-  name: string;
-  description: string;
-  skills: ISkill[];
-  url: string;
+  _id: string
+  name: string
+  description: string
+  skills: ISkill[]
+  url: string
 }
 
 export interface ITaskDocument extends Omit<ITask, '_id'>, Document {}
 
-const TaskSchema = new Schema<ITaskDocument>({
+const TaskSchema = new Schema<ITaskDocument>(
+  {
     name: {
       type: String,
       required: true,
@@ -39,7 +40,7 @@ const TaskSchema = new Schema<ITaskDocument>({
   },
   {
     timestamps: true,
-  },
+  }
 )
 
 const TaskModel: mongoose.Model<ITaskDocument> =

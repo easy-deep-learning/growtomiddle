@@ -1,19 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'standalone',
-    experimental: {
-      serverComponentsExternalPackages: ['mongoose'],
-    },
-    webpack (config) {
-      config.experiments = { ...config.experiments, topLevelAwait: true }
-      return config
-    },
-  }
-  
+  output: 'standalone',
+  experimental: {
+    serverComponentsExternalPackages: ['mongoose'],
+  },
+  webpack(config) {
+    config.experiments = { ...config.experiments, topLevelAwait: true }
+    return config
+  },
+}
 
 // Injected content via Sentry wizard below
 
-const { withSentryConfig } = require("@sentry/nextjs");
+const { withSentryConfig } = require('@sentry/nextjs')
 
 module.exports = withSentryConfig(
   module.exports,
@@ -23,8 +22,8 @@ module.exports = withSentryConfig(
 
     // Suppresses source map uploading logs during build
     silent: true,
-    org: "easy-deep-learning-01a16725a",
-    project: "growtomiddle",
+    org: 'easy-deep-learning-01a16725a',
+    project: 'growtomiddle',
   },
   {
     // For all available options, see:
@@ -37,7 +36,7 @@ module.exports = withSentryConfig(
     transpileClientSDK: true,
 
     // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-    tunnelRoute: "/monitoring",
+    tunnelRoute: '/monitoring',
 
     // Hides source maps from generated client bundles
     hideSourceMaps: true,
@@ -51,4 +50,4 @@ module.exports = withSentryConfig(
     // https://vercel.com/docs/cron-jobs
     automaticVercelMonitors: true,
   }
-);
+)

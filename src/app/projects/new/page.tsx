@@ -6,18 +6,17 @@ import { FormEvent } from 'react'
 import { gql, useMutation } from '@apollo/client'
 
 const query = gql`
-    #graphql
-    mutation CreateProject($project: ProjectInput) {
-        createProject(project: $project) {
-            name
-            description
-        }
+  #graphql
+  mutation CreateProject($project: ProjectInput) {
+    createProject(project: $project) {
+      name
+      description
     }
+  }
 `
 
 const ProjectNewPage: NextPage = () => {
   const [createProject] = useMutation(query)
-
 
   const handleCreateProject = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -25,7 +24,6 @@ const ProjectNewPage: NextPage = () => {
     const body = Object.fromEntries(formData)
     const response = await createProject({ variables: { project: body } })
   }
-
 
   return (
     <div>
@@ -44,7 +42,7 @@ const ProjectNewPage: NextPage = () => {
         </div>
       </form>
     </div>
-  );
+  )
 }
 
-export default ProjectNewPage;
+export default ProjectNewPage

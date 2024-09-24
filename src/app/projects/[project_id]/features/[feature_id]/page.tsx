@@ -5,32 +5,35 @@ import { gql, useQuery } from '@apollo/client'
 import type { IFeature } from '@/database/models/Feature'
 
 const GET_FEATURE = gql`
-    #graphql
-    query GetFeature($id: ID!) {
-        feature(id: $id) {
-            _id
-            name
-            description
-            tasks {
-                _id
-                name
-            }
-        }
+  #graphql
+  query GetFeature($id: ID!) {
+    feature(id: $id) {
+      _id
+      name
+      description
+      tasks {
+        _id
+        name
+      }
     }
+  }
 `
 
 type PageParams = {
   params: {
-    project_id: string,
-    feature_id: string,
-  };
-};
+    project_id: string
+    feature_id: string
+  }
+}
 
 const FeaturePage: NextPage<PageParams> = (context) => {
-  const { loading, error, data } = useQuery<{ feature: IFeature }>(GET_FEATURE, { variables: { id: context.params.feature_id } })
+  const { loading, error, data } = useQuery<{ feature: IFeature }>(
+    GET_FEATURE,
+    { variables: { id: context.params.feature_id } }
+  )
 
   if (error) {
-    console.log("error: ", error); // eslint-disable-line
+    console.log('error: ', error) // eslint-disable-line
     return <div>{error.message}</div>
   }
 
