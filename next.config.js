@@ -8,6 +8,9 @@ const nextConfig = {
     config.experiments = { ...config.experiments, topLevelAwait: true }
     return config
   },
+  images: {
+    domains: ['lh3.googleusercontent.com'],
+  },
 }
 
 // Injected content via Sentry wizard below
@@ -15,7 +18,7 @@ const nextConfig = {
 const { withSentryConfig } = require('@sentry/nextjs')
 
 module.exports = withSentryConfig(
-  module.exports,
+  nextConfig,
   {
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options

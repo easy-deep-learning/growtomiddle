@@ -20,7 +20,8 @@ const resolvers = {
     feature: async (parent: any, { id }: { id: string }) => {
       return FeatureModel.findById(id)
     },
-    users: async () => {
+    users: async (parent: any, _, content) => {
+      console.log('content: ', content)
       return UsersModel.find({})
     },
   },
