@@ -8,6 +8,7 @@ export interface IUser {
   email: string
   image: string
   emailVerified: boolean
+  roles: string[]
 }
 
 export interface IUserDocument extends Omit<IUser, '_id'>, Document {}

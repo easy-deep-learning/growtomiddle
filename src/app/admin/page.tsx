@@ -17,6 +17,10 @@ const GET_USERS = gql`
       _id
       name
       image
+      roles {
+        name
+        permissions
+      }
     }
   }
 `
@@ -34,6 +38,8 @@ const AdminPage: NextPage = () => {
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>
+
+  console.log('data: ', data)
 
   return (
     <div>

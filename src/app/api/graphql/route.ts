@@ -6,6 +6,7 @@ import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
 import UsersModel from '@/database/models/User'
+import RoleModel from '@/database/models/Role'
 
 const resolvers = {
   Query: {
@@ -23,6 +24,9 @@ const resolvers = {
     users: async (parent: any, _, content) => {
       console.log('content: ', content)
       return UsersModel.find({})
+    },
+    role: async (parent: any, { id }: { id: string }) => {
+      return RoleModel.findById(id)
     },
   },
   Mutation: {
@@ -57,6 +61,13 @@ const resolvers = {
 
 const typeDefs = gql`
   #graphql
+
+  type Role {
+    _id: ID
+    name: String
+    permissions: [Permission]
+  }
+
   type Query {
     projects: [Project]
     project(id: ID!): Project
@@ -69,6 +80,7 @@ const typeDefs = gql`
     name: String
     email: String
     image: String
+    roles: [Role]
   }
 
   type Project {
@@ -128,6 +140,13 @@ const typeDefs = gql`
     example
     video
     podcast
+  }
+
+  enum Permission {
+    CREATE
+    READ
+    WRITE
+    DELETE
   }
 
   type Mutation {
