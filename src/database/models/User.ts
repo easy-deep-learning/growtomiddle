@@ -2,13 +2,15 @@
 
 import mongoose, { Schema, Document } from 'mongoose'
 
+import { RoleName } from './Role'
+
 export interface IUser {
   _id: string
   name: string
   email: string
   image: string
   emailVerified: boolean
-  roles: string[]
+  roles: RoleName[]
 }
 
 export interface IUserDocument extends Omit<IUser, '_id'>, Document {}

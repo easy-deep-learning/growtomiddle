@@ -5,8 +5,8 @@ import { gql } from 'graphql-tag'
 import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
-import UsersModel from '@/database/models/User'
-import RoleModel from '@/database/models/Role'
+import UserModel from '@/database/models/User'
+import RoleModel, { RoleName } from '@/database/models/Role'
 
 const resolvers = {
   Query: {
@@ -21,12 +21,11 @@ const resolvers = {
     feature: async (parent: any, { id }: { id: string }) => {
       return FeatureModel.findById(id)
     },
-    users: async (parent: any, _, content) => {
-      console.log('content: ', content)
-      return UsersModel.find({})
+    users: async () => {
+      return UserModel.find({})
     },
-    role: async (parent: any, { id }: { id: string }) => {
-      return RoleModel.findById(id)
+    roles: async () => {
+      return RoleModel.find({})
     },
   },
   Mutation: {
@@ -55,6 +54,16 @@ const resolvers = {
         { $push: { features: newFeature._id } }
       )
       return await ProjectModel.findById(projectId).populate('features')
+    },
+    updateUserRoles: async (
+      _: any,
+      { input }: { input: { userId: string; roleIds: RoleName[] } }
+    ) => {
+      const user = await UserModel.findById(input.userId)
+      if (!user) throw new Error('User not found')
+      user.roles = input.roleIds
+      await user.save()
+      return await user.populate('roles')
     },
   },
 }
