@@ -82,6 +82,7 @@ const typeDefs = gql`
     project(id: ID!): Project
     feature(id: ID!): Feature
     users: [User]
+    roles: [Role]
   }
 
   type User {
@@ -117,6 +118,11 @@ const typeDefs = gql`
     name: String
     description: String
     url: String
+  }
+
+  input UpdateUserRolesInput {
+    userId: ID!
+    roleIds: [ID!]!
   }
 
   type Task {
@@ -162,6 +168,7 @@ const typeDefs = gql`
     createProject(project: ProjectInput): Project
     updateProject(id: ID!, project: ProjectInput): Project
     addFeature(projectId: ID!, feature: FeatureInput): Project
+    updateUserRoles(input: UpdateUserRolesInput!): User!
   }
 `
 

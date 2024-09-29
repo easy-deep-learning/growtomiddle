@@ -9,6 +9,7 @@ import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 
 import { IUser } from '@/database/models/User'
+import { IRole } from '@/database/models/Role'
 
 const GET_USERS_AND_ROLES = gql`
   #graphql
@@ -43,7 +44,7 @@ const UPDATE_USER_ROLES = gql`
 
 const AdminPage: NextPage = () => {
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const { loading, error, data } = useQuery(GET_USERS_AND_ROLES)
   const [updateUserRoles] = useMutation(UPDATE_USER_ROLES)
 
@@ -93,6 +94,64 @@ const AdminPage: NextPage = () => {
       </Head>
       <main>
         <h1>Welcome to the Admin Page</h1>
+        <section>
+          <h2>Roles</h2>
+          <h3>Add role</h3>
+          <ul>
+            {data?.roles.map((role: IRole) => (
+              <li key={role._id}>
+                <p>{role.name}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section>
+          <h2>Users</h2>
+          <ul>
+            {data?.users.map((user: IUser) => (
+              <li key={user._id}>
+                <Image
+                  src={user.image}
+                  alt={user.name}
+                  width={50}
+                  height={50}
+                />
+                <p>{user.name}</p>
+                <button
+                  onClick={() => {
+                    setSelectedUser(user)
+                    setSelectedRoles(user.roles.map((role) => role._id))
+                  }}
+                >
+                  Edit Roles
+                </button>
+              </li>
+            ))}
+          </ul>
+          {selectedUser && (
+            <div>
+              <h3>Edit Roles for {selectedUser.name}</h3>
+              <ul>
+                {data?.roles.map((role: IRole) => (
+                  <li key={role._id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={selectedRoles.includes(role._id)}
+                        onChange={() =>
+                          handleRoleChange(selectedUser._id, role._id)
+                        }
+                      />
+                      {role.name}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+              <button onClick={handleSaveRoles}>Save</button>
+              <button onClick={() => setSelectedUser(null)}>Cancel</button>
+            </div>
+          )}
+        </section>
         <h2>Users</h2>
         <ul>
           {data?.users.map((user: IUser) => (
