@@ -6,7 +6,7 @@ import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
 import UserModel from '@/database/models/User'
-import RoleModel, { RoleName } from '@/database/models/Role'
+import UserRoleModel from '@/database/models/UserRole'
 
 const resolvers = {
   Query: {
@@ -25,7 +25,7 @@ const resolvers = {
       return UserModel.find({})
     },
     roles: async () => {
-      return RoleModel.find({})
+      return UserRoleModel.find({})
     },
   },
   Mutation: {
@@ -38,7 +38,6 @@ const resolvers = {
       parent: any,
       { id, project }: { id: string; project: IProject }
     ) => {
-      await mongooseConnect()
       await ProjectModel.updateOne({ _id: id }, project)
       return await ProjectModel.findById(id)
     },
@@ -46,7 +45,6 @@ const resolvers = {
       parent: any,
       { projectId, feature }: { projectId: string; feature: IFeature }
     ) => {
-      await mongooseConnect()
       const newFeature = new FeatureModel(feature)
       await newFeature.save()
       await ProjectModel.updateOne(
@@ -55,34 +53,42 @@ const resolvers = {
       )
       return await ProjectModel.findById(projectId).populate('features')
     },
-    updateUserRoles: async (
+    createUserRole: async (
       _: any,
-      { input }: { input: { userId: string; roleIds: RoleName[] } }
+      { input }: { input: { name: string; permissions: string[] } }
     ) => {
-      const user = await UserModel.findById(input.userId)
-      if (!user) throw new Error('User not found')
-      user.roles = input.roleIds
-      await user.save()
-      return await user.populate('roles')
+      try {
+        console.log('input: ', input)
+        const newRole = new UserRoleModel(input)
+        return await newRole.save()
+      } catch (error) {
+        console.error('error: ', error)
+      }
     },
   },
 }
 
 const typeDefs = gql`
   #graphql
-
-  type Role {
-    _id: ID
-    name: String
-    permissions: [Permission]
-  }
-
   type Query {
     projects: [Project]
     project(id: ID!): Project
     feature(id: ID!): Feature
     users: [User]
-    roles: [Role]
+    roles: [UserRole]
+  }
+
+  type Mutation {
+    createProject(project: ProjectInput): Project
+    updateProject(id: ID!, project: ProjectInput): Project
+    addFeature(projectId: ID!, feature: FeatureInput): Project
+    createUserRole(input: UserRoleInput!): UserRole
+  }
+
+  type UserRole {
+    _id: ID
+    name: String
+    permissions: Permission
   }
 
   type User {
@@ -90,7 +96,7 @@ const typeDefs = gql`
     name: String
     email: String
     image: String
-    roles: [Role]
+    roles: [UserRole]
   }
 
   type Project {
@@ -118,6 +124,11 @@ const typeDefs = gql`
     name: String
     description: String
     url: String
+  }
+
+  input UserRoleInput {
+    name: String!
+    permissions: [String]!
   }
 
   input UpdateUserRolesInput {
@@ -158,17 +169,10 @@ const typeDefs = gql`
   }
 
   enum Permission {
-    CREATE
-    READ
-    WRITE
-    DELETE
-  }
-
-  type Mutation {
-    createProject(project: ProjectInput): Project
-    updateProject(id: ID!, project: ProjectInput): Project
-    addFeature(projectId: ID!, feature: FeatureInput): Project
-    updateUserRoles(input: UpdateUserRolesInput!): User!
+    create
+    read
+    write
+    delete
   }
 `
 

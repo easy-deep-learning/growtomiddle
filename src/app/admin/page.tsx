@@ -9,7 +9,14 @@ import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 
 import { IUser } from '@/database/models/User'
-import { IRole } from '@/database/models/Role'
+import { type IUserRole } from '@/database/models/UserRole'
+
+enum Permission {
+  CREATE = 'create',
+  READ = 'read',
+  WRITE = 'write',
+  DELETE = 'delete',
+}
 
 const GET_USERS_AND_ROLES = gql`
   #graphql
@@ -42,14 +49,29 @@ const UPDATE_USER_ROLES = gql`
   }
 `
 
+const CREATE_ROLE = gql`
+  mutation createUserRole($input: UserRoleInput!) {
+    createRole(input: $input) {
+      _id
+      name
+      permissions
+    }
+  }
+`
+
 const AdminPage: NextPage = () => {
   const router = useRouter()
   const { status } = useSession()
   const { loading, error, data } = useQuery(GET_USERS_AND_ROLES)
   const [updateUserRoles] = useMutation(UPDATE_USER_ROLES)
+  const [createRole] = useMutation(CREATE_ROLE, {
+    refetchQueries: [{ query: GET_USERS_AND_ROLES }],
+  })
 
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
   const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+  const [roleName, setRoleName] = useState('')
+  const [rolePermissions, setRolePermissions] = useState<Permission[]>([])
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -83,6 +105,24 @@ const AdminPage: NextPage = () => {
     }
   }
 
+  const handlePermissionChange = (permission: Permission) => {
+    setRolePermissions((prevPermissions) =>
+      prevPermissions.includes(permission)
+        ? prevPermissions.filter((perm) => perm !== permission)
+        : [...prevPermissions, permission]
+    )
+  }
+
+  const handleCreateRole = async () => {
+    await createRole({
+      variables: {
+        input: { name: roleName, permissions: rolePermissions },
+      },
+    })
+    setRoleName('')
+    setRolePermissions([])
+  }
+
   return (
     <div>
       <Head>
@@ -96,9 +136,32 @@ const AdminPage: NextPage = () => {
         <h1>Welcome to the Admin Page</h1>
         <section>
           <h2>Roles</h2>
-          <h3>Add role</h3>
+          <h3>Add Role</h3>
+          <div>
+            <label htmlFor="roleName">Role Name</label>
+            <input
+              type="text"
+              id="roleName"
+              value={roleName}
+              onChange={(e) => setRoleName(e.target.value)}
+            />
+          </div>
+          <div>
+            <h3>Permissions</h3>
+            {Object.values(Permission).map((permission) => (
+              <label key={permission}>
+                <input
+                  type="checkbox"
+                  checked={rolePermissions.includes(permission)}
+                  onChange={() => handlePermissionChange(permission)}
+                />
+                {permission}
+              </label>
+            ))}
+          </div>
+          <button onClick={handleCreateRole}>Create Role</button>
           <ul>
-            {data?.roles.map((role: IRole) => (
+            {data?.roles.map((role: IUserRole) => (
               <li key={role._id}>
                 <p>{role.name}</p>
               </li>
@@ -132,7 +195,7 @@ const AdminPage: NextPage = () => {
             <div>
               <h3>Edit Roles for {selectedUser.name}</h3>
               <ul>
-                {data?.roles.map((role: IRole) => (
+                {data?.roles.map((role: IUserRole) => (
                   <li key={role._id}>
                     <label>
                       <input
@@ -173,7 +236,7 @@ const AdminPage: NextPage = () => {
           <div>
             <h3>Edit Roles for {selectedUser.name}</h3>
             <ul>
-              {data?.roles.map((role: IRole) => (
+              {data?.roles.map((role: IUserRole) => (
                 <li key={role._id}>
                   <label>
                     <input

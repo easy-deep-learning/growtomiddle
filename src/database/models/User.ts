@@ -2,7 +2,7 @@
 
 import mongoose, { Schema, Document } from 'mongoose'
 
-import { IRole, RoleName } from './Role'
+import { IUserRole } from './UserRole'
 
 export interface IUser {
   _id: string
@@ -10,7 +10,7 @@ export interface IUser {
   email: string
   image: string
   emailVerified: boolean
-  roles: IRole[]
+  roles: IUserRole[]
 }
 
 export interface IUserDocument extends Omit<IUser, '_id'>, Document {}
@@ -33,7 +33,7 @@ const UserSchema = new Schema<IUserDocument>({
   roles: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Role',
+      ref: 'UserRole',
     },
   ],
 })
