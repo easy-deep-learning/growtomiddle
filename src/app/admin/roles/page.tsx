@@ -5,7 +5,7 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import Head from 'next/head'
 import { NextPage } from 'next'
 
-import { IRole, Permission } from '@/database/models/Role'
+import { type IUserRole, type Permission } from '@/database/models/UserRole'
 
 export const GET_ROLES = gql`
   query GetRoles {
@@ -59,7 +59,7 @@ const AdminRolesPage: NextPage = () => {
 
   const [roleName, setRoleName] = useState('')
   const [rolePermissions, setRolePermissions] = useState<Permission[]>([])
-  const [editingRole, setEditingRole] = useState<IRole | null>(null)
+  const [editingRole, setEditingRole] = useState<IUserRole | null>(null)
 
   const handlePermissionChange = (permission: Permission) => {
     setRolePermissions((prevPermissions) =>
@@ -89,7 +89,7 @@ const AdminRolesPage: NextPage = () => {
     setEditingRole(null)
   }
 
-  const handleEditRole = (role: IRole) => {
+  const handleEditRole = (role: IUserRole) => {
     setEditingRole(role)
     setRoleName(role.name)
     setRolePermissions(role.permissions)
@@ -144,7 +144,7 @@ const AdminRolesPage: NextPage = () => {
         <section>
           <h2>Roles</h2>
           <ul>
-            {data?.roles.map((role: IRole) => (
+            {data?.roles.map((role: IUserRole) => (
               <li key={role._id}>
                 <p>{role.name}</p>
                 <p>{role.permissions.join(', ')}</p>
