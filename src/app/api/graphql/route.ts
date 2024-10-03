@@ -1,3 +1,4 @@
+import { MongoError } from 'mongodb'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
 import { ApolloServer } from '@apollo/server'
 import { gql } from 'graphql-tag'
@@ -60,9 +61,14 @@ const resolvers = {
       try {
         console.log('input: ', input)
         const newRole = new UserRoleModel(input)
-        return await newRole.save()
+        await newRole.save()
+        return newRole
       } catch (error) {
+        if (error instanceof MongoError && error.code === 11000) {
+          throw new Error('Role already exists')
+        }
         console.error('error: ', error)
+        throw new Error('Failed to create user role')
       }
     },
   },
@@ -88,7 +94,7 @@ const typeDefs = gql`
   type UserRole {
     _id: ID
     name: String
-    permissions: Permission
+    permissions: [Permission]
   }
 
   type User {
