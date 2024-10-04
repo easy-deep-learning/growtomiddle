@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "BASE_FETCH_URL=http://localhost:3000 next dev",
     "build": "next build",
-    "build-experimental": "next experimental-compile",
+    "build-compile": "next build --experimental-build-mode compile",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
