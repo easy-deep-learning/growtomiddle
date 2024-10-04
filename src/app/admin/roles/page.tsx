@@ -5,9 +5,16 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import Head from 'next/head'
 import { NextPage } from 'next'
 
-import { type IUserRole, type Permission } from '@/database/models/UserRole'
+import { type IUserRole } from '@/database/models/UserRole'
 
-export const GET_ROLES = gql`
+enum Permission {
+  create = 'create',
+  read = 'read',
+  write = 'write',
+  delete = 'delete',
+}
+
+const GET_ROLES = gql`
   query GetRoles {
     roles {
       _id
@@ -17,7 +24,7 @@ export const GET_ROLES = gql`
   }
 `
 
-export const CREATE_ROLE = gql`
+const CREATE_ROLE = gql`
   mutation CreateRole($input: RoleInput!) {
     createRole(input: $input) {
       _id
@@ -27,7 +34,7 @@ export const CREATE_ROLE = gql`
   }
 `
 
-export const UPDATE_ROLE = gql`
+const UPDATE_ROLE = gql`
   mutation UpdateRole($id: ID!, $input: RoleInput!) {
     updateRole(id: $id, input: $input) {
       _id
@@ -37,7 +44,7 @@ export const UPDATE_ROLE = gql`
   }
 `
 
-export const DELETE_ROLE = gql`
+const DELETE_ROLE = gql`
   mutation DeleteRole($id: ID!) {
     deleteRole(id: $id) {
       _id

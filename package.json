@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "BASE_FETCH_URL=http://localhost:3000 next dev",
-    "build": "next experimental-compile",
-    "build-prerender": "next build",
+    "build": "next build",
+    "build-experimental": "next experimental-compile",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
