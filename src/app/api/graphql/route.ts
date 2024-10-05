@@ -71,6 +71,18 @@ const resolvers = {
         throw new Error('Failed to create user role')
       }
     },
+    deleteRole: async (_: any, { id }: { id: string }) => {
+      try {
+        const result = await UserRoleModel.deleteOne({ _id: id })
+        if (result.deletedCount === 0) {
+          throw new Error('Role not found')
+        }
+        return { _id: id }
+      } catch (error) {
+        console.error('Error deleting role:', error)
+        throw new Error('Failed to delete role')
+      }
+    },
   },
 }
 
@@ -89,12 +101,17 @@ const typeDefs = gql`
     updateProject(id: ID!, project: ProjectInput): Project
     addFeature(projectId: ID!, feature: FeatureInput): Project
     createUserRole(input: UserRoleInput!): UserRole
+    deleteRole(id: ID!): UserRoleId
   }
 
   type UserRole {
     _id: ID
     name: String
     permissions: [Permission]
+  }
+
+  type UserRoleId {
+    _id: ID
   }
 
   type User {
