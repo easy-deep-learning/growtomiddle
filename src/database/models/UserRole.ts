@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose'
 export enum Permission {
   create = 'create',
   read = 'read',
-  write = 'write',
+  update = 'update',
   delete = 'delete',
 }
 

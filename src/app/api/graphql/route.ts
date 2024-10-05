@@ -71,6 +71,15 @@ const resolvers = {
         throw new Error('Failed to create user role')
       }
     },
+    updateRole: async (_: any, { id, input }: { id: string; input: any }) => {
+      try {
+        await UserRoleModel.updateOne({ _id: id }, input)
+        return await UserRoleModel.findById(id)
+      } catch (error) {
+        console.error('Error updating role:', error)
+        throw new Error('Failed to update role')
+      }
+    },
     deleteRole: async (_: any, { id }: { id: string }) => {
       try {
         const result = await UserRoleModel.deleteOne({ _id: id })
@@ -100,7 +109,8 @@ const typeDefs = gql`
     createProject(project: ProjectInput): Project
     updateProject(id: ID!, project: ProjectInput): Project
     addFeature(projectId: ID!, feature: FeatureInput): Project
-    createUserRole(input: UserRoleInput!): UserRole
+    createUserRole(input: UserRoleCreateInput!): UserRole
+    updateRole(id: ID!, input: UserRoleUpdateInput!): UserRole
     deleteRole(id: ID!): UserRoleId
   }
 
@@ -149,9 +159,14 @@ const typeDefs = gql`
     url: String
   }
 
-  input UserRoleInput {
+  input UserRoleCreateInput {
     name: String!
     permissions: [String]!
+  }
+
+  input UserRoleUpdateInput {
+    name: String
+    permissions: [String]
   }
 
   input UpdateUserRolesInput {
@@ -194,7 +209,7 @@ const typeDefs = gql`
   enum Permission {
     create
     read
-    write
+    update
     delete
   }
 `

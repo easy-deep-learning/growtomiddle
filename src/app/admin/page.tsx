@@ -14,7 +14,7 @@ import { type IUserRole } from '@/database/models/UserRole'
 enum Permission {
   CREATE = 'create',
   READ = 'read',
-  WRITE = 'write',
+  UPDATE = 'update',
   DELETE = 'delete',
 }
 
@@ -232,29 +232,6 @@ const AdminPage: NextPage = () => {
             </li>
           ))}
         </ul>
-        {selectedUser && (
-          <div>
-            <h3>Edit Roles for {selectedUser.name}</h3>
-            <ul>
-              {data?.roles.map((role: IUserRole) => (
-                <li key={role._id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={selectedRoles.includes(role._id)}
-                      onChange={() =>
-                        handleRoleChange(selectedUser._id, role._id)
-                      }
-                    />
-                    {role.name}
-                  </label>
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleSaveRoles}>Save</button>
-            <button onClick={() => setSelectedUser(null)}>Cancel</button>
-          </div>
-        )}
       </main>
     </div>
   )

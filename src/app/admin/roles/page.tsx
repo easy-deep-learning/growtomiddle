@@ -10,7 +10,7 @@ import { type IUserRole } from '@/database/models/UserRole'
 enum Permission {
   create = 'create',
   read = 'read',
-  write = 'write',
+  update = 'update',
   delete = 'delete',
 }
 
@@ -25,7 +25,7 @@ const GET_ROLES = gql`
 `
 
 const CREATE_ROLE = gql`
-  mutation CreateRole($input: RoleInput!) {
+  mutation CreateRole($input: UserRoleCreateInput!) {
     createRole(input: $input) {
       _id
       name
@@ -35,7 +35,7 @@ const CREATE_ROLE = gql`
 `
 
 const UPDATE_ROLE = gql`
-  mutation UpdateRole($id: ID!, $input: RoleInput!) {
+  mutation UpdateRole($id: ID!, $input: UserRoleUpdateInput!) {
     updateRole(id: $id, input: $input) {
       _id
       name
