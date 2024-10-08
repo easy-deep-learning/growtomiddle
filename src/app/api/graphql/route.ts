@@ -32,7 +32,6 @@ const resolvers = {
   Mutation: {
     createProject: async (parent: any, { project }: { project: IProject }) => {
       const newProject = new ProjectModel(project)
-      console.log('newProject:', newProject)
       return await newProject.save()
     },
     updateProject: async (
@@ -54,12 +53,28 @@ const resolvers = {
       )
       return await ProjectModel.findById(projectId).populate('features')
     },
+    updateUser: async (
+      _parent: any,
+      { user }: { user: { id: string; name: string; roles: string[] } }
+    ) => {
+      console.log('user: ', user)
+      return await UserModel.findByIdAndUpdate(user.id, user)
+    },
+    updateUserRoles: async (
+      _parent: any,
+      { user }: { user: { userId: string; roleIds: string[] } }
+    ) => {
+      const roles = await UserRoleModel.find({ _id: { $in: user.roleIds } })
+      console.log('roles: ', roles)
+      return await UserModel.findByIdAndUpdate(user.userId, {
+        roles: user.roleIds,
+      })
+    },
     createUserRole: async (
-      _: any,
+      _parent: any,
       { input }: { input: { name: string; permissions: string[] } }
     ) => {
       try {
-        console.log('input: ', input)
         const newRole = new UserRoleModel(input)
         await newRole.save()
         return newRole
@@ -71,7 +86,10 @@ const resolvers = {
         throw new Error('Failed to create user role')
       }
     },
-    updateRole: async (_: any, { id, input }: { id: string; input: any }) => {
+    updateRole: async (
+      parent: any,
+      { id, input }: { id: string; input: any }
+    ) => {
       try {
         await UserRoleModel.updateOne({ _id: id }, input)
         return await UserRoleModel.findById(id)
@@ -80,7 +98,7 @@ const resolvers = {
         throw new Error('Failed to update role')
       }
     },
-    deleteRole: async (_: any, { id }: { id: string }) => {
+    deleteRole: async (parent: any, { id }: { id: string }) => {
       try {
         const result = await UserRoleModel.deleteOne({ _id: id })
         if (result.deletedCount === 0) {
@@ -108,6 +126,8 @@ const typeDefs = gql`
   type Mutation {
     createProject(project: ProjectInput): Project
     updateProject(id: ID!, project: ProjectInput): Project
+    updateUser(user: UserInput): User
+    updateUserRoles(user: UpdateUserRolesInput!): User
     addFeature(projectId: ID!, feature: FeatureInput): Project
     createUserRole(input: UserRoleCreateInput!): UserRole
     updateRole(id: ID!, input: UserRoleUpdateInput!): UserRole
@@ -157,6 +177,12 @@ const typeDefs = gql`
     name: String
     description: String
     url: String
+  }
+
+  input UserInput {
+    _id: ID
+    name: String
+    roles: [ID]
   }
 
   input UserRoleCreateInput {

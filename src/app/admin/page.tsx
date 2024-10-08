@@ -11,13 +11,6 @@ import { useSession } from 'next-auth/react'
 import { IUser } from '@/database/models/User'
 import { type IUserRole } from '@/database/models/UserRole'
 
-enum Permission {
-  CREATE = 'create',
-  READ = 'read',
-  UPDATE = 'update',
-  DELETE = 'delete',
-}
-
 const GET_USERS_AND_ROLES = gql`
   #graphql
   query GetUsers {
@@ -38,9 +31,10 @@ const GET_USERS_AND_ROLES = gql`
 `
 
 const UPDATE_USER_ROLES = gql`
-  mutation UpdateUserRoles($input: UpdateUserRolesInput!) {
-    updateUserRoles(input: $input) {
+  mutation UpdateUser($user: UpdateUserRolesInput!) {
+    updateUserRoles(user: $user) {
       _id
+      name
       roles {
         _id
         name
@@ -49,29 +43,14 @@ const UPDATE_USER_ROLES = gql`
   }
 `
 
-const CREATE_ROLE = gql`
-  mutation createUserRole($input: UserRoleInput!) {
-    createRole(input: $input) {
-      _id
-      name
-      permissions
-    }
-  }
-`
-
 const AdminPage: NextPage = () => {
   const router = useRouter()
   const { status } = useSession()
   const { loading, error, data } = useQuery(GET_USERS_AND_ROLES)
-  const [updateUserRoles] = useMutation(UPDATE_USER_ROLES)
-  const [createRole] = useMutation(CREATE_ROLE, {
-    refetchQueries: [{ query: GET_USERS_AND_ROLES }],
-  })
+  const [updateUser] = useMutation(UPDATE_USER_ROLES)
 
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
   const [selectedRoles, setSelectedRoles] = useState<string[]>([])
-  const [roleName, setRoleName] = useState('')
-  const [rolePermissions, setRolePermissions] = useState<Permission[]>([])
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -92,9 +71,9 @@ const AdminPage: NextPage = () => {
 
   const handleSaveRoles = async () => {
     if (selectedUser) {
-      await updateUserRoles({
+      await updateUser({
         variables: {
-          input: {
+          user: {
             userId: selectedUser._id,
             roleIds: selectedRoles,
           },
@@ -103,24 +82,6 @@ const AdminPage: NextPage = () => {
       setSelectedUser(null)
       setSelectedRoles([])
     }
-  }
-
-  const handlePermissionChange = (permission: Permission) => {
-    setRolePermissions((prevPermissions) =>
-      prevPermissions.includes(permission)
-        ? prevPermissions.filter((perm) => perm !== permission)
-        : [...prevPermissions, permission]
-    )
-  }
-
-  const handleCreateRole = async () => {
-    await createRole({
-      variables: {
-        input: { name: roleName, permissions: rolePermissions },
-      },
-    })
-    setRoleName('')
-    setRolePermissions([])
   }
 
   return (
@@ -135,40 +96,6 @@ const AdminPage: NextPage = () => {
       <main>
         <h1>Welcome to the Admin Page</h1>
         <section>
-          <h2>Roles</h2>
-          <h3>Add Role</h3>
-          <div>
-            <label htmlFor="roleName">Role Name</label>
-            <input
-              type="text"
-              id="roleName"
-              value={roleName}
-              onChange={(e) => setRoleName(e.target.value)}
-            />
-          </div>
-          <div>
-            <h3>Permissions</h3>
-            {Object.values(Permission).map((permission) => (
-              <label key={permission}>
-                <input
-                  type="checkbox"
-                  checked={rolePermissions.includes(permission)}
-                  onChange={() => handlePermissionChange(permission)}
-                />
-                {permission}
-              </label>
-            ))}
-          </div>
-          <button onClick={handleCreateRole}>Create Role</button>
-          <ul>
-            {data?.roles.map((role: IUserRole) => (
-              <li key={role._id}>
-                <p>{role.name}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-        <section>
           <h2>Users</h2>
           <ul>
             {data?.users.map((user: IUser) => (
@@ -180,6 +107,14 @@ const AdminPage: NextPage = () => {
                   height={50}
                 />
                 <p>{user.name}</p>
+                <p>
+                  user roles:
+                  <ul>
+                    {user.roles.map((role) => (
+                      <li key={role._id}>{role.name}</li>
+                    ))}
+                  </ul>
+                </p>
                 <button
                   onClick={() => {
                     setSelectedUser(user)
@@ -216,22 +151,6 @@ const AdminPage: NextPage = () => {
           )}
         </section>
         <h2>Users</h2>
-        <ul>
-          {data?.users.map((user: IUser) => (
-            <li key={user._id}>
-              <Image src={user.image} alt={user.name} width={50} height={50} />
-              <p>{user.name}</p>
-              <button
-                onClick={() => {
-                  setSelectedUser(user)
-                  setSelectedRoles(user.roles.map((role) => role._id))
-                }}
-              >
-                Edit Roles
-              </button>
-            </li>
-          ))}
-        </ul>
       </main>
     </div>
   )
