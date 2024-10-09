@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "run:sandbox": "tsc ./src/_sandbox/createUserRole.ts && node ./src/_sandbox/createUserRole.js"
+    "run:sandbox": "tsc ./src/_sandbox/index.ts && node ./src/_sandbox/index.js"
   },
   "engines": {
     "node": ">=20"
