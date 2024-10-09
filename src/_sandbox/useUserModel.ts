@@ -4,7 +4,7 @@ import UserModel from '../database/models/User'
 async function getUserById(userId: string) {
   try {
     await mongooseConnect()
-    const user = await UserModel.findById(userId)
+    const user = await UserModel.findById(userId).populate('roles')
     if (!user) {
       throw new Error('User not found')
     }
@@ -17,5 +17,5 @@ async function getUserById(userId: string) {
 
 getUserById('66f5a0d1d72e444d6a7e01df').then((user) => {
   console.log('user:', user)
-  return
+  return process.exit(0)
 })

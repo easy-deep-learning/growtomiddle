@@ -23,7 +23,7 @@ const resolvers = {
       return FeatureModel.findById(id)
     },
     users: async () => {
-      return UserModel.find({})
+      return UserModel.find({}).populate('roles')
     },
     roles: async () => {
       return UserRoleModel.find({})
