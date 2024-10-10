@@ -1,3 +1,4 @@
+import { MongoError } from 'mongodb'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
 import { ApolloServer } from '@apollo/server'
 import { gql } from 'graphql-tag'
@@ -5,7 +6,7 @@ import { gql } from 'graphql-tag'
 import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
-import UsersModel from '@/database/models/User'
+import UserModel from '@/database/models/User'
 import RoleModel from '@/database/models/Role'
 
 const resolvers = {
@@ -18,36 +19,36 @@ const resolvers = {
     project: async (parent: any, { id }: { id: string }) => {
       return ProjectModel.findById(id).populate('features')
     },
+
     feature: async (parent: any, { id }: { id: string }) => {
       return FeatureModel.findById(id)
     },
-    users: async (parent: any, _, content) => {
-      console.log('content: ', content)
-      return UsersModel.find({})
+
+    users: async () => {
+      return UserModel.find({}).populate('roles')
     },
-    role: async (parent: any, { id }: { id: string }) => {
-      return RoleModel.findById(id)
+
+    roles: async () => {
+      return RoleModel.find({})
     },
   },
   Mutation: {
     createProject: async (parent: any, { project }: { project: IProject }) => {
       const newProject = new ProjectModel(project)
-      console.log('newProject:', newProject)
       return await newProject.save()
     },
     updateProject: async (
       parent: any,
       { id, project }: { id: string; project: IProject }
     ) => {
-      await mongooseConnect()
       await ProjectModel.updateOne({ _id: id }, project)
       return await ProjectModel.findById(id)
     },
+
     addFeature: async (
       parent: any,
       { projectId, feature }: { projectId: string; feature: IFeature }
     ) => {
-      await mongooseConnect()
       const newFeature = new FeatureModel(feature)
       await newFeature.save()
       await ProjectModel.updateOne(
@@ -56,11 +57,83 @@ const resolvers = {
       )
       return await ProjectModel.findById(projectId).populate('features')
     },
+
+    updateUser: async (
+      _parent: any,
+      { user }: { user: { _id: string; name: string; roles: string[] } }
+    ) => {
+      const dataForUpdate = { name: user.name, roles: user.roles }
+      return await UserModel.findByIdAndUpdate(user._id, dataForUpdate)
+    },
+
+    createRole: async (
+      _parent: any,
+      { input }: { input: { name: string; permissions: string[] } }
+    ) => {
+      try {
+        const newRole = new RoleModel(input)
+        await newRole.save()
+        return newRole
+      } catch (error) {
+        if (error instanceof MongoError && error.code === 11000) {
+          throw new Error('Role already exists')
+        }
+        console.error('Error creating role: ', error)
+        throw new Error('Failed to create user role')
+      }
+    },
+    updateRole: async (
+      _parent: any,
+      { id, input }: { id: string; input: any }
+    ) => {
+      try {
+        await RoleModel.updateOne({ _id: id }, input)
+        return await RoleModel.findById(id)
+      } catch (error) {
+        console.error('Error updating role:', error)
+        throw new Error('Failed to update role')
+      }
+    },
+    deleteRole: async (_parent: any, { id }: { id: string }) => {
+      try {
+        const result = await RoleModel.deleteOne({ _id: id })
+        if (result.deletedCount === 0) {
+          throw new Error('Role not found')
+        }
+        return { _id: id }
+      } catch (error) {
+        console.error('Error deleting role:', error)
+        throw new Error('Failed to delete role')
+      }
+    },
   },
 }
 
 const typeDefs = gql`
   #graphql
+  type Query {
+    projects: [Project]
+    project(id: ID!): Project
+
+    feature(id: ID!): Feature
+
+    users: [User]
+
+    roles: [Role]
+  }
+
+  type Mutation {
+    createProject(project: ProjectInput): Project
+    updateProject(id: ID!, project: ProjectInput): Project
+
+    updateUser(user: UserInput): User
+
+    addFeature(projectId: ID!, feature: FeatureInput): Project
+
+    createRole(input: RoleCreateInput!): Role
+    updateRole(id: ID!, input: RoleUpdateInput!): Role
+    deleteRole(id: ID!): RoleId
+  }
 
   type Role {
     _id: ID
@@ -68,11 +141,8 @@ const typeDefs = gql`
     permissions: [Permission]
   }
 
-  type Query {
-    projects: [Project]
-    project(id: ID!): Project
-    feature(id: ID!): Feature
-    users: [User]
+  type RoleId {
+    _id: ID
   }
 
   type User {
@@ -110,6 +180,22 @@ const typeDefs = gql`
     url: String
   }
 
+  input UserInput {
+    _id: ID
+    name: String
+    roles: [ID]
+  }
+
+  input RoleCreateInput {
+    name: String!
+    permissions: [String]!
+  }
+
+  input RoleUpdateInput {
+    name: String
+    permissions: [String]
+  }
+
   type Task {
     _id: ID
     name: String
@@ -143,16 +229,10 @@ const typeDefs = gql`
   }
 
   enum Permission {
-    CREATE
-    READ
-    WRITE
-    DELETE
-  }
-
-  type Mutation {
-    createProject(project: ProjectInput): Project
-    updateProject(id: ID!, project: ProjectInput): Project
-    addFeature(projectId: ID!, feature: FeatureInput): Project
+    create
+    read
+    update
+    delete
   }
 `
 

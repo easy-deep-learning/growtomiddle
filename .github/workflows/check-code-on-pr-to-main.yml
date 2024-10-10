@@ -27,7 +27,7 @@ jobs:
         run: npm run lint
 
       - name: Build
-        run: npm run build
+        run: npm run build-compile
         env: # Or as an environment variable
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
