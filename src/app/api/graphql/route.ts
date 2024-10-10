@@ -7,7 +7,7 @@ import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
 import UserModel from '@/database/models/User'
-import UserRoleModel from '@/database/models/UserRole'
+import RoleModel from '@/database/models/Role'
 
 const resolvers = {
   Query: {
@@ -19,14 +19,17 @@ const resolvers = {
     project: async (parent: any, { id }: { id: string }) => {
       return ProjectModel.findById(id).populate('features')
     },
+
     feature: async (parent: any, { id }: { id: string }) => {
       return FeatureModel.findById(id)
     },
+
     users: async () => {
       return UserModel.find({}).populate('roles')
     },
+
     roles: async () => {
-      return UserRoleModel.find({})
+      return RoleModel.find({})
     },
   },
   Mutation: {
@@ -41,6 +44,7 @@ const resolvers = {
       await ProjectModel.updateOne({ _id: id }, project)
       return await ProjectModel.findById(id)
     },
+
     addFeature: async (
       parent: any,
       { projectId, feature }: { projectId: string; feature: IFeature }
@@ -53,54 +57,46 @@ const resolvers = {
       )
       return await ProjectModel.findById(projectId).populate('features')
     },
+
     updateUser: async (
       _parent: any,
-      { user }: { user: { id: string; name: string; roles: string[] } }
+      { user }: { user: { _id: string; name: string; roles: string[] } }
     ) => {
-      console.log('user: ', user)
-      return await UserModel.findByIdAndUpdate(user.id, user)
+      const dataForUpdate = { name: user.name, roles: user.roles }
+      return await UserModel.findByIdAndUpdate(user._id, dataForUpdate)
     },
-    updateUserRoles: async (
-      _parent: any,
-      { user }: { user: { userId: string; roleIds: string[] } }
-    ) => {
-      const roles = await UserRoleModel.find({ _id: { $in: user.roleIds } })
-      console.log('roles: ', roles)
-      return await UserModel.findByIdAndUpdate(user.userId, {
-        roles: user.roleIds,
-      })
-    },
-    createUserRole: async (
+
+    createRole: async (
       _parent: any,
       { input }: { input: { name: string; permissions: string[] } }
     ) => {
       try {
-        const newRole = new UserRoleModel(input)
+        const newRole = new RoleModel(input)
         await newRole.save()
         return newRole
       } catch (error) {
         if (error instanceof MongoError && error.code === 11000) {
           throw new Error('Role already exists')
         }
-        console.error('error: ', error)
+        console.error('Error creating role: ', error)
         throw new Error('Failed to create user role')
       }
     },
     updateRole: async (
-      parent: any,
+      _parent: any,
       { id, input }: { id: string; input: any }
     ) => {
       try {
-        await UserRoleModel.updateOne({ _id: id }, input)
-        return await UserRoleModel.findById(id)
+        await RoleModel.updateOne({ _id: id }, input)
+        return await RoleModel.findById(id)
       } catch (error) {
         console.error('Error updating role:', error)
         throw new Error('Failed to update role')
       }
     },
-    deleteRole: async (parent: any, { id }: { id: string }) => {
+    deleteRole: async (_parent: any, { id }: { id: string }) => {
       try {
-        const result = await UserRoleModel.deleteOne({ _id: id })
+        const result = await RoleModel.deleteOne({ _id: id })
         if (result.deletedCount === 0) {
           throw new Error('Role not found')
         }
@@ -118,29 +114,34 @@ const typeDefs = gql`
   type Query {
     projects: [Project]
     project(id: ID!): Project
+
     feature(id: ID!): Feature
+
     users: [User]
-    roles: [UserRole]
+
+    roles: [Role]
   }
 
   type Mutation {
     createProject(project: ProjectInput): Project
     updateProject(id: ID!, project: ProjectInput): Project
+
     updateUser(user: UserInput): User
-    updateUserRoles(user: UpdateUserRolesInput!): User
+
     addFeature(projectId: ID!, feature: FeatureInput): Project
-    createUserRole(input: UserRoleCreateInput!): UserRole
-    updateRole(id: ID!, input: UserRoleUpdateInput!): UserRole
-    deleteRole(id: ID!): UserRoleId
+
+    createRole(input: RoleCreateInput!): Role
+    updateRole(id: ID!, input: RoleUpdateInput!): Role
+    deleteRole(id: ID!): RoleId
   }
 
-  type UserRole {
+  type Role {
     _id: ID
     name: String
     permissions: [Permission]
   }
 
-  type UserRoleId {
+  type RoleId {
     _id: ID
   }
 
@@ -149,7 +150,7 @@ const typeDefs = gql`
     name: String
     email: String
     image: String
-    roles: [UserRole]
+    roles: [Role]
   }
 
   type Project {
@@ -185,19 +186,14 @@ const typeDefs = gql`
     roles: [ID]
   }
 
-  input UserRoleCreateInput {
+  input RoleCreateInput {
     name: String!
     permissions: [String]!
   }
 
-  input UserRoleUpdateInput {
+  input RoleUpdateInput {
     name: String
     permissions: [String]
-  }
-
-  input UpdateUserRolesInput {
-    userId: ID!
-    roleIds: [ID!]!
   }
 
   type Task {

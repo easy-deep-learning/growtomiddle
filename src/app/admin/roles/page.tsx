@@ -5,7 +5,7 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import Head from 'next/head'
 import { NextPage } from 'next'
 
-import { type IUserRole } from '@/database/models/UserRole'
+import { type IRole } from '@/database/models/Role'
 
 enum Permission {
   create = 'create',
@@ -25,7 +25,7 @@ const GET_ROLES = gql`
 `
 
 const CREATE_ROLE = gql`
-  mutation CreateRole($input: UserRoleCreateInput!) {
+  mutation CreateRole($input: RoleCreateInput!) {
     createRole(input: $input) {
       _id
       name
@@ -35,7 +35,7 @@ const CREATE_ROLE = gql`
 `
 
 const UPDATE_ROLE = gql`
-  mutation UpdateRole($id: ID!, $input: UserRoleUpdateInput!) {
+  mutation UpdateRole($id: ID!, $input: RoleUpdateInput!) {
     updateRole(id: $id, input: $input) {
       _id
       name
@@ -66,7 +66,7 @@ const AdminRolesPage: NextPage = () => {
 
   const [roleName, setRoleName] = useState('')
   const [rolePermissions, setRolePermissions] = useState<Permission[]>([])
-  const [editingRole, setEditingRole] = useState<IUserRole | null>(null)
+  const [editingRole, setEditingRole] = useState<IRole | null>(null)
 
   const handlePermissionChange = (permission: Permission) => {
     setRolePermissions((prevPermissions) =>
@@ -96,7 +96,7 @@ const AdminRolesPage: NextPage = () => {
     setEditingRole(null)
   }
 
-  const handleEditRole = (role: IUserRole) => {
+  const handleEditRole = (role: IRole) => {
     setEditingRole(role)
     setRoleName(role.name)
     setRolePermissions(role.permissions)
@@ -151,7 +151,7 @@ const AdminRolesPage: NextPage = () => {
         <section>
           <h2>Roles</h2>
           <ul>
-            {data?.roles.map((role: IUserRole) => (
+            {data?.roles.map((role: IRole) => (
               <li key={role._id}>
                 <p>{role.name}</p>
                 <p>{role.permissions.join(', ')}</p>

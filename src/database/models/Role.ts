@@ -7,15 +7,15 @@ export enum Permission {
   delete = 'delete',
 }
 
-export interface IUserRole {
+export interface IRole {
   _id: string
   name: string
   permissions: Permission[]
 }
 
-export interface IUserRoleDocument extends Omit<IUserRole, '_id'>, Document {}
+export interface IRoleDocument extends Omit<IRole, '_id'>, Document {}
 
-const UserRoleSchema = new Schema<IUserRoleDocument>({
+const RoleSchema = new Schema<IRoleDocument>({
   name: {
     type: String,
     required: true,
@@ -28,8 +28,7 @@ const UserRoleSchema = new Schema<IUserRoleDocument>({
   },
 })
 
-const UserRoleModel: mongoose.Model<IUserRoleDocument> =
-  mongoose.models.UserRole ||
-  mongoose.model<IUserRoleDocument>('UserRole', UserRoleSchema)
+const RoleModel: mongoose.Model<IRoleDocument> =
+  mongoose.models.Role || mongoose.model<IRoleDocument>('Role', RoleSchema)
 
-export default UserRoleModel
+export default RoleModel

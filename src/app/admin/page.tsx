@@ -9,11 +9,11 @@ import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 
 import { IUser } from '@/database/models/User'
-import { type IUserRole } from '@/database/models/UserRole'
+import { type IRole } from '@/database/models/Role'
 
 const GET_USERS_AND_ROLES = gql`
   #graphql
-  query GetUsers {
+  query GetUsersAndRoles {
     users {
       _id
       name
@@ -30,9 +30,9 @@ const GET_USERS_AND_ROLES = gql`
   }
 `
 
-const UPDATE_USER_ROLES = gql`
-  mutation UpdateUser($user: UpdateUserRolesInput!) {
-    updateUserRoles(user: $user) {
+const UPDATE_USER = gql`
+  mutation UpdateUser($user: UserInput!) {
+    updateUser(user: $user) {
       _id
       name
       roles {
@@ -46,8 +46,8 @@ const UPDATE_USER_ROLES = gql`
 const AdminPage: NextPage = () => {
   const router = useRouter()
   const { status } = useSession()
-  const { loading, error, data } = useQuery(GET_USERS_AND_ROLES)
-  const [updateUser] = useMutation(UPDATE_USER_ROLES)
+  const { loading, error, data, refetch } = useQuery(GET_USERS_AND_ROLES)
+  const [updateUser] = useMutation(UPDATE_USER)
 
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
   const [selectedRoles, setSelectedRoles] = useState<string[]>([])
@@ -74,11 +74,12 @@ const AdminPage: NextPage = () => {
       await updateUser({
         variables: {
           user: {
-            userId: selectedUser._id,
-            roleIds: selectedRoles,
+            _id: selectedUser._id,
+            roles: selectedRoles,
           },
         },
       })
+      await refetch()
       setSelectedUser(null)
       setSelectedRoles([])
     }
@@ -130,7 +131,7 @@ const AdminPage: NextPage = () => {
             <div>
               <h3>Edit Roles for {selectedUser.name}</h3>
               <ul>
-                {data?.roles.map((role: IUserRole) => (
+                {data?.roles.map((role: IRole) => (
                   <li key={role._id}>
                     <label>
                       <input
