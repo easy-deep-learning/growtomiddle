@@ -13,19 +13,18 @@ const resolvers = {
   Query: {
     projects: async () => {
       const result = await ProjectModel.find({})
-      console.log('Query, projects:', result)
       return result
     },
-    project: async (parent: any, { id }: { id: string }) => {
+    project: async (_parent: any, { id }: { id: string }) => {
       return ProjectModel.findById(id).populate('features')
     },
 
-    feature: async (parent: any, { id }: { id: string }) => {
+    feature: async (_parent: any, { id }: { id: string }) => {
       return FeatureModel.findById(id)
     },
 
     users: async () => {
-      return UserModel.find({}).populate('roles')
+      return UserModel.find({}).populate('role')
     },
 
     roles: async () => {
@@ -33,12 +32,12 @@ const resolvers = {
     },
   },
   Mutation: {
-    createProject: async (parent: any, { project }: { project: IProject }) => {
+    createProject: async (_parent: any, { project }: { project: IProject }) => {
       const newProject = new ProjectModel(project)
       return await newProject.save()
     },
     updateProject: async (
-      parent: any,
+      _parent: any,
       { id, project }: { id: string; project: IProject }
     ) => {
       await ProjectModel.updateOne({ _id: id }, project)
@@ -46,7 +45,7 @@ const resolvers = {
     },
 
     addFeature: async (
-      parent: any,
+      _parent: any,
       { projectId, feature }: { projectId: string; feature: IFeature }
     ) => {
       const newFeature = new FeatureModel(feature)
@@ -60,9 +59,9 @@ const resolvers = {
 
     updateUser: async (
       _parent: any,
-      { user }: { user: { _id: string; name: string; roles: string[] } }
+      { user }: { user: { _id: string; name: string; role: string[] } }
     ) => {
-      const dataForUpdate = { name: user.name, roles: user.roles }
+      const dataForUpdate = { name: user.name, role: user.role }
       return await UserModel.findByIdAndUpdate(user._id, dataForUpdate)
     },
 
@@ -150,7 +149,13 @@ const typeDefs = gql`
     name: String
     email: String
     image: String
-    roles: [Role]
+    role: Role
+  }
+
+  input UserInput {
+    _id: ID
+    name: String
+    role: ID
   }
 
   type Project {
@@ -178,12 +183,6 @@ const typeDefs = gql`
     name: String
     description: String
     url: String
-  }
-
-  input UserInput {
-    _id: ID
-    name: String
-    roles: [ID]
   }
 
   input RoleCreateInput {

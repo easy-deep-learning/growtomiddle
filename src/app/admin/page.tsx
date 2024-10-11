@@ -18,7 +18,7 @@ const GET_USERS_AND_ROLES = gql`
       _id
       name
       image
-      roles {
+      role {
         _id
         name
       }
@@ -35,7 +35,7 @@ const UPDATE_USER = gql`
     updateUser(user: $user) {
       _id
       name
-      roles {
+      role {
         _id
         name
       }
@@ -50,7 +50,7 @@ const AdminPage: NextPage = () => {
   const [updateUser] = useMutation(UPDATE_USER)
 
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
-  const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+  const [selectedRole, setSelectedRole] = useState<string>('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -61,12 +61,8 @@ const AdminPage: NextPage = () => {
   if (loading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>
 
-  const handleRoleChange = (userId: string, roleId: string) => {
-    setSelectedRoles((prevRoles) =>
-      prevRoles.includes(roleId)
-        ? prevRoles.filter((id) => id !== roleId)
-        : [...prevRoles, roleId]
-    )
+  const handleRoleChange = (roleId: string) => {
+    setSelectedRole(roleId)
   }
 
   const handleSaveRoles = async () => {
@@ -75,13 +71,13 @@ const AdminPage: NextPage = () => {
         variables: {
           user: {
             _id: selectedUser._id,
-            roles: selectedRoles,
+            role: selectedRole,
           },
         },
       })
       await refetch()
       setSelectedUser(null)
-      setSelectedRoles([])
+      setSelectedRole('')
     }
   }
 
@@ -108,21 +104,14 @@ const AdminPage: NextPage = () => {
                   height={50}
                 />
                 <p>{user.name}</p>
-                <p>
-                  user roles:
-                  <ul>
-                    {user.roles.map((role) => (
-                      <li key={role._id}>{role.name}</li>
-                    ))}
-                  </ul>
-                </p>
+                <p>Role: {user.role?.name}</p>
                 <button
                   onClick={() => {
                     setSelectedUser(user)
-                    setSelectedRoles(user.roles.map((role) => role._id))
+                    setSelectedRole(user.role?._id || '')
                   }}
                 >
-                  Edit Roles
+                  Edit Role
                 </button>
               </li>
             ))}
@@ -135,11 +124,11 @@ const AdminPage: NextPage = () => {
                   <li key={role._id}>
                     <label>
                       <input
-                        type="checkbox"
-                        checked={selectedRoles.includes(role._id)}
-                        onChange={() =>
-                          handleRoleChange(selectedUser._id, role._id)
-                        }
+                        type="radio"
+                        name="role"
+                        value={role._id}
+                        checked={selectedRole === role._id}
+                        onChange={() => handleRoleChange(role._id)}
                       />
                       {role.name}
                     </label>
