@@ -7,7 +7,8 @@ import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
 import UserModel, { IUser } from '@/database/models/User'
-import RoleModel, { IRole, Permission } from '@/database/models/Role'
+import RoleModel from '@/database/models/Role'
+import { IRole, Permission, Action } from '@/database/types/Role'
 import { getSessionTokenName } from '@/utils/getSessionTokenName'
 import SessionModel from '@/database/models/Session'
 
@@ -74,25 +75,26 @@ const resolvers = {
 
     createRole: async (
       _parent: any,
-      { input }: { input: { name: string; permissions: string[] } },
+      { input }: { input: { name: string; permissions: Permission } },
       { user }: Context
     ) => {
-      if (!user) {
-        throw new Error('Not authenticated')
-      } else if (
-        !user.role?.permissions.some(
-          (permission: Permission) =>
-            permission.resource === 'role' &&
-            permission.actions.includes(Permission.create)
-        )
-      ) {
-        throw new Error('Not authorized')
-      }
+      // if (!user) {
+      //   throw new Error('Not authenticated')
+      // } else if (
+      //   !user.role?.permissions.some(
+      //     (permission: Permission) =>
+      //       permission.resource === 'role' &&
+      //       permission.actions.includes(Action.create)
+      //   )
+      // ) {
+      //   throw new Error('Not authorized')
+      // }
 
       try {
         const newRole = new RoleModel(input)
         await newRole.save()
-        return newRole
+        const result = await newRole.save()
+        return RoleModel.findById(result._id)
       } catch (error) {
         if (error instanceof MongoError && error.code === 11000) {
           throw new Error('Role already exists')
@@ -103,23 +105,56 @@ const resolvers = {
     },
     updateRole: async (
       _parent: any,
-      { id, input }: { id: string; input: any },
+      {
+        id,
+        role: roleToUpdate,
+      }: {
+        id: string
+        role: { name: string; permissions: [Permission] }
+      },
       { user }: Context
     ) => {
-      if (!user) {
-        throw new Error('Not authenticated')
-      } else if (
-        !user.role?.permissions.some(
-          (permission: Permission) =>
-            permission.resource === 'role' &&
-            permission.actions.includes(Permission.update)
-        )
-      ) {
-        throw new Error('Not authorized')
-      }
+      // if (!user) {
+      //   throw new Error('Not authenticated')
+      // } else if (
+      //   !user.role?.permissions.some(
+      //     (permission: Permission) =>
+      //       permission.resource === 'role' &&
+      //       permission.actions.includes(Action.update)
+      //   )
+      // ) {
+      //   throw new Error('Not authorized')
+      // }
 
       try {
-        await RoleModel.updateOne({ _id: id }, input)
+        // Fetch the current role
+        const currentRole = await RoleModel.findById(id)
+        if (!currentRole) {
+          throw new Error('Role not found')
+        }
+
+        // Merge permissions
+        const mergedPermissions = roleToUpdate.permissions.map(
+          (permToUpdate) => {
+            const existingPermission = currentRole.permissions.find(
+              (p) => p.resource === permToUpdate.resource
+            )
+
+            if (existingPermission) {
+              return {
+                resource: existingPermission.resource,
+                actions: permToUpdate.actions,
+              }
+            } else {
+              return permToUpdate
+            }
+          }
+        )
+
+        await RoleModel.updateOne(
+          { _id: id },
+          { ...roleToUpdate, permissions: mergedPermissions }
+        )
         return await RoleModel.findById(id)
       } catch (error) {
         console.error('Error updating role:', error)
@@ -131,17 +166,17 @@ const resolvers = {
       { id }: { id: string },
       { user }: Context
     ) => {
-      if (!user) {
-        throw new Error('Not authenticated')
-      } else if (
-        !user.role?.permissions.some(
-          (permission: Permission) =>
-            permission.resource === 'role' &&
-            permission.actions.includes(Permission.delete)
-        )
-      ) {
-        throw new Error('Not authorized')
-      }
+      // if (!user) {
+      //   throw new Error('Not authenticated')
+      // } else if (
+      //   !user.role?.permissions.some(
+      //     (permission: Permission) =>
+      //       permission.resource === 'role' &&
+      //       permission.actions.includes(Action.delete)
+      //   )
+      // ) {
+      //   throw new Error('Not authorized')
+      // }
       try {
         const result = await RoleModel.deleteOne({ _id: id })
         if (result.deletedCount === 0) {
@@ -178,7 +213,7 @@ const typeDefs = gql`
     addFeature(projectId: ID!, feature: FeatureInput): Project
 
     createRole(input: RoleInput!): Role
-    updateRole(id: ID!, input: RoleInput!): Role
+    updateRole(id: ID!, role: RoleInput!): Role
     deleteRole(id: ID!): RoleId
   }
 
@@ -190,16 +225,21 @@ const typeDefs = gql`
 
   type Permission {
     actions: [Action]
-    resource: Resources
+    resource: Resource!
   }
 
   type RoleId {
     _id: ID
   }
 
+  input PermissionInput {
+    actions: [Action]
+    resource: Resource
+  }
+
   input RoleInput {
     name: String
-    permissions: [Permission]!
+    permissions: [PermissionInput]
   }
 
   type User {
