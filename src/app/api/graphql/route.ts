@@ -81,7 +81,7 @@ const resolvers = {
         throw new Error('Not authenticated')
       } else if (
         !user.role?.permissions.some(
-          (permission) =>
+          (permission: Permission) =>
             permission.resource === 'role' &&
             permission.actions.includes(Permission.create)
         )
@@ -110,7 +110,7 @@ const resolvers = {
         throw new Error('Not authenticated')
       } else if (
         !user.role?.permissions.some(
-          (permission) =>
+          (permission: Permission) =>
             permission.resource === 'role' &&
             permission.actions.includes(Permission.update)
         )
@@ -135,7 +135,7 @@ const resolvers = {
         throw new Error('Not authenticated')
       } else if (
         !user.role?.permissions.some(
-          (permission) =>
+          (permission: Permission) =>
             permission.resource === 'role' &&
             permission.actions.includes(Permission.delete)
         )
@@ -177,8 +177,8 @@ const typeDefs = gql`
 
     addFeature(projectId: ID!, feature: FeatureInput): Project
 
-    createRole(input: RoleCreateInput!): Role
-    updateRole(id: ID!, input: RoleUpdateInput!): Role
+    createRole(input: RoleInput!): Role
+    updateRole(id: ID!, input: RoleInput!): Role
     deleteRole(id: ID!): RoleId
   }
 
@@ -188,8 +188,18 @@ const typeDefs = gql`
     permissions: [Permission]
   }
 
+  type Permission {
+    actions: [Action]
+    resource: Resources
+  }
+
   type RoleId {
     _id: ID
+  }
+
+  input RoleInput {
+    name: String
+    permissions: [Permission]!
   }
 
   type User {
@@ -233,16 +243,6 @@ const typeDefs = gql`
     url: String
   }
 
-  input RoleCreateInput {
-    name: String!
-    permissions: [String]!
-  }
-
-  input RoleUpdateInput {
-    name: String
-    permissions: [String]
-  }
-
   type Task {
     _id: ID
     name: String
@@ -275,11 +275,20 @@ const typeDefs = gql`
     podcast
   }
 
-  enum Permission {
+  enum Action {
     create
     read
     update
     delete
+  }
+
+  enum Resource {
+    role
+    user
+    task
+    skill
+    material
+    project
   }
 `
 

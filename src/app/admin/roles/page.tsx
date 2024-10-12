@@ -5,14 +5,7 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import Head from 'next/head'
 import { NextPage } from 'next'
 
-import { type IRole } from '@/database/models/Role'
-
-enum Permission {
-  create = 'create',
-  read = 'read',
-  update = 'update',
-  delete = 'delete',
-}
+import { Action, Permission, Resource, IRole } from '@/database/types/Role'
 
 const GET_ROLES = gql`
   query GetRoles {
@@ -130,7 +123,7 @@ const AdminRolesPage: NextPage = () => {
           </div>
           <div>
             <h3>Permissions</h3>
-            {Object.values(Permission).map((permission) => (
+            {Object.values(Action).map((permission) => (
               <label key={permission}>
                 <input
                   type="checkbox"
