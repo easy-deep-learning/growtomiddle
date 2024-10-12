@@ -21,8 +21,8 @@ const GET_ROLES = gql`
 `
 
 const CREATE_ROLE = gql`
-  mutation CreateRole($input: RoleCreateInput!) {
-    createRole(input: $input) {
+  mutation CreateRole($role: RoleInput!) {
+    createRole(role: $role) {
       _id
       name
       permissions
@@ -31,8 +31,8 @@ const CREATE_ROLE = gql`
 `
 
 const UPDATE_ROLE = gql`
-  mutation UpdateRole($id: ID!, $input: RoleInput!) {
-    updateRole(id: $id, input: $input) {
+  mutation UpdateRole($id: ID!, $role: RoleInput!) {
+    updateRole(id: $id, role: $input) {
       _id
       name
       permissions
@@ -51,8 +51,6 @@ const DELETE_ROLE = gql`
 const AdminRolesPage: NextPage = () => {
   const { loading, error, data } = useQuery(GET_ROLES)
 
-  console.log('data: ', data)
-
   const [createRole] = useMutation(CREATE_ROLE, {
     refetchQueries: [{ query: GET_ROLES }],
   })
@@ -67,31 +65,57 @@ const AdminRolesPage: NextPage = () => {
   const [rolePermissions, setRolePermissions] = useState<Permission[]>([])
   const [editingRole, setEditingRole] = useState<IRole | null>(null)
 
-  const handleRolePermissionChange = (permission: Permission) => {
-    console.log('permission: ', permission)
+  const handleRolePermissionChange = ({
+    resource,
+    action,
+  }: {
+    resource: Resource
+    action: Action
+  }) => {
+    setRolePermissions((prevPermissions) => {
+      const existingPermission = prevPermissions.find(
+        (prevPermission) => prevPermission.resource === resource
+      )
+      let updated = false
 
-    setRolePermissions((prevPermissions) =>
-      prevPermissions.some((perm) => perm.resource === perm.resource)
-        ? prevPermissions.filter((perm) => perm.actions !== permission.actions)
-        : [...prevPermissions, permission]
-    )
+      const updatedPermissions = prevPermissions.map((prevPermission) =>
+        prevPermission.resource === resource
+          ? ((updated = true),
+            {
+              ...prevPermission,
+              actions: prevPermission.actions.some(
+                (prevPermissionAction) => prevPermissionAction === action
+              )
+                ? prevPermission.actions.filter(
+                    (prevPermissionAction) => prevPermissionAction !== action
+                  )
+                : [...prevPermission.actions, action],
+            })
+          : prevPermission
+      )
+
+      updated || updatedPermissions.push({ resource, actions: [action] })
+      return updatedPermissions ?? [{ resource, actions: [action] }]
+    })
   }
 
   const handleCreateOrUpdateRole = async () => {
-    console.log('rolePermissions: ', rolePermissions)
-    return
+    console.log('{ name: roleName, permissions: rolePermissions }: ', {
+      name: roleName,
+      permissions: rolePermissions,
+    })
 
     if (editingRole) {
       await updateRole({
         variables: {
           id: editingRole._id,
-          input: { name: roleName, permissions: rolePermissions },
+          role: { name: roleName, permissions: rolePermissions },
         },
       })
     } else {
       await createRole({
         variables: {
-          input: { name: roleName, permissions: rolePermissions },
+          role: { name: roleName, permissions: rolePermissions },
         },
       })
     }
@@ -103,6 +127,7 @@ const AdminRolesPage: NextPage = () => {
   const handleEditRole = (role: IRole) => {
     setEditingRole(role)
     setRoleName(role.name)
+    setRolePermissions(role.permissions)
   }
 
   const handleDeleteRole = async (id: string) => {
@@ -137,25 +162,25 @@ const AdminRolesPage: NextPage = () => {
               <div key={resource}>
                 <h4>{resource}</h4>
                 {Object.values(Action).map((action) => (
-                  <div key={action}>
+                  <span key={action}>
                     <label>
                       <input
                         type="checkbox"
                         checked={rolePermissions.some(
-                          (perm) =>
-                            perm.resource === resource &&
-                            perm.actions.includes(action)
+                          (permission) =>
+                            permission.resource === resource &&
+                            permission.actions.includes(action)
                         )}
                         onChange={() =>
                           handleRolePermissionChange({
                             resource,
-                            actions: [action],
+                            action,
                           })
                         }
                       />
                       {action}
                     </label>
-                  </div>
+                  </span>
                 ))}
               </div>
             ))}
@@ -172,11 +197,11 @@ const AdminRolesPage: NextPage = () => {
           <ul>
             {data?.roles.map((role: IRole) => (
               <li key={role._id}>
-                <p>{role.name}</p>
+                <h3>{role.name}</h3>
                 <p>
                   {role.permissions.map((permission) => (
                     <div key={permission.resource}>
-                      <p>{permission.resource}</p>
+                      <h4>{permission.resource}</h4>
                       <p>{permission.actions.join(', ')}</p>
                     </div>
                   ))}

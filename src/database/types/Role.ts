@@ -15,7 +15,7 @@ export enum Resource {
 }
 
 export type Permission = {
-  actions: [Action]
+  actions: Action[]
   resource: Resource
 }
 
@@ -23,7 +23,7 @@ export type IRole = {
   _id: string
   name: string
   permissions: {
-    actions: Permission[]
+    actions: Action[]
     resource: Resource
   }[]
 }

@@ -75,7 +75,7 @@ const resolvers = {
 
     createRole: async (
       _parent: any,
-      { input }: { input: { name: string; permissions: Permission } },
+      { role }: { role: { name: string; permissions: Permission } },
       { user }: Context
     ) => {
       // if (!user) {
@@ -91,7 +91,7 @@ const resolvers = {
       // }
 
       try {
-        const newRole = new RoleModel(input)
+        const newRole = new RoleModel(role)
         await newRole.save()
         const result = await newRole.save()
         return RoleModel.findById(result._id)
@@ -212,7 +212,7 @@ const typeDefs = gql`
 
     addFeature(projectId: ID!, feature: FeatureInput): Project
 
-    createRole(input: RoleInput!): Role
+    createRole(role: RoleInput!): Role
     updateRole(id: ID!, role: RoleInput!): Role
     deleteRole(id: ID!): RoleId
   }
