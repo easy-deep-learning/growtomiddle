@@ -7,6 +7,12 @@ import { NextPage } from 'next'
 
 import { Action, Permission, Resource, IRole } from '@/database/types/Role'
 
+const removeTypename = (key: string, value: any) =>
+  key === '__typename' ? undefined : value
+
+const cleanVariables = (variables: any) =>
+  JSON.parse(JSON.stringify(variables), removeTypename)
+
 const GET_ROLES = gql`
   query GetRoles {
     roles {
@@ -32,10 +38,13 @@ const CREATE_ROLE = gql`
 
 const UPDATE_ROLE = gql`
   mutation UpdateRole($id: ID!, $role: RoleInput!) {
-    updateRole(id: $id, role: $input) {
+    updateRole(id: $id, role: $role) {
       _id
       name
-      permissions
+      permissions {
+        actions
+        resource
+      }
     }
   }
 `
@@ -100,16 +109,15 @@ const AdminRolesPage: NextPage = () => {
   }
 
   const handleCreateOrUpdateRole = async () => {
-    console.log('{ name: roleName, permissions: rolePermissions }: ', {
-      name: roleName,
-      permissions: rolePermissions,
-    })
-
+    console.log('editingRole: ', editingRole)
     if (editingRole) {
       await updateRole({
         variables: {
           id: editingRole._id,
-          role: { name: roleName, permissions: rolePermissions },
+          role: {
+            name: roleName,
+            permissions: cleanVariables(rolePermissions),
+          },
         },
       })
     } else {
