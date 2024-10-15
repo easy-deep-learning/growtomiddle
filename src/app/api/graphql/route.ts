@@ -6,8 +6,15 @@ import { gql } from 'graphql-tag'
 import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
-import UserModel from '@/database/models/User'
+import UserModel, { IUser } from '@/database/models/User'
 import RoleModel from '@/database/models/Role'
+import { IRole, Permission, Action } from '@/database/types/Role'
+import { getSessionTokenName } from '@/utils/getSessionTokenName'
+import SessionModel from '@/database/models/Session'
+
+type Context = {
+  user: IUser & { role: IRole }
+}
 
 const resolvers = {
   Query: {
@@ -59,7 +66,8 @@ const resolvers = {
 
     updateUser: async (
       _parent: any,
-      { user }: { user: { _id: string; name: string; role: string[] } }
+      { user }: { user: { _id: string; name: string; role: string[] } },
+      context: any
     ) => {
       const dataForUpdate = { name: user.name, role: user.role }
       return await UserModel.findByIdAndUpdate(user._id, dataForUpdate)
@@ -67,12 +75,26 @@ const resolvers = {
 
     createRole: async (
       _parent: any,
-      { input }: { input: { name: string; permissions: string[] } }
+      { role }: { role: { name: string; permissions: Permission } },
+      { user }: Context
     ) => {
+      // if (!user) {
+      //   throw new Error('Not authenticated')
+      // } else if (
+      //   !user.role?.permissions.some(
+      //     (permission: Permission) =>
+      //       permission.resource === 'role' &&
+      //       permission.actions.includes(Action.create)
+      //   )
+      // ) {
+      //   throw new Error('Not authorized')
+      // }
+
       try {
-        const newRole = new RoleModel(input)
+        const newRole = new RoleModel(role)
         await newRole.save()
-        return newRole
+        const result = await newRole.save()
+        return RoleModel.findById(result._id)
       } catch (error) {
         if (error instanceof MongoError && error.code === 11000) {
           throw new Error('Role already exists')
@@ -83,17 +105,78 @@ const resolvers = {
     },
     updateRole: async (
       _parent: any,
-      { id, input }: { id: string; input: any }
+      {
+        id,
+        role: roleToUpdate,
+      }: {
+        id: string
+        role: { name: string; permissions: [Permission] }
+      },
+      { user }: Context
     ) => {
+      // if (!user) {
+      //   throw new Error('Not authenticated')
+      // } else if (
+      //   !user.role?.permissions.some(
+      //     (permission: Permission) =>
+      //       permission.resource === 'role' &&
+      //       permission.actions.includes(Action.update)
+      //   )
+      // ) {
+      //   throw new Error('Not authorized')
+      // }
+
       try {
-        await RoleModel.updateOne({ _id: id }, input)
+        // Fetch the current role
+        const currentRole = await RoleModel.findById(id)
+        if (!currentRole) {
+          throw new Error('Role not found')
+        }
+
+        // Merge permissions
+        const mergedPermissions = roleToUpdate.permissions.map(
+          (permToUpdate) => {
+            const existingPermission = currentRole.permissions.find(
+              (p) => p.resource === permToUpdate.resource
+            )
+
+            if (existingPermission) {
+              return {
+                resource: existingPermission.resource,
+                actions: permToUpdate.actions,
+              }
+            } else {
+              return permToUpdate
+            }
+          }
+        )
+
+        await RoleModel.updateOne(
+          { _id: id },
+          { ...roleToUpdate, permissions: mergedPermissions }
+        )
         return await RoleModel.findById(id)
       } catch (error) {
         console.error('Error updating role:', error)
         throw new Error('Failed to update role')
       }
     },
-    deleteRole: async (_parent: any, { id }: { id: string }) => {
+    deleteRole: async (
+      _parent: any,
+      { id }: { id: string },
+      { user }: Context
+    ) => {
+      // if (!user) {
+      //   throw new Error('Not authenticated')
+      // } else if (
+      //   !user.role?.permissions.some(
+      //     (permission: Permission) =>
+      //       permission.resource === 'role' &&
+      //       permission.actions.includes(Action.delete)
+      //   )
+      // ) {
+      //   throw new Error('Not authorized')
+      // }
       try {
         const result = await RoleModel.deleteOne({ _id: id })
         if (result.deletedCount === 0) {
@@ -129,8 +212,8 @@ const typeDefs = gql`
 
     addFeature(projectId: ID!, feature: FeatureInput): Project
 
-    createRole(input: RoleCreateInput!): Role
-    updateRole(id: ID!, input: RoleUpdateInput!): Role
+    createRole(role: RoleInput!): Role
+    updateRole(id: ID!, role: RoleInput!): Role
     deleteRole(id: ID!): RoleId
   }
 
@@ -140,8 +223,23 @@ const typeDefs = gql`
     permissions: [Permission]
   }
 
+  type Permission {
+    actions: [Action]
+    resource: Resource!
+  }
+
   type RoleId {
     _id: ID
+  }
+
+  input PermissionInput {
+    actions: [Action]
+    resource: Resource
+  }
+
+  input RoleInput {
+    name: String
+    permissions: [PermissionInput]
   }
 
   type User {
@@ -185,16 +283,6 @@ const typeDefs = gql`
     url: String
   }
 
-  input RoleCreateInput {
-    name: String!
-    permissions: [String]!
-  }
-
-  input RoleUpdateInput {
-    name: String
-    permissions: [String]
-  }
-
   type Task {
     _id: ID
     name: String
@@ -227,11 +315,20 @@ const typeDefs = gql`
     podcast
   }
 
-  enum Permission {
+  enum Action {
     create
     read
     update
     delete
+  }
+
+  enum Resource {
+    role
+    user
+    task
+    skill
+    material
+    project
   }
 `
 
@@ -244,7 +341,17 @@ const server = new ApolloServer({
 const handler = startServerAndCreateNextHandler(server, {
   context: async (nextApiRequest) => {
     await mongooseConnect()
-    return { req: { cookies: nextApiRequest.cookies._parsed } }
+    const sessionTokenName = getSessionTokenName()
+    // TODO: Fix this type casting
+    const sessionId = (
+      nextApiRequest.cookies?._parsed as unknown as Map<
+        string,
+        { name: string; value: string }
+      >
+    )?.get(sessionTokenName)?.value
+    const session = await SessionModel.findOne({ sessionToken: sessionId })
+    const user = await UserModel.findById(session?.userId).populate('role')
+    return { user: user as IUser & { role: IRole } }
   },
 })
 

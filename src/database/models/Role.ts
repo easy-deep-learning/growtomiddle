@@ -1,17 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
-export enum Permission {
-  create = 'create',
-  read = 'read',
-  update = 'update',
-  delete = 'delete',
-}
-
-export interface IRole {
-  _id: string
-  name: string
-  permissions: Permission[]
-}
+import { Action, Resource, IRole } from '@/database/types/Role'
 
 export interface IRoleDocument extends Omit<IRole, '_id'>, Document {}
 
@@ -21,11 +10,18 @@ const RoleSchema = new Schema<IRoleDocument>({
     required: true,
     unique: true,
   },
-  permissions: {
-    type: [String],
-    required: true,
-    enum: Object.values(Permission),
-  },
+  permissions: [
+    {
+      actions: {
+        type: [String],
+        enum: Object.values(Action),
+      },
+      resource: {
+        type: String,
+        enum: Object.values(Resource),
+      },
+    },
+  ],
 })
 
 const RoleModel: mongoose.Model<IRoleDocument> =
