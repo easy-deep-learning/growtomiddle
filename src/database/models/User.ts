@@ -2,7 +2,8 @@
 
 import mongoose, { Schema, Document } from 'mongoose'
 
-import Role, { IRole } from './Role'
+import Role from './Role'
+import { IRole } from '../types/Role'
 
 export interface IUser {
   _id: string

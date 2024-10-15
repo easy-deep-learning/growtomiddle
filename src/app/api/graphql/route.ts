@@ -351,7 +351,7 @@ const handler = startServerAndCreateNextHandler(server, {
     )?.get(sessionTokenName)?.value
     const session = await SessionModel.findOne({ sessionToken: sessionId })
     const user = await UserModel.findById(session?.userId).populate('role')
-    return { user }
+    return { user: user as IUser & { role: IRole } }
   },
 })
 

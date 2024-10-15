@@ -9,7 +9,7 @@ import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 
 import { IUser } from '@/database/models/User'
-import { type IRole } from '@/database/models/Role'
+import { type IRole } from '@/database/types/Role'
 
 const GET_USERS_AND_ROLES = gql`
   #graphql
