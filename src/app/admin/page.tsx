@@ -8,7 +8,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 
-import { IUser } from '@/database/models/User'
+import { IUser } from '@/database/types/User'
 import { type IRole } from '@/database/types/Role'
 
 const GET_USERS_AND_ROLES = gql`

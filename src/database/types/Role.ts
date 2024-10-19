@@ -1,4 +1,4 @@
-import { type Document } from 'mongoose'
+import type { ObjectId, Document } from 'mongoose'
 
 export enum Action {
   create = 'create',
@@ -7,7 +7,7 @@ export enum Action {
   delete = 'delete',
 }
 
-export enum Resource {
+export enum ResourceName {
   _own = '_own',
   role = 'role',
   user = 'user',
@@ -19,16 +19,16 @@ export enum Resource {
 
 export type Permission = {
   actions: Action[]
-  resource: Resource
+  resource: ResourceName
 }
 
 export type IRole = {
-  _id: string
+  _id: ObjectId
   name: string
   permissions: {
     actions: Action[]
-    resource: Resource
+    resource: ResourceName
   }[]
 }
 
-export interface IRoleDocument extends Omit<IRole, '_id'>, Document {}
+export interface IRoleDocument extends IRole, Document<ObjectId> {}

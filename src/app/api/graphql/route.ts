@@ -6,9 +6,10 @@ import { gql } from 'graphql-tag'
 import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
-import UserModel, { IUser } from '@/database/models/User'
+import UserModel from '@/database/models/User'
+import { IUser } from '@/database/types/User'
 import RoleModel from '@/database/models/Role'
-import { IRole, Permission, Action, Resource } from '@/database/types/Role'
+import { IRole, Permission, Action, ResourceName } from '@/database/types/Role'
 import { getSessionTokenName } from '@/utils/getSessionTokenName'
 import SessionModel from '@/database/models/Session'
 
@@ -16,7 +17,7 @@ type Context = {
   user: IUser & { role: IRole }
 }
 
-const isAuthorized = (user: IUser, resource: Resource, action: Action) => {
+const isAuthorized = (user: IUser, resource: ResourceName, action: Action) => {
   return user?.role?.permissions?.some(
     (permission: Permission) =>
       permission.resource === resource && permission.actions.includes(action)
@@ -34,7 +35,7 @@ const resolvers = {
       { id }: { id: string },
       { user }: Context
     ) => {
-      if (!isAuthorized(user, Resource.project, Action.read)) {
+      if (!isAuthorized(user, ResourceName.project, Action.read)) {
         throw new Error('Not authorized')
       }
       return ProjectModel.findById(id).populate('features')
@@ -45,14 +46,14 @@ const resolvers = {
     },
 
     users: async (_parent: any, _input: any, { user }: Context) => {
-      if (!isAuthorized(user, Resource.user, Action.read)) {
+      if (!isAuthorized(user, ResourceName.user, Action.read)) {
         throw new Error('Not authorized')
       }
       return UserModel.find({}).populate('role')
     },
 
     roles: async (_parent: any, _input: any, { user }: Context) => {
-      if (!isAuthorized(user, Resource.role, Action.read)) {
+      if (!isAuthorized(user, ResourceName.role, Action.read)) {
         throw new Error('Not authorized')
       }
       return RoleModel.find({})
@@ -98,7 +99,7 @@ const resolvers = {
       { role }: { role: { name: string; permissions: Permission } },
       { user }: Context
     ) => {
-      if (!isAuthorized(user, Resource.role, Action.create)) {
+      if (!isAuthorized(user, ResourceName.role, Action.create)) {
         throw new Error('Not authorized')
       }
 
@@ -126,7 +127,7 @@ const resolvers = {
       },
       { user }: Context
     ) => {
-      if (!isAuthorized(user, Resource.role, Action.update)) {
+      if (!isAuthorized(user, ResourceName.role, Action.update)) {
         throw new Error('Not authorized')
       }
 
@@ -170,7 +171,7 @@ const resolvers = {
       { id }: { id: string },
       { user }: Context
     ) => {
-      if (!isAuthorized(user, Resource.role, Action.delete)) {
+      if (!isAuthorized(user, ResourceName.role, Action.delete)) {
         throw new Error('Not authorized')
       }
       try {

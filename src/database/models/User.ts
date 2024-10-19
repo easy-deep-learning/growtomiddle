@@ -1,20 +1,9 @@
 // Users are creating by next-auth.js
 
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 import Role from './Role'
-import { IRole } from '../types/Role'
-
-export interface IUser {
-  _id: string
-  name: string
-  email: string
-  image: string
-  emailVerified: boolean
-  role: IRole
-}
-
-export interface IUserDocument extends Omit<IUser, '_id'>, Document {}
+import type { IUserDocument } from '../types/User'
 
 const UserSchema = new Schema<IUserDocument>({
   name: {

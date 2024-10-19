@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose'
 
 import {
   Action,
-  Resource,
+  ResourceName,
   Permission,
   IRoleDocument,
 } from '@/database/types/Role'
@@ -10,7 +10,7 @@ import {
 const defaultOwnerPermissions: Permission[] = [
   {
     actions: [Action.create, Action.read, Action.update, Action.delete],
-    resource: Resource._own,
+    resource: ResourceName._own,
   },
 ]
 
@@ -21,15 +21,17 @@ const RoleSchema = new Schema<IRoleDocument>({
     unique: true,
   },
   permissions: {
+    _id: false,
     type: [
       {
+        _id: false,
         actions: {
           type: [String],
           enum: Object.values(Action),
         },
         resource: {
           type: String,
-          enum: Object.values(Resource),
+          enum: Object.values(ResourceName),
         },
       },
     ],
