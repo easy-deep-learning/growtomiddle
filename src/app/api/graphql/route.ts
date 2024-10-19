@@ -8,12 +8,19 @@ import ProjectModel, { IProject } from '@/database/models/Project'
 import FeatureModel, { IFeature } from '@/database/models/Feature'
 import UserModel, { IUser } from '@/database/models/User'
 import RoleModel from '@/database/models/Role'
-import { IRole, Permission, Action } from '@/database/types/Role'
+import { IRole, Permission, Action, Resource } from '@/database/types/Role'
 import { getSessionTokenName } from '@/utils/getSessionTokenName'
 import SessionModel from '@/database/models/Session'
 
 type Context = {
   user: IUser & { role: IRole }
+}
+
+const isAuthorized = (user: IUser, resource: Resource, action: Action) => {
+  return user?.role?.permissions?.some(
+    (permission: Permission) =>
+      permission.resource === resource && permission.actions.includes(action)
+  )
 }
 
 const resolvers = {
@@ -22,7 +29,14 @@ const resolvers = {
       const result = await ProjectModel.find({})
       return result
     },
-    project: async (_parent: any, { id }: { id: string }) => {
+    project: async (
+      _parent: any,
+      { id }: { id: string },
+      { user }: Context
+    ) => {
+      if (!isAuthorized(user, Resource.project, Action.read)) {
+        throw new Error('Not authorized')
+      }
       return ProjectModel.findById(id).populate('features')
     },
 
@@ -30,11 +44,17 @@ const resolvers = {
       return FeatureModel.findById(id)
     },
 
-    users: async () => {
+    users: async (_parent: any, _input: any, { user }: Context) => {
+      if (!isAuthorized(user, Resource.user, Action.read)) {
+        throw new Error('Not authorized')
+      }
       return UserModel.find({}).populate('role')
     },
 
-    roles: async () => {
+    roles: async (_parent: any, _input: any, { user }: Context) => {
+      if (!isAuthorized(user, Resource.role, Action.read)) {
+        throw new Error('Not authorized')
+      }
       return RoleModel.find({})
     },
   },
@@ -78,17 +98,9 @@ const resolvers = {
       { role }: { role: { name: string; permissions: Permission } },
       { user }: Context
     ) => {
-      // if (!user) {
-      //   throw new Error('Not authenticated')
-      // } else if (
-      //   !user.role?.permissions.some(
-      //     (permission: Permission) =>
-      //       permission.resource === 'role' &&
-      //       permission.actions.includes(Action.create)
-      //   )
-      // ) {
-      //   throw new Error('Not authorized')
-      // }
+      if (!isAuthorized(user, Resource.role, Action.create)) {
+        throw new Error('Not authorized')
+      }
 
       try {
         const newRole = new RoleModel(role)
@@ -114,17 +126,9 @@ const resolvers = {
       },
       { user }: Context
     ) => {
-      // if (!user) {
-      //   throw new Error('Not authenticated')
-      // } else if (
-      //   !user.role?.permissions.some(
-      //     (permission: Permission) =>
-      //       permission.resource === 'role' &&
-      //       permission.actions.includes(Action.update)
-      //   )
-      // ) {
-      //   throw new Error('Not authorized')
-      // }
+      if (!isAuthorized(user, Resource.role, Action.update)) {
+        throw new Error('Not authorized')
+      }
 
       try {
         // Fetch the current role
@@ -166,17 +170,9 @@ const resolvers = {
       { id }: { id: string },
       { user }: Context
     ) => {
-      // if (!user) {
-      //   throw new Error('Not authenticated')
-      // } else if (
-      //   !user.role?.permissions.some(
-      //     (permission: Permission) =>
-      //       permission.resource === 'role' &&
-      //       permission.actions.includes(Action.delete)
-      //   )
-      // ) {
-      //   throw new Error('Not authorized')
-      // }
+      if (!isAuthorized(user, Resource.role, Action.delete)) {
+        throw new Error('Not authorized')
+      }
       try {
         const result = await RoleModel.deleteOne({ _id: id })
         if (result.deletedCount === 0) {

@@ -31,7 +31,10 @@ const CREATE_ROLE = gql`
     createRole(role: $role) {
       _id
       name
-      permissions
+      permissions {
+        actions
+        resource
+      }
     }
   }
 `

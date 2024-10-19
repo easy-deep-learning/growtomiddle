@@ -6,6 +6,7 @@ export enum Action {
 }
 
 export enum Resource {
+  _own = '_own',
   role = 'role',
   user = 'user',
   task = 'task',
