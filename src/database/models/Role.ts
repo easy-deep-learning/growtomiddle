@@ -1,8 +1,18 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
-import { Action, Resource, IRole } from '@/database/types/Role'
+import {
+  Action,
+  Resource,
+  Permission,
+  IRoleDocument,
+} from '@/database/types/Role'
 
-export interface IRoleDocument extends Omit<IRole, '_id'>, Document {}
+const defaultOwnerPermissions: Permission[] = [
+  {
+    actions: [Action.create, Action.read, Action.update, Action.delete],
+    resource: Resource._own,
+  },
+]
 
 const RoleSchema = new Schema<IRoleDocument>({
   name: {
@@ -10,18 +20,24 @@ const RoleSchema = new Schema<IRoleDocument>({
     required: true,
     unique: true,
   },
-  permissions: [
-    {
-      actions: {
-        type: [String],
-        enum: Object.values(Action),
+  permissions: {
+    type: [
+      {
+        actions: {
+          type: [String],
+          enum: Object.values(Action),
+        },
+        resource: {
+          type: String,
+          enum: Object.values(Resource),
+        },
       },
-      resource: {
-        type: String,
-        enum: Object.values(Resource),
-      },
+    ],
+    default: defaultOwnerPermissions,
+    set: (permissions: Permission[]) => {
+      return permissions.length === 0 ? defaultOwnerPermissions : permissions
     },
-  ],
+  },
 })
 
 const RoleModel: mongoose.Model<IRoleDocument> =

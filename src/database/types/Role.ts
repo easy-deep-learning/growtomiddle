@@ -1,3 +1,5 @@
+import { type Document } from 'mongoose'
+
 export enum Action {
   create = 'create',
   read = 'read',
@@ -28,3 +30,5 @@ export type IRole = {
     resource: Resource
   }[]
 }
+
+export interface IRoleDocument extends Omit<IRole, '_id'>, Document {}
