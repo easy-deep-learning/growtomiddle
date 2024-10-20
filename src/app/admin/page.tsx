@@ -8,7 +8,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 
-import { IUser } from '@/database/types/User'
+import { IUser, IUserWithRole } from '@/database/types/User'
 import { type IRole } from '@/database/types/Role'
 
 const GET_USERS_AND_ROLES = gql`
@@ -71,7 +71,7 @@ const AdminPage: NextPage = () => {
         variables: {
           user: {
             _id: selectedUser._id,
-            role: selectedRole,
+            roleId: selectedRole,
           },
         },
       })
@@ -95,8 +95,8 @@ const AdminPage: NextPage = () => {
         <section>
           <h2>Users</h2>
           <ul>
-            {data?.users.map((user: IUser) => (
-              <li key={user._id}>
+            {data?.users.map((user: IUserWithRole) => (
+              <li key={user._id.toString()}>
                 <Image
                   src={user.image}
                   alt={user.name}
@@ -108,7 +108,7 @@ const AdminPage: NextPage = () => {
                 <button
                   onClick={() => {
                     setSelectedUser(user)
-                    setSelectedRole(user.role?._id || '')
+                    setSelectedRole(user.role?._id.toString() || '')
                   }}
                 >
                   Edit Role
@@ -121,14 +121,14 @@ const AdminPage: NextPage = () => {
               <h3>Edit Roles for {selectedUser.name}</h3>
               <ul>
                 {data?.roles.map((role: IRole) => (
-                  <li key={role._id}>
+                  <li key={role._id.toString()}>
                     <label>
                       <input
                         type="radio"
                         name="role"
-                        value={role._id}
-                        checked={selectedRole === role._id}
-                        onChange={() => handleRoleChange(role._id)}
+                        value={role._id.toString()}
+                        checked={selectedRole === role._id.toString()}
+                        onChange={() => handleRoleChange(role._id.toString())}
                       />
                       {role.name}
                     </label>

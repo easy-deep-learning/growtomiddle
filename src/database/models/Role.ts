@@ -14,33 +14,38 @@ const defaultOwnerPermissions: Permission[] = [
   },
 ]
 
-const RoleSchema = new Schema<IRoleDocument>({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  permissions: {
-    _id: false,
-    type: [
-      {
-        _id: false,
-        actions: {
-          type: [String],
-          enum: Object.values(Action),
+const RoleSchema = new Schema<IRoleDocument>(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    permissions: {
+      _id: false,
+      type: [
+        {
+          _id: false,
+          actions: {
+            type: [String],
+            enum: Object.values(Action),
+          },
+          resource: {
+            type: String,
+            enum: Object.values(ResourceName),
+          },
         },
-        resource: {
-          type: String,
-          enum: Object.values(ResourceName),
-        },
+      ],
+      default: defaultOwnerPermissions,
+      set: (permissions: Permission[]) => {
+        return permissions.length === 0 ? defaultOwnerPermissions : permissions
       },
-    ],
-    default: defaultOwnerPermissions,
-    set: (permissions: Permission[]) => {
-      return permissions.length === 0 ? defaultOwnerPermissions : permissions
     },
   },
-})
+  {
+    timestamps: true,
+  }
+)
 
 const RoleModel: mongoose.Model<IRoleDocument> =
   mongoose.models.Role || mongoose.model<IRoleDocument>('Role', RoleSchema)

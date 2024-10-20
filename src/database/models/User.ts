@@ -2,28 +2,42 @@
 
 import mongoose, { Schema } from 'mongoose'
 
-import Role from './Role'
+import RoleModel from './Role'
 import type { IUserDocument } from '../types/User'
 
-const UserSchema = new Schema<IUserDocument>({
-  name: {
-    type: String,
-    required: true,
+const UserSchema = new Schema<IUserDocument>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    image: String,
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    roleId: {
+      type: Schema.Types.ObjectId,
+      ref: RoleModel,
+    },
   },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  image: String,
-  emailVerified: {
-    type: Boolean,
-    default: false,
-  },
-  role: {
-    type: Schema.Types.ObjectId,
-    ref: Role,
-  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+)
+
+UserSchema.virtual('role', {
+  ref: RoleModel,
+  localField: 'roleId',
+  foreignField: '_id',
+  justOne: true,
 })
 
 const UserModel: mongoose.Model<IUserDocument> =

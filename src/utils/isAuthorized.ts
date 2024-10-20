@@ -1,31 +1,31 @@
 import { ObjectId } from 'mongoose'
 
 import { ResourceName, Action, Permission } from '@/database/types/Role'
-import { IUser } from '@/database/types/User'
+import { IUserWithRole } from '@/database/types/User'
 
 export const isAuthorized = ({
   user,
   resourceName,
-  resourceId,
+  resourceAuthorId,
   action,
 }: {
-  user: IUser
+  user?: IUserWithRole | null
   resourceName: ResourceName
-  resourceId?: ObjectId
+  resourceAuthorId?: ObjectId
   action: Action
 }) => {
-  const isOwner = resourceId?.toString() === user._id.toString()
+  const isOwner = resourceAuthorId?.toString() === user?._id.toString()
   const ownerAllowedActions =
     user?.role?.permissions?.find(
       (permission) => permission.resource === ResourceName._own
     )?.actions || []
 
   return (
+    (isOwner && ownerAllowedActions.includes(action)) ||
     user?.role?.permissions?.some(
       (permission: Permission) =>
         permission.resource === resourceName &&
         permission.actions.includes(action)
-    ) ||
-    (isOwner && ownerAllowedActions.includes(action))
+    )
   )
 }

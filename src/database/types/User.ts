@@ -7,6 +7,10 @@ export interface IUser {
   email: string
   image: string
   emailVerified: boolean
+  roleId: ObjectId
+}
+
+export interface IUserWithRole extends IUser {
   role: IRole
 }
 

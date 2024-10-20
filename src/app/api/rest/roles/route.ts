@@ -1,34 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import RoleModel from '@/database/models/Role'
-import {
-  Action,
-  IRole,
-  IRoleDocument,
-  Permission,
-  ResourceName,
-} from '@/database/types/Role'
+import { Action, IRoleDocument, ResourceName } from '@/database/types/Role'
 import mongooseConnect from '@/database/mongooseConnect'
-import { IUser } from '@/database/types/User'
-import { getSessionTokenName } from '@/utils/getSessionTokenName'
-import SessionModel from '@/database/models/Session'
-import UserModel from '@/database/models/User'
 import { isAuthorized } from '@/utils/isAuthorized'
-
-const getUserFromRequest = async (req: NextRequest) => {
-  await mongooseConnect()
-  const sessionTokenName = getSessionTokenName()
-  const sessionId = req.cookies.get(sessionTokenName)?.value
-  const session = await SessionModel.findOne({ sessionToken: sessionId })
-  if (!session) return null
-  const user = await UserModel.findById(session.userId).populate('role')
-  return user
-}
+import { getUserFromRequest } from '@/utils/getUserFromRequest'
 
 export const GET = async (request: NextRequest) => {
   try {
     const user = await getUserFromRequest(request)
-    console.log('user: ', user)
     if (
       !user ||
       !isAuthorized({

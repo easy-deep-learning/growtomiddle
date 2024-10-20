@@ -207,7 +207,7 @@ const AdminRolesPage: NextPage = () => {
           <h2>Roles</h2>
           <ul>
             {data?.roles.map((role: IRole) => (
-              <li key={role._id}>
+              <li key={role._id.toString()}>
                 <h3>{role.name}</h3>
                 <p>
                   {role.permissions.map((permission) => (
@@ -218,7 +218,7 @@ const AdminRolesPage: NextPage = () => {
                   ))}
                 </p>
                 <button onClick={() => handleEditRole(role)}>Edit</button>
-                <button onClick={() => handleDeleteRole(role._id)}>
+                <button onClick={() => handleDeleteRole(role._id.toString())}>
                   Delete
                 </button>
               </li>
