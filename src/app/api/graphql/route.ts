@@ -21,7 +21,16 @@ type Context = {
 
 const resolvers = {
   Query: {
-    projects: async () => {
+    projects: async (_parent: any, _input: any, { user }: Context) => {
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.project,
+          action: Action.read,
+        })
+      ) {
+        throw new Error('Not authorized')
+      }
       const result = await ProjectModel.find({}).populate('author')
       return result
     },
@@ -47,8 +56,24 @@ const resolvers = {
       }
     },
 
-    feature: async (_parent: any, { id }: { id: string }) => {
-      return FeatureModel.findById(id).populate('author')
+    feature: async (
+      _parent: any,
+      { id }: { id: string },
+      { user }: Context
+    ) => {
+      const feature = await FeatureModel.findById(id).populate('author')
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.feature,
+          resourceAuthorId: feature?.authorId,
+          action: Action.read,
+        })
+      ) {
+        throw new Error('Not authorized')
+      } else {
+        return feature
+      }
     },
 
     users: async (_parent: any, _input: any, { user }: Context) => {

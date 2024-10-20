@@ -15,6 +15,7 @@ export enum ResourceName {
   skill = 'skill',
   material = 'material',
   project = 'project',
+  feature = 'feature',
 }
 
 export type Permission = {

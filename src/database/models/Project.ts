@@ -2,6 +2,8 @@ import mongoose, { Schema, Document, ObjectId } from 'mongoose'
 import UserModel from './User'
 import FeatureModel from './Feature'
 import { IProjectDocument } from '../types/Project'
+import { IUserWithRole } from '../types/User'
+import { IFeature } from '../types/Feature'
 
 const ProjectSchema = new Schema<IProjectDocument>(
   {
@@ -15,12 +17,12 @@ const ProjectSchema = new Schema<IProjectDocument>(
       required: true,
     },
     description: String,
-    // features: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: FeatureModel,
-    //   },
-    // ],
+    featuresId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: FeatureModel,
+      },
+    ],
     url: String,
   },
   {
@@ -30,11 +32,17 @@ const ProjectSchema = new Schema<IProjectDocument>(
   }
 )
 
-ProjectSchema.virtual('author', {
+ProjectSchema.virtual<IUserWithRole>('author', {
   ref: UserModel,
   localField: 'authorId',
   foreignField: '_id',
   justOne: true,
+})
+
+ProjectSchema.virtual<IFeature>('features', {
+  ref: FeatureModel,
+  localField: 'featuresId',
+  foreignField: '_id',
 })
 
 const ProjectModel: mongoose.Model<IProjectDocument> =

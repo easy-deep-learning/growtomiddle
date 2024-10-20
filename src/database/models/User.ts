@@ -4,6 +4,7 @@ import mongoose, { Schema } from 'mongoose'
 
 import RoleModel from './Role'
 import type { IUserDocument } from '../types/User'
+import { IRole } from '../types/Role'
 
 const UserSchema = new Schema<IUserDocument>(
   {
@@ -33,7 +34,7 @@ const UserSchema = new Schema<IUserDocument>(
   }
 )
 
-UserSchema.virtual('role', {
+UserSchema.virtual<IRole>('role', {
   ref: RoleModel,
   localField: 'roleId',
   foreignField: '_id',

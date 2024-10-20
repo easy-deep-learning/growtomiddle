@@ -4,12 +4,9 @@ import SessionModel from '@/database/models/Session'
 import UserModel from '@/database/models/User'
 import mongooseConnect from '@/database/mongooseConnect'
 import { getSessionTokenName } from './getSessionTokenName'
-import { IUserWithRole } from '@/database/types/User'
 import { IRole } from '@/database/types/Role'
 
-export const getUserFromRequest = async (
-  req: NextRequest
-): Promise<IUserWithRole | null> => {
+export const getUserFromRequest = async (req: NextRequest) => {
   await mongooseConnect()
   const sessionTokenName = getSessionTokenName()
   const sessionId = req.cookies.get(sessionTokenName)?.value

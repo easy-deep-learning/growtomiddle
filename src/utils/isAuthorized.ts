@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongoose'
 
-import { ResourceName, Action, Permission } from '@/database/types/Role'
+import { ResourceName, Action, Permission, IRole } from '@/database/types/Role'
 import { IUserWithRole } from '@/database/types/User'
 
 export const isAuthorized = ({
@@ -9,7 +9,7 @@ export const isAuthorized = ({
   resourceAuthorId,
   action,
 }: {
-  user?: IUserWithRole | null
+  user?: { _id: ObjectId; role: IRole } | null
   resourceName: ResourceName
   resourceAuthorId?: ObjectId
   action: Action

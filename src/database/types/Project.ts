@@ -6,7 +6,7 @@ export interface IProject {
   authorId: ObjectId
   name: string
   description?: string
-  features?: ObjectId[]
+  featuresId?: ObjectId[]
   url?: string
 }
 
