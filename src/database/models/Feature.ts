@@ -1,53 +1,22 @@
-/**
- * @example
- *  {
- *  "_id": "5f7f9d5c9d6f6b1d7c9d6f6b",
- *  "name": "CRUD for interviews",
- *  "description": "As user I create, read, update and delete an interview",
- *  "tasks": [
- *    {
- *      "_id": "5f7f9d5c9d6f6b1d7c9d6f6b",
- *      "name": "Create a HTML form for an interview",
- *    },
- *    {
- *      "_id": "5f7f9d5c9d6f6b1d7c9d6f6b",
- *      "name": "Create a NextJS api route for an interview",
- *    },
- *    {
- *      "_id": "5f7f9d5c9d6f6b1d7c9d6f6b",
- *      "name": "Create a MongoDB model for an interview",
- *    },
- *    {
- *      "_id": "5f7f9d5c9d6f6b1d7c9d6f6b",
- *     "name": "Create a e2e test for an interview",
- *    }
- *  ],
- *  "url": "https://github.com/you/your-repo/issues/1",
- *  }
- */
-
-import mongoose, { Schema, Document } from 'mongoose'
-import type { ITask } from '@/database/models/Task'
+import mongoose, { Schema, Document, ObjectId } from 'mongoose'
+import type { ITask } from '@/database/types/Task'
 import TaskModel from '@/database/models/Task'
-
-export interface IFeature {
-  _id: string
-  name: string
-  description: string
-  tasks: ITask[]
-  url: string
-}
-
-export interface IFeatureDocument extends Omit<IFeature, '_id'>, Document {}
+import { IFeatureDocument } from '../types/Feature'
+import UserModel from './User'
 
 const FeatureSchema = new Schema<IFeatureDocument>(
   {
+    authorId: {
+      type: Schema.Types.ObjectId,
+      ref: TaskModel,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
     },
     description: String,
-    tasks: [
+    tasksId: [
       {
         type: Schema.Types.ObjectId,
         ref: TaskModel,
@@ -57,8 +26,24 @@ const FeatureSchema = new Schema<IFeatureDocument>(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 )
+
+FeatureSchema.virtual<ITask>('tasks', {
+  ref: TaskModel,
+  localField: 'tasksId',
+  foreignField: '_id',
+  justOne: false,
+})
+
+FeatureSchema.virtual<ITask>('author', {
+  ref: UserModel,
+  localField: 'authorId',
+  foreignField: '_id',
+  justOne: true,
+})
 
 const FeatureModel: mongoose.Model<IFeatureDocument> =
   mongoose.models.Feature ||

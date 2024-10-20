@@ -7,7 +7,7 @@ import { gql } from 'graphql-tag'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 
-import { IProject } from '@/database/models/Project'
+import { IProject } from '@/database/types/Project'
 
 const GET_PROJECTS = gql`
   #graphql
@@ -28,7 +28,7 @@ const ProjectList: FC<ProjectListPropsType> = ({ projects }) => {
   return (
     <ul>
       {projects.map((project) => (
-        <li key={project._id}>
+        <li key={project._id.toString()}>
           <Link href={`/projects/${project._id}`}>{project.name}</Link>
         </li>
       ))}

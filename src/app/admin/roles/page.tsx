@@ -5,7 +5,7 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import Head from 'next/head'
 import { NextPage } from 'next'
 
-import { Action, Permission, Resource, IRole } from '@/database/types/Role'
+import { Action, Permission, ResourceName, IRole } from '@/database/types/Role'
 
 const removeTypename = (key: string, value: any) =>
   key === '__typename' ? undefined : value
@@ -31,7 +31,10 @@ const CREATE_ROLE = gql`
     createRole(role: $role) {
       _id
       name
-      permissions
+      permissions {
+        actions
+        resource
+      }
     }
   }
 `
@@ -78,7 +81,7 @@ const AdminRolesPage: NextPage = () => {
     resource,
     action,
   }: {
-    resource: Resource
+    resource: ResourceName
     action: Action
   }) => {
     setRolePermissions((prevPermissions) => {
@@ -166,7 +169,7 @@ const AdminRolesPage: NextPage = () => {
           </div>
           <div>
             <h3>Permissions</h3>
-            {Object.values(Resource).map((resource) => (
+            {Object.values(ResourceName).map((resource) => (
               <div key={resource}>
                 <h4>{resource}</h4>
                 {Object.values(Action).map((action) => (
@@ -204,7 +207,7 @@ const AdminRolesPage: NextPage = () => {
           <h2>Roles</h2>
           <ul>
             {data?.roles.map((role: IRole) => (
-              <li key={role._id}>
+              <li key={role._id.toString()}>
                 <h3>{role.name}</h3>
                 <p>
                   {role.permissions.map((permission) => (
@@ -215,7 +218,7 @@ const AdminRolesPage: NextPage = () => {
                   ))}
                 </p>
                 <button onClick={() => handleEditRole(role)}>Edit</button>
-                <button onClick={() => handleDeleteRole(role._id)}>
+                <button onClick={() => handleDeleteRole(role._id.toString())}>
                   Delete
                 </button>
               </li>

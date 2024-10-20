@@ -4,37 +4,102 @@ import { ApolloServer } from '@apollo/server'
 import { gql } from 'graphql-tag'
 
 import mongooseConnect from '@/database/mongooseConnect'
-import ProjectModel, { IProject } from '@/database/models/Project'
-import FeatureModel, { IFeature } from '@/database/models/Feature'
-import UserModel, { IUser } from '@/database/models/User'
+import ProjectModel from '@/database/models/Project'
+import FeatureModel from '@/database/models/Feature'
+import UserModel from '@/database/models/User'
+import { IUserWithRole } from '@/database/types/User'
 import RoleModel from '@/database/models/Role'
-import { IRole, Permission, Action } from '@/database/types/Role'
-import { getSessionTokenName } from '@/utils/getSessionTokenName'
-import SessionModel from '@/database/models/Session'
+import { Permission, Action, ResourceName } from '@/database/types/Role'
+import { isAuthorized } from '@/utils/isAuthorized'
+import { IProject } from '@/database/types/Project'
+import { getUserFromRequest } from '@/utils/getUserFromRequest'
+import { NextRequest } from 'next/server'
+import { IFeature } from '@/database/types/Feature'
 
 type Context = {
-  user: IUser & { role: IRole }
+  user: IUserWithRole | null | undefined
 }
 
 const resolvers = {
   Query: {
-    projects: async () => {
-      const result = await ProjectModel.find({})
+    projects: async (_parent: any, _input: any, { user }: Context) => {
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.project,
+          action: Action.read,
+        })
+      ) {
+        throw new Error('Not authorized')
+      }
+      const result = await ProjectModel.find({}).populate('author')
       return result
     },
-    project: async (_parent: any, { id }: { id: string }) => {
-      return ProjectModel.findById(id).populate('features')
+    project: async (
+      _parent: any,
+      { id }: { id: string },
+      { user }: Context
+    ) => {
+      const project = await ProjectModel.findById(id)
+        .populate('author')
+        .populate('features')
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.project,
+          resourceAuthorId: project?.authorId,
+          action: Action.read,
+        })
+      ) {
+        throw new Error('Not authorized')
+      } else {
+        return project
+      }
     },
 
-    feature: async (_parent: any, { id }: { id: string }) => {
-      return FeatureModel.findById(id)
+    feature: async (
+      _parent: any,
+      { id }: { id: string },
+      { user }: Context
+    ) => {
+      const feature = await FeatureModel.findById(id).populate('author')
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.feature,
+          resourceAuthorId: feature?.authorId,
+          action: Action.read,
+        })
+      ) {
+        throw new Error('Not authorized')
+      } else {
+        return feature
+      }
     },
 
-    users: async () => {
+    users: async (_parent: any, _input: any, { user }: Context) => {
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.user,
+          action: Action.read,
+        })
+      ) {
+        throw new Error('Not authorized')
+      }
       return UserModel.find({}).populate('role')
     },
 
-    roles: async () => {
+    roles: async (_parent: any, _input: any, { user }: Context) => {
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.role,
+          action: Action.read,
+        })
+      ) {
+        throw new Error('Not authorized')
+      }
       return RoleModel.find({})
     },
   },
@@ -66,10 +131,10 @@ const resolvers = {
 
     updateUser: async (
       _parent: any,
-      { user }: { user: { _id: string; name: string; role: string[] } },
+      { user }: { user: { _id: string; name: string; roleId: string } },
       context: any
     ) => {
-      const dataForUpdate = { name: user.name, role: user.role }
+      const dataForUpdate = { name: user.name, roleId: user.roleId }
       return await UserModel.findByIdAndUpdate(user._id, dataForUpdate)
     },
 
@@ -78,17 +143,15 @@ const resolvers = {
       { role }: { role: { name: string; permissions: Permission } },
       { user }: Context
     ) => {
-      // if (!user) {
-      //   throw new Error('Not authenticated')
-      // } else if (
-      //   !user.role?.permissions.some(
-      //     (permission: Permission) =>
-      //       permission.resource === 'role' &&
-      //       permission.actions.includes(Action.create)
-      //   )
-      // ) {
-      //   throw new Error('Not authorized')
-      // }
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.role,
+          action: Action.create,
+        })
+      ) {
+        throw new Error('Not authorized')
+      }
 
       try {
         const newRole = new RoleModel(role)
@@ -114,17 +177,15 @@ const resolvers = {
       },
       { user }: Context
     ) => {
-      // if (!user) {
-      //   throw new Error('Not authenticated')
-      // } else if (
-      //   !user.role?.permissions.some(
-      //     (permission: Permission) =>
-      //       permission.resource === 'role' &&
-      //       permission.actions.includes(Action.update)
-      //   )
-      // ) {
-      //   throw new Error('Not authorized')
-      // }
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.role,
+          action: Action.update,
+        })
+      ) {
+        throw new Error('Not authorized')
+      }
 
       try {
         // Fetch the current role
@@ -166,17 +227,15 @@ const resolvers = {
       { id }: { id: string },
       { user }: Context
     ) => {
-      // if (!user) {
-      //   throw new Error('Not authenticated')
-      // } else if (
-      //   !user.role?.permissions.some(
-      //     (permission: Permission) =>
-      //       permission.resource === 'role' &&
-      //       permission.actions.includes(Action.delete)
-      //   )
-      // ) {
-      //   throw new Error('Not authorized')
-      // }
+      if (
+        !isAuthorized({
+          user,
+          resourceName: ResourceName.role,
+          action: Action.delete,
+        })
+      ) {
+        throw new Error('Not authorized')
+      }
       try {
         const result = await RoleModel.deleteOne({ _id: id })
         if (result.deletedCount === 0) {
@@ -225,7 +284,7 @@ const typeDefs = gql`
 
   type Permission {
     actions: [Action]
-    resource: Resource!
+    resource: ResourceName!
   }
 
   type RoleId {
@@ -234,7 +293,7 @@ const typeDefs = gql`
 
   input PermissionInput {
     actions: [Action]
-    resource: Resource
+    resource: ResourceName
   }
 
   input RoleInput {
@@ -247,17 +306,19 @@ const typeDefs = gql`
     name: String
     email: String
     image: String
+    roleId: ID
     role: Role
   }
 
   input UserInput {
     _id: ID
     name: String
-    role: ID
+    roleId: ID
   }
 
   type Project {
     _id: ID
+    authorId: ID
     name: String
     description: String
     features: [Feature]
@@ -265,6 +326,7 @@ const typeDefs = gql`
   }
 
   input ProjectInput {
+    authorId: ID
     name: String
     description: String
     url: String
@@ -272,12 +334,14 @@ const typeDefs = gql`
 
   type Feature {
     _id: ID
+    authorId: ID
     name: String
     description: String
     tasks: [Task]
   }
 
   input FeatureInput {
+    authorId: ID
     name: String
     description: String
     url: String
@@ -285,6 +349,7 @@ const typeDefs = gql`
 
   type Task {
     _id: ID
+    authorId: ID
     name: String
     description: String
     skills: [Skill]
@@ -292,6 +357,7 @@ const typeDefs = gql`
 
   type Skill {
     _id: ID
+    authorId: ID
     name: String
     description: String
     materials: [Material]
@@ -299,6 +365,7 @@ const typeDefs = gql`
 
   type Material {
     _id: ID
+    authorId: ID
     name: String
     type: MaterialType
     description: String
@@ -322,7 +389,8 @@ const typeDefs = gql`
     delete
   }
 
-  enum Resource {
+  enum ResourceName {
+    _own
     role
     user
     task
@@ -339,19 +407,10 @@ const server = new ApolloServer({
 })
 
 const handler = startServerAndCreateNextHandler(server, {
-  context: async (nextApiRequest) => {
+  context: async (nextRequest: NextRequest) => {
     await mongooseConnect()
-    const sessionTokenName = getSessionTokenName()
-    // TODO: Fix this type casting
-    const sessionId = (
-      nextApiRequest.cookies?._parsed as unknown as Map<
-        string,
-        { name: string; value: string }
-      >
-    )?.get(sessionTokenName)?.value
-    const session = await SessionModel.findOne({ sessionToken: sessionId })
-    const user = await UserModel.findById(session?.userId).populate('role')
-    return { user: user as IUser & { role: IRole } }
+    const user = await getUserFromRequest(nextRequest)
+    return { user: user }
   },
 })
 

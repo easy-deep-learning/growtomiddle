@@ -2,7 +2,7 @@
 
 import { NextPage } from 'next'
 import { gql, useQuery } from '@apollo/client'
-import type { IFeature } from '@/database/models/Feature'
+import type { IFeature } from '@/database/types/Feature'
 
 const GET_FEATURE = gql`
   #graphql
