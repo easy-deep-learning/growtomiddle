@@ -5,7 +5,7 @@ import { gql } from 'graphql-tag'
 
 import mongooseConnect from '@/database/mongooseConnect'
 import ProjectModel from '@/database/models/Project'
-import FeatureModel, { IFeature } from '@/database/models/Feature'
+import FeatureModel from '@/database/models/Feature'
 import UserModel from '@/database/models/User'
 import { IUserWithRole } from '@/database/types/User'
 import RoleModel from '@/database/models/Role'
@@ -14,6 +14,7 @@ import { isAuthorized } from '@/utils/isAuthorized'
 import { IProject } from '@/database/types/Project'
 import { getUserFromRequest } from '@/utils/getUserFromRequest'
 import { NextRequest } from 'next/server'
+import { IFeature } from '@/database/types/Feature'
 
 type Context = {
   user: IUserWithRole | null | undefined

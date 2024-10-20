@@ -5,7 +5,7 @@ import { NextPage } from 'next'
 import Link from 'next/link'
 import { gql, useMutation, useQuery } from '@apollo/client'
 
-import { IProject } from '@/database/models/Project'
+import { IProjectAuthorPopulated } from '@/database/types/Project'
 
 const GET_PROJECT = gql`
   #graphql
@@ -41,10 +41,9 @@ type PageParams = {
 }
 
 const ProjectPage: NextPage<PageParams> = (context) => {
-  const { loading, error, data } = useQuery<{ project: IProject }>(
-    GET_PROJECT,
-    { variables: { id: context.params.project_id } }
-  )
+  const { loading, error, data } = useQuery<{
+    project: IProjectAuthorPopulated
+  }>(GET_PROJECT, { variables: { id: context.params.project_id } })
   const [addFeature] = useMutation(ADD_FEATURE)
 
   const handleAddFeature = async (event: FormEvent<HTMLFormElement>) => {
@@ -93,7 +92,7 @@ const ProjectPage: NextPage<PageParams> = (context) => {
         <ul>
           {data.project.features.map((feature) => {
             return (
-              <li key={feature._id}>
+              <li key={feature._id.toString()}>
                 <Link
                   href={`/projects/${data.project._id}/features/${feature._id}`}
                 >

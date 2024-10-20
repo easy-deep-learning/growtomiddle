@@ -5,7 +5,8 @@ export interface IFeature {
   name: string
   description?: string
   tasksId?: ObjectId[]
+  authorId?: ObjectId
   url?: string
 }
 
-export interface IFeatureDocument extends Document<ObjectId, {}, IFeature> {}
+export interface IFeatureDocument extends IFeature, Document<ObjectId> {}
