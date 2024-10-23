@@ -5,10 +5,8 @@ import { getUserFromRequest } from '@/utils/getUserFromRequest'
 import { isAuthorized } from '@/utils/isAuthorized'
 import { Action, ResourceName } from '@/database/types/Role'
 
-export const GET = async (
-  request: NextRequest,
-  { params }: { params: { projectId: string } }
-) => {
+export const GET = async (request: NextRequest, props: { params: Promise<{ projectId: string }> }) => {
+  const params = await props.params;
   try {
     const user = await getUserFromRequest(request)
 

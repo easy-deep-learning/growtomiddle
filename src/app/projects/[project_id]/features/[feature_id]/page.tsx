@@ -1,4 +1,5 @@
-'use client'
+'use client';
+import { use } from "react";
 
 import { NextPage } from 'next'
 import { gql, useQuery } from '@apollo/client'
@@ -27,9 +28,10 @@ type PageParams = {
 }
 
 const FeaturePage: NextPage<PageParams> = (context) => {
+  const params = use(context.params);
   const { loading, error, data } = useQuery<{ feature: IFeature }>(
     GET_FEATURE,
-    { variables: { id: context.params.feature_id } }
+    { variables: { id: params.feature_id } }
   )
 
   if (error) {

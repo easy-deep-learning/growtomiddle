@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent } from 'react'
+import { FormEvent, use } from 'react';
 import { NextPage } from 'next'
 import Link from 'next/link'
 import { gql, useMutation, useQuery } from '@apollo/client'
@@ -41,9 +41,10 @@ type PageParams = {
 }
 
 const ProjectPage: NextPage<PageParams> = (context) => {
+  const params = use(context.params);
   const { loading, error, data } = useQuery<{
     project: IProjectAuthorPopulated
-  }>(GET_PROJECT, { variables: { id: context.params.project_id } })
+  }>(GET_PROJECT, { variables: { id: params.project_id } })
   const [addFeature] = useMutation(ADD_FEATURE)
 
   const handleAddFeature = async (event: FormEvent<HTMLFormElement>) => {
@@ -52,7 +53,7 @@ const ProjectPage: NextPage<PageParams> = (context) => {
     const body = Object.fromEntries(formData)
     const response = await addFeature({
       variables: {
-        projectId: context.params.project_id,
+        projectId: params.project_id,
         feature: body,
       },
     })
@@ -71,14 +72,13 @@ const ProjectPage: NextPage<PageParams> = (context) => {
   }
 
   return (
-    <div>
+    (<div>
       <h1>{data.project.name}</h1>
       <div>{data.project.description}</div>
-
       <h3>Features</h3>
       <div>
         <form
-          action={`/api/project/${context.params.project_id}/feature`}
+          action={`/api/project/${params.project_id}/feature`}
           method="POST"
           onSubmit={handleAddFeature}
         >
@@ -103,8 +103,8 @@ const ProjectPage: NextPage<PageParams> = (context) => {
           })}
         </ul>
       )}
-    </div>
-  )
+    </div>)
+  );
 }
 
 export default ProjectPage
