@@ -11,5 +11,6 @@
     "nosniff",
     "SAMEORIGIN",
     "simpledotcss"
-  ]
+  ],
+  "git.ignoreLimitWarning": true
 }
