@@ -1,32 +1,33 @@
-import React from 'react'
-import { Metadata } from 'next'
-import { Analytics } from '@vercel/analytics/react'
-import ApolloWrapper from '@/apollo/client-side-components'
+import React from "react";
+import { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
+import ApolloWrapper from "@/apollo/client-side-components";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
-import { NextAuthProvider } from './providers'
+import { NextAuthProvider } from "./providers";
 
-import '@/styles/global.css'
+import "@/styles/global.css";
 
 export const metadata: Metadata = {
-  title: 'gymnasia',
-  description: 'gymnasia — education world for all',
-}
+  title: "gymnasia",
+  description: "gymnasia — education world for all",
+};
 
-export default function RootLayout ({
+export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-    <body>
-    <NextAuthProvider>
-      <ApolloWrapper>
-        {children}
-      </ApolloWrapper>
-    </NextAuthProvider>
-    <Analytics />
-    </body>
+      <body>
+        <NextAuthProvider>
+          <ApolloWrapper>
+            <AntdRegistry>{children}</AntdRegistry>
+          </ApolloWrapper>
+        </NextAuthProvider>
+        <Analytics />
+      </body>
     </html>
-  )
+  );
 }

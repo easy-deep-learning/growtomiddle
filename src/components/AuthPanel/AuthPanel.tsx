@@ -1,25 +1,23 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { signIn, signOut, useSession } from 'next-auth/react'
-import Link from 'next/link'
+import Link from "next/link";
+import { Button } from "antd";
+import { signIn, signOut, useSession } from "next-auth/react";
 
-import classes from './AuthPanel.module.css'
+import classes from "./AuthPanel.module.css";
 
 export const AuthPanel = () => {
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
 
   return (
     <div className={classes.component}>
-      {status === 'unauthenticated' && (
-        <button onClick={() => signIn()}>
+      {status === "unauthenticated" && (
+        <Button type="primary" onClick={() => signIn()}>
           Войти
-        </button>
+        </Button>
       )}
-      {status === 'loading' && (
-        <div className={classes.loader}></div>
-      )}
-      {status === 'authenticated' && (
+      {status === "loading" && <div className={classes.loader}></div>}
+      {status === "authenticated" && (
         <>
           <p className={classes.title}>Привет, {session?.user?.name}</p>
           <div className={classes.avatarAndMenu}>
@@ -31,24 +29,21 @@ export const AuthPanel = () => {
               />
             </Link>
             <div className={classes.menu}>
-              <Link href="/profile"
-                    className={classes.linkToProfile}
-              >
+              <Link href="/profile" className={classes.linkToProfile}>
                 Профиль
               </Link>
-              <button
+              <Button
                 className={classes.logout}
                 onClick={() => {
-                  confirm('Вы уверены, что хотите выйти?') && signOut()
+                  confirm("Вы уверены, что хотите выйти?") && signOut();
                 }}
               >
                 Выйти
-              </button>
+              </Button>
             </div>
           </div>
-
         </>
       )}
     </div>
-  )
-}
+  );
+};
