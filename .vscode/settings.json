@@ -1,3 +1,15 @@
 {
-  "cSpell.words": ["simpledotcss"]
+  "cSpell.words": [
+    "ADMINPASSWORD",
+    "ADMINUSERNAME",
+    "BASICAUTH",
+    "configdb",
+    "healthcheck",
+    "INITDB",
+    "mkcert",
+    "mongosh",
+    "nosniff",
+    "SAMEORIGIN",
+    "simpledotcss"
+  ]
 }

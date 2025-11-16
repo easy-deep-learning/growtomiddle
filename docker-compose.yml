@@ -1,0 +1,97 @@
+services:
+  mongodb:
+    image: mongo:8.2
+    container_name: growtomiddle-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: growtomiddle
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - growtomiddle-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Next.js application (development mode with hot reload)
+  nextjs:
+    image: node:22-alpine
+    container_name: growtomiddle-nextjs
+    restart: unless-stopped
+    working_dir: /app
+    env_file:
+      - .env.local
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/growtomiddle?authSource=admin
+      - NEXTAUTH_URL=https://growtomiddle.lol/api/auth
+      - BASE_FETCH_URL=https://growtomiddle.lol
+      - NEXT_PUBLIC_GRAPHQL_ENDPOINT=https://growtomiddle.lol/api/graphql
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - growtomiddle-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    entrypoint: /bin/sh
+    command: -c "corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install && pnpm dev"
+
+  # Nginx reverse proxy with HTTPS
+  nginx:
+    image: nginx:alpine
+    container_name: growtomiddle-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - nextjs
+    networks:
+      - growtomiddle-network
+
+  # Optional: MongoDB Express for database management UI
+  mongo-express:
+    image: mongo-express:latest
+    container_name: growtomiddle-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://admin:password@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - growtomiddle-network
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  nginx_logs:
+    driver: local
+
+networks:
+  growtomiddle-network:
+    driver: bridge
+
