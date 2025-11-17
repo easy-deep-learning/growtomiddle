@@ -10,7 +10,7 @@
  *  }
  */
 
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IMaterial {
   _id: string;
@@ -38,10 +38,10 @@ const MaterialSchema = new Schema<IMaterialDocument>(
   },
   {
     timestamps: true,
-  },
-)
+  }
+);
 
 const MaterialModel: mongoose.Model<IMaterialDocument> =
-  mongoose.models.Material || mongoose.model<IMaterialDocument>('Material', MaterialSchema)
+  mongoose.models.Material || mongoose.model<IMaterialDocument>('Material', MaterialSchema);
 
-export default MaterialModel
+export default MaterialModel;

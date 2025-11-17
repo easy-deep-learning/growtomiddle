@@ -1,0 +1,8 @@
+{
+  "name": "growtomiddle",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "nextjs",
+  "workspaceFolder": "/growtomiddle",
+  "remoteUser": "node",
+  "postCreateCommand": "pnpm install"
+}

@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Modal, message, Popconfirm } from "antd";
-import { VacancyList, VacancyForm } from "@/components/Vacancy";
-import type { IVacancy } from "@/database/models/Vacancy";
+import { useEffect, useState } from 'react';
+import type { IVacancy } from '@/database/models/Vacancy';
+import { message, Modal, Popconfirm } from 'antd';
+
+import { VacancyForm, VacancyList } from '@/components/Vacancy';
 
 export default function VacanciesPage() {
   const [vacancies, setVacancies] = useState<IVacancy[]>([]);
@@ -16,13 +17,13 @@ export default function VacanciesPage() {
   const fetchVacancies = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/vacancies");
-      if (!response.ok) throw new Error("Failed to fetch vacancies");
+      const response = await fetch('/api/vacancies');
+      if (!response.ok) throw new Error('Failed to fetch vacancies');
       const data = await response.json();
       setVacancies(data);
     } catch (error) {
-      console.error("Error fetching vacancies:", error);
-      message.error("Failed to load vacancies");
+      console.error('Error fetching vacancies:', error);
+      message.error('Failed to load vacancies');
     } finally {
       setLoading(false);
     }
@@ -48,32 +49,28 @@ export default function VacanciesPage() {
   const handleSubmit = async (values: Partial<IVacancy>) => {
     try {
       setFormLoading(true);
-      const url = editingVacancy
-        ? `/api/vacancies/${editingVacancy._id}`
-        : "/api/vacancies";
-      const method = editingVacancy ? "PUT" : "POST";
+      const url = editingVacancy ? `/api/vacancies/${editingVacancy._id}` : '/api/vacancies';
+      const method = editingVacancy ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(values),
       });
 
-      if (!response.ok) throw new Error("Failed to save vacancy");
+      if (!response.ok) throw new Error('Failed to save vacancy');
 
       message.success(
-        editingVacancy
-          ? "Vacancy updated successfully"
-          : "Vacancy created successfully"
+        editingVacancy ? 'Vacancy updated successfully' : 'Vacancy created successfully'
       );
       setModalVisible(false);
       setEditingVacancy(undefined);
       fetchVacancies();
     } catch (error) {
-      console.error("Error saving vacancy:", error);
-      message.error("Failed to save vacancy");
+      console.error('Error saving vacancy:', error);
+      message.error('Failed to save vacancy');
     } finally {
       setFormLoading(false);
     }
@@ -83,16 +80,16 @@ export default function VacanciesPage() {
   const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`/api/vacancies/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error("Failed to delete vacancy");
+      if (!response.ok) throw new Error('Failed to delete vacancy');
 
-      message.success("Vacancy deleted successfully");
+      message.success('Vacancy deleted successfully');
       fetchVacancies();
     } catch (error) {
-      console.error("Error deleting vacancy:", error);
-      message.error("Failed to delete vacancy");
+      console.error('Error deleting vacancy:', error);
+      message.error('Failed to delete vacancy');
     }
   };
 
@@ -100,25 +97,25 @@ export default function VacanciesPage() {
   const handleToggleSave = async (id: string, isSaved: boolean) => {
     try {
       const response = await fetch(`/api/vacancies/${id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ isSaved }),
       });
 
-      if (!response.ok) throw new Error("Failed to update vacancy");
+      if (!response.ok) throw new Error('Failed to update vacancy');
 
-      message.success(isSaved ? "Vacancy saved" : "Vacancy unsaved");
+      message.success(isSaved ? 'Vacancy saved' : 'Vacancy unsaved');
       fetchVacancies();
     } catch (error) {
-      console.error("Error updating vacancy:", error);
-      message.error("Failed to update vacancy");
+      console.error('Error updating vacancy:', error);
+      message.error('Failed to update vacancy');
     }
   };
 
   return (
-    <div style={{ padding: "24px", maxWidth: "1200px", margin: "0 auto" }}>
+    <div style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
       <VacancyList
         vacancies={vacancies}
         loading={loading}
@@ -129,7 +126,7 @@ export default function VacanciesPage() {
       />
 
       <Modal
-        title={editingVacancy ? "Edit Vacancy" : "Create New Vacancy"}
+        title={editingVacancy ? 'Edit Vacancy' : 'Create New Vacancy'}
         open={modalVisible}
         onCancel={() => {
           setModalVisible(false);
@@ -137,7 +134,7 @@ export default function VacanciesPage() {
         }}
         footer={null}
         width={800}
-        destroyOnClose
+        destroyOnHidden
       >
         <VacancyForm
           vacancy={editingVacancy}

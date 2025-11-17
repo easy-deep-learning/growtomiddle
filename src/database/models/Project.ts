@@ -9,8 +9,8 @@
  *  }
  */
 
-import mongoose, { Schema, Document } from 'mongoose'
-import { IFeature } from '@/database/models/Feature'
+import { IFeature } from '@/database/models/Feature';
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IProject {
   _id: string;
@@ -22,7 +22,8 @@ export interface IProject {
 
 export interface IProjectDocument extends Omit<IProject, '_id'>, Document {}
 
-const ProjectSchema = new Schema<IProjectDocument>({
+const ProjectSchema = new Schema<IProjectDocument>(
+  {
     name: {
       type: String,
       required: true,
@@ -38,10 +39,10 @@ const ProjectSchema = new Schema<IProjectDocument>({
   },
   {
     timestamps: true,
-  },
-)
+  }
+);
 
 const ProjectModel: mongoose.Model<IProjectDocument> =
-    mongoose.models.Project || mongoose.model<IProjectDocument>('Project', ProjectSchema)
+  mongoose.models.Project || mongoose.model<IProjectDocument>('Project', ProjectSchema);
 
-export default ProjectModel
+export default ProjectModel;

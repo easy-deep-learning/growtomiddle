@@ -1,23 +1,21 @@
-import React from "react";
-import { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
-import ApolloWrapper from "@/apollo/client-side-components";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
+import React from 'react';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { Analytics } from '@vercel/analytics/react';
+import { Metadata } from 'next';
 
-import { NextAuthProvider } from "./providers";
+import ApolloWrapper from '@/apollo/client-side-components';
 
-import "@/styles/global.css";
+import { NextAuthProvider } from './providers';
+
+import '@ant-design/v5-patch-for-react-19';
+import '@/styles/global.css';
 
 export const metadata: Metadata = {
-  title: "gymnasia",
-  description: "gymnasia — education world for all",
+  title: 'gymnasia',
+  description: 'gymnasia — education world for all',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>

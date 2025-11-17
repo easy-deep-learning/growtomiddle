@@ -1,1 +1,1 @@
-export { Goal } from './Goal'
+export { Goal } from './Goal';

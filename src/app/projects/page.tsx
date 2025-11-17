@@ -1,25 +1,25 @@
-'use client'
+'use client';
 
-import { gql, useQuery } from '@apollo/client'
-import type { NextPage } from 'next'
-import Link from 'next/link'
-import { IProject } from '@/database/models/Project'
-import { FC } from 'react'
+import { FC } from 'react';
+import { IProject } from '@/database/models/Project';
+import { gql, useQuery } from '@apollo/client';
+import type { NextPage } from 'next';
+import Link from 'next/link';
 
 const GET_PROJECTS = gql`
-    #graphql
-    query GetProjects {
-        projects {
-            _id
-            name
-            description
-        }
+  #graphql
+  query GetProjects {
+    projects {
+      _id
+      name
+      description
     }
-`
+  }
+`;
 
 type ProjectListPropsType = {
-  projects: IProject[]
-}
+  projects: IProject[];
+};
 
 const ProjectList: FC<ProjectListPropsType> = ({ projects }) => {
   return (
@@ -30,18 +30,18 @@ const ProjectList: FC<ProjectListPropsType> = ({ projects }) => {
         </li>
       ))}
     </ul>
-  )
-}
+  );
+};
 
 const ProjectsPage: NextPage = () => {
-  const { loading, error, data } = useQuery<{ projects: IProject[] }>(GET_PROJECTS)
+  const { loading, error, data } = useQuery<{ projects: IProject[] }>(GET_PROJECTS);
 
   if (error) {
-    return <div>error</div>
+    return <div>error</div>;
   }
 
   if (loading || !data) {
-    return <div>loading</div>
+    return <div>loading</div>;
   }
 
   return (
@@ -52,7 +52,7 @@ const ProjectsPage: NextPage = () => {
       </div>
       <ProjectList projects={data.projects} />
     </div>
-  )
-}
+  );
+};
 
-export default ProjectsPage
+export default ProjectsPage;

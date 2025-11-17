@@ -1,31 +1,28 @@
-'use client'
+'use client';
 
-import { NextPage } from 'next'
-import { FormEvent } from 'react'
-
-import { gql, useMutation } from '@apollo/client'
+import { FormEvent } from 'react';
+import { gql, useMutation } from '@apollo/client';
+import { NextPage } from 'next';
 
 const query = gql`
-    #graphql
-    mutation CreateProject($project: ProjectInput) {
-        createProject(project: $project) {
-            name
-            description
-        }
+  #graphql
+  mutation CreateProject($project: ProjectInput) {
+    createProject(project: $project) {
+      name
+      description
     }
-`
+  }
+`;
 
 const ProjectNewPage: NextPage = () => {
-  const [createProject] = useMutation(query)
-
+  const [createProject] = useMutation(query);
 
   const handleCreateProject = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const body = Object.fromEntries(formData)
-    const response = await createProject({ variables: { project: body } })
-  }
-
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const body = Object.fromEntries(formData);
+    const response = await createProject({ variables: { project: body } });
+  };
 
   return (
     <div>
@@ -45,6 +42,6 @@ const ProjectNewPage: NextPage = () => {
       </form>
     </div>
   );
-}
+};
 
 export default ProjectNewPage;

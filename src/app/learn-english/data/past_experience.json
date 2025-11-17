@@ -11,11 +11,7 @@
         "negative": "subject + did not + verb",
         "question": "did + subject + verb"
       },
-      "examples": [
-        "I went to the store.",
-        "She played the piano.",
-        "We watched a movie."
-      ]
+      "examples": ["I went to the store.", "She played the piano.", "We watched a movie."]
     },
     {
       "name": "Past Continuous",
@@ -25,11 +21,7 @@
         "negative": "subject + was/were not + verb + ing",
         "question": "was/were + subject + verb + ing"
       },
-      "examples": [
-        "I was reading a book.",
-        "She was cooking dinner.",
-        "We were watching TV."
-      ]
+      "examples": ["I was reading a book.", "She was cooking dinner.", "We were watching TV."]
     },
     {
       "name": "Past Perfect",

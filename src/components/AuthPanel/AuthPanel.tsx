@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Button } from "antd";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { Button } from 'antd';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 
-import classes from "./AuthPanel.module.css";
+import classes from './AuthPanel.module.css';
 
 export const AuthPanel = () => {
   const { data: session, status } = useSession();
 
   return (
     <div className={classes.component}>
-      {status === "unauthenticated" && (
+      {status === 'unauthenticated' && (
         <Button type="primary" onClick={() => signIn()}>
           Войти
         </Button>
       )}
-      {status === "loading" && <div className={classes.loader}></div>}
-      {status === "authenticated" && (
+      {status === 'loading' && <div className={classes.loader}></div>}
+      {status === 'authenticated' && (
         <>
           <p className={classes.title}>Привет, {session?.user?.name}</p>
           <div className={classes.avatarAndMenu}>
@@ -35,7 +35,7 @@ export const AuthPanel = () => {
               <Button
                 className={classes.logout}
                 onClick={() => {
-                  confirm("Вы уверены, что хотите выйти?") && signOut();
+                  confirm('Вы уверены, что хотите выйти?') && signOut();
                 }}
               >
                 Выйти

@@ -1,71 +1,72 @@
-'use client'
+'use client';
 
-import { FormEvent } from 'react'
-import { NextPage } from 'next'
-import Link from 'next/link'
-import { gql, useMutation, useQuery } from '@apollo/client'
-
-import { IProject } from '@/database/models/Project'
+import { FormEvent } from 'react';
+import { IProject } from '@/database/models/Project';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { NextPage } from 'next';
+import Link from 'next/link';
 
 const GET_PROJECT = gql`
-    #graphql
-    query GetProject($id: ID!) {
-        project(id: $id) {
-            _id
-            name
-            description
-            features {
-                _id
-                name
-            }
-        }
+  #graphql
+  query GetProject($id: ID!) {
+    project(id: $id) {
+      _id
+      name
+      description
+      features {
+        _id
+        name
+      }
     }
-`
+  }
+`;
 const ADD_FEATURE = gql`
-    #graphql
-    mutation AddFeature($projectId: ID!, $feature: FeatureInput) {
-        addFeature(projectId: $projectId, feature: $feature) {
-            _id
-            name
-            description
-            features {
-                _id
-                name
-            }
-        }
+  #graphql
+  mutation AddFeature($projectId: ID!, $feature: FeatureInput) {
+    addFeature(projectId: $projectId, feature: $feature) {
+      _id
+      name
+      description
+      features {
+        _id
+        name
+      }
     }
-`
+  }
+`;
 
 type PageParams = {
   params: { project_id: string };
 };
 
 const ProjectPage: NextPage<PageParams> = (context) => {
-  const { loading, error, data } = useQuery<{ project: IProject }>(GET_PROJECT, { variables: { id: context.params.project_id } })
-  const [addFeature] = useMutation(ADD_FEATURE)
+  const { loading, error, data } = useQuery<{ project: IProject }>(GET_PROJECT, {
+    variables: { id: context.params.project_id },
+  });
+  const [addFeature] = useMutation(ADD_FEATURE);
 
   const handleAddFeature = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const body = Object.fromEntries(formData)
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const body = Object.fromEntries(formData);
     const response = await addFeature({
       variables: {
         projectId: context.params.project_id,
         feature: body,
       },
-    })
-  }
+    });
+  };
 
   if (error) {
-    return <div>error</div>
+    return <div>error</div>;
   }
 
   if (loading) {
-    return <div>loading</div>
+    return <div>loading</div>;
   }
 
   if (!data?.project) {
-    return <div>not found</div>
+    return <div>not found</div>;
   }
 
   return (
@@ -91,14 +92,16 @@ const ProjectPage: NextPage<PageParams> = (context) => {
           {data.project.features.map((feature) => {
             return (
               <li key={feature._id}>
-                <Link href={`/projects/${data.project._id}/features/${feature._id}`}>{feature.name}</Link>
+                <Link href={`/projects/${data.project._id}/features/${feature._id}`}>
+                  {feature.name}
+                </Link>
               </li>
-            )
+            );
           })}
         </ul>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ProjectPage
+export default ProjectPage;

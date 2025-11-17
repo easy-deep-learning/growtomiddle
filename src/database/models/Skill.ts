@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Document, Schema } from 'mongoose';
 
 /**
  * @example
@@ -29,10 +29,10 @@ const SkillSchema = new Schema<ISkillDocument>(
   },
   {
     timestamps: true,
-  },
-)
+  }
+);
 
 const SkillModel: mongoose.Model<ISkillDocument> =
-  mongoose.models.Skill || mongoose.model<ISkillDocument>('Skill', SkillSchema)
+  mongoose.models.Skill || mongoose.model<ISkillDocument>('Skill', SkillSchema);
 
-export default SkillModel
+export default SkillModel;

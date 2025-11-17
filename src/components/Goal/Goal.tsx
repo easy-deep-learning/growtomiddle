@@ -1,24 +1,16 @@
-import classes from './Goal.module.css'
+import classes from './Goal.module.css';
 
 export const Goal = () => {
   return (
     <div className={classes.component}>
-
       <div className={classes.about}>
+        <h3 className={classes.header}>Расскажите о себе</h3>
 
-        <h3 className={classes.header}>
-          Расскажите о себе
-        </h3>
-
-        <h3 className={classes.header}>
-          Когда вы начали работать в IT?
-        </h3>
+        <h3 className={classes.header}>Когда вы начали работать в IT?</h3>
 
         <input type="date" name="deadline" id="" />
 
-        <h3 className={classes.header}>
-          Моя работа мечты
-        </h3>
+        <h3 className={classes.header}>Моя работа мечты</h3>
         <textarea
           placeholder="чтобы фронтендеров в команде было не меньше 3 react на хуках, redux-toolkit, TS можно mobX
                       graphQL, Docker, websockets не знаю, но тоже с удовольствием бы поработал
@@ -31,21 +23,23 @@ export const Goal = () => {
           rows={15}
         />
 
-        <h3 className={classes.header}>
-           Что я уже знаю
-        </h3>
+        <h3 className={classes.header}>Что я уже знаю</h3>
 
         <ul>
-          <li><input name="skill[0]" placeholder="вот это" /></li>
-          <li><input name="skill[1]" placeholder="и еще вот" /></li>
-          <li><input name="skill[2]" placeholder="а так же" /></li>
+          <li>
+            <input name="skill[0]" placeholder="вот это" />
+          </li>
+          <li>
+            <input name="skill[1]" placeholder="и еще вот" />
+          </li>
+          <li>
+            <input name="skill[2]" placeholder="а так же" />
+          </li>
         </ul>
 
         <button>+</button>
 
-        <h3 className={classes.header}>
-          Пройденные собеседования
-        </h3>
+        <h3 className={classes.header}>Пройденные собеседования</h3>
         <ul>
           <li>
             <h4>компания</h4>
@@ -54,7 +48,8 @@ export const Goal = () => {
               <li>Что спросили?</li>
               <li>Где нашлись пробелы?</li>
               <li>Тестовое задание</li>
-              <li>Когда можно повторить?
+              <li>
+                Когда можно повторить?
                 <input type="date" name="deadline" id="" />
               </li>
             </ul>
@@ -66,7 +61,8 @@ export const Goal = () => {
               <li>Что спросили?</li>
               <li>Где нашлись пробелы?</li>
               <li>Тестовое задание</li>
-              <li>Когда можно повторить?
+              <li>
+                Когда можно повторить?
                 <input type="date" name="deadline" id="" />
               </li>
             </ul>
@@ -78,7 +74,8 @@ export const Goal = () => {
               <li>Что спросили?</li>
               <li>Где нашлись пробелы?</li>
               <li>Тестовое задание</li>
-              <li>Когда можно повторить?
+              <li>
+                Когда можно повторить?
                 <input type="date" name="deadline" id="" />
               </li>
             </ul>
@@ -95,8 +92,13 @@ export const Goal = () => {
 
         <h4>JavaScript</h4>
         <ul>
-          <li>Пройти все темы на сайте <a href="https://learn.javascript.ru">learn.javascript.ru</a></li>
-          <li>Решить 100 задач уровня Easy на <a href="https://leetcode.com/problemset/javascript/?difficulty=EASY&page=1">Литкод</a></li>
+          <li>
+            Пройти все темы на сайте <a href="https://learn.javascript.ru">learn.javascript.ru</a>
+          </li>
+          <li>
+            Решить 100 задач уровня Easy на{' '}
+            <a href="https://leetcode.com/problemset/javascript/?difficulty=EASY&page=1">Литкод</a>
+          </li>
         </ul>
         <a href="/">полная программа</a>
 
@@ -116,5 +118,5 @@ export const Goal = () => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};

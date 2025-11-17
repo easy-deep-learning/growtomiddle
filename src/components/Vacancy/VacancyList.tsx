@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import { List, Empty, Spin, Tabs, Button, Space } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { VacancyCard } from "./VacancyCard";
-import type { IVacancy } from "@/database/models/Vacancy";
+import type { IVacancy } from '@/database/models/Vacancy';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, Empty, List, Space, Spin, Tabs } from 'antd';
+
+import { VacancyCard } from './VacancyCard';
 
 interface VacancyListProps {
   vacancies: IVacancy[];
@@ -27,7 +28,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({
 
   const tabItems = [
     {
-      key: "all",
+      key: 'all',
       label: `All (${allVacancies.length})`,
       children: (
         <List
@@ -47,7 +48,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({
       ),
     },
     {
-      key: "saved",
+      key: 'saved',
       label: `Saved (${savedVacancies.length})`,
       children: (
         <List
@@ -70,7 +71,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center", padding: "50px" }}>
+      <div style={{ textAlign: 'center', padding: '50px' }}>
         <Spin size="large" />
       </div>
     );
@@ -78,14 +79,9 @@ export const VacancyList: React.FC<VacancyListProps> = ({
 
   return (
     <div>
-      <Space style={{ marginBottom: 16, width: "100%", justifyContent: "space-between" }}>
+      <Space style={{ marginBottom: 16, width: '100%', justifyContent: 'space-between' }}>
         <h1 style={{ margin: 0 }}>Vacancies</h1>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={onCreateNew}
-          size="large"
-        >
+        <Button type="primary" icon={<PlusOutlined />} onClick={onCreateNew} size="large">
           Add New Vacancy
         </Button>
       </Space>
@@ -93,4 +89,3 @@ export const VacancyList: React.FC<VacancyListProps> = ({
     </div>
   );
 };
-

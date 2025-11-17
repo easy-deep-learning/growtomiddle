@@ -1,16 +1,16 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IVacancy {
   _id: string;
   companyId?: string;
   title: string;
-  size: "small" | "medium" | "large";
-  type: "startup" | "enterprise" | "government" | "non-profit" | "other";
-  source: "linkedin" | "xing" | "indeed" | "referral" | "other";
+  size: 'small' | 'medium' | 'large';
+  type: 'startup' | 'enterprise' | 'government' | 'non-profit' | 'other';
+  source: 'linkedin' | 'xing' | 'indeed' | 'referral' | 'other';
   sourceUrl?: string;
   location?: string;
-  employmentType?: "full-time" | "part-time" | "contract" | "internship";
-  level?: "junior" | "middle" | "senior" | "lead";
+  employmentType?: 'full-time' | 'part-time' | 'contract' | 'internship';
+  level?: 'junior' | 'middle' | 'senior' | 'lead';
   techStack?: string[];
   salaryRange?: {
     from?: number;
@@ -25,7 +25,9 @@ export interface IVacancy {
   updatedAt: string;
 }
 
-export interface IVacancyDocument extends Omit<IVacancy, "_id" | "createdAt" | "updatedAt">, Document {
+export interface IVacancyDocument
+  extends Omit<IVacancy, '_id' | 'createdAt' | 'updatedAt'>,
+    Document {
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,28 +41,28 @@ const VacancySchema = new Schema<IVacancyDocument>(
     },
     size: {
       type: String,
-      enum: ["small", "medium", "large"],
+      enum: ['small', 'medium', 'large'],
       required: true,
     },
     type: {
       type: String,
-      enum: ["startup", "enterprise", "government", "non-profit", "other"],
+      enum: ['startup', 'enterprise', 'government', 'non-profit', 'other'],
       required: true,
     },
     source: {
       type: String,
-      enum: ["linkedin", "xing", "indeed", "referral", "other"],
+      enum: ['linkedin', 'xing', 'indeed', 'referral', 'other'],
       required: true,
     },
     sourceUrl: String,
     location: String,
     employmentType: {
       type: String,
-      enum: ["full-time", "part-time", "contract", "internship"],
+      enum: ['full-time', 'part-time', 'contract', 'internship'],
     },
     level: {
       type: String,
-      enum: ["junior", "middle", "senior", "lead"],
+      enum: ['junior', 'middle', 'senior', 'lead'],
     },
     techStack: [String],
     salaryRange: {
@@ -82,7 +84,6 @@ const VacancySchema = new Schema<IVacancyDocument>(
 );
 
 const VacancyModel: mongoose.Model<IVacancyDocument> =
-  mongoose.models.Vacancy || mongoose.model<IVacancyDocument>("Vacancy", VacancySchema);
+  mongoose.models.Vacancy || mongoose.model<IVacancyDocument>('Vacancy', VacancySchema);
 
 export default VacancyModel;
-

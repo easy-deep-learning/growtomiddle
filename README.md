@@ -1,7 +1,9 @@
 # growtomiddle
+
 Personal path of a middle developer
 
 ## Tech Stack
+
 - https://nextjs.org/
 - https://www.mongodb.com/
 - https://next-auth.js.org/
@@ -9,6 +11,7 @@ Personal path of a middle developer
 ## Local Development Setup
 
 ### Prerequisites
+
 - Node.js 22
 - pnpm 9+
 - Docker and Docker Compose
@@ -17,16 +20,19 @@ Personal path of a middle developer
 ### Install mkcert
 
 **macOS:**
+
 ```bash
 brew install mkcert
 ```
 
 **Linux:**
+
 ```bash
 # Follow instructions at: https://github.com/FiloSottile/mkcert#linux
 ```
 
 **Windows:**
+
 ```bash
 # Follow instructions at: https://github.com/FiloSottile/mkcert#windows
 ```
@@ -34,15 +40,17 @@ brew install mkcert
 ### Setup SSL Certificates
 
 1. **Generate SSL certificates:**
+
    ```bash
    ./scripts/setup-ssl.sh
    ```
 
 2. **Add domain to /etc/hosts:**
+
    ```bash
    # macOS/Linux
    sudo sh -c 'echo "127.0.0.1 growtomiddle.lol" >> /etc/hosts'
-   
+
    # Windows: Edit C:\Windows\System32\drivers\etc\hosts
    # Add: 127.0.0.1 growtomiddle.lol
    ```
@@ -69,6 +77,7 @@ BASE_FETCH_URL=https://growtomiddle.lol
 ```
 
 To generate a secure `NEXTAUTH_SECRET`, run:
+
 ```bash
 openssl rand -base64 32
 ```
@@ -76,6 +85,7 @@ openssl rand -base64 32
 ### Running with Docker Compose
 
 1. **Start all services:**
+
    ```bash
    docker-compose up -d --build
    ```
@@ -87,11 +97,13 @@ openssl rand -base64 32
      - Password: `admin`
 
 3. **View logs:**
+
    ```bash
    docker-compose logs -f nextjs
    ```
 
 4. **Stop services:**
+
    ```bash
    docker-compose down
    ```
@@ -111,6 +123,7 @@ openssl rand -base64 32
 ### MongoDB Connection
 
 The MongoDB service is configured with:
+
 - **Host:** `mongodb` (within Docker network) or `localhost` (from host)
 - **Port:** `27017`
 - **Database:** `growtomiddle`
@@ -122,13 +135,16 @@ The MongoDB service is configured with:
 ### Troubleshooting
 
 **SSL Certificate Issues:**
+
 - Ensure mkcert is installed and local CA is installed: `mkcert -install`
 - Verify certificates exist: `ls -la nginx/ssl/`
 
 **Domain Not Resolving:**
+
 - Check `/etc/hosts` includes `127.0.0.1 growtomiddle.lol`
 - Try accessing via `https://localhost` (if configured in nginx.conf)
 
 **Next.js Build Fails:**
+
 - Check Docker logs: `docker-compose logs nextjs`
 - Ensure all environment variables are set in `.env.local`
