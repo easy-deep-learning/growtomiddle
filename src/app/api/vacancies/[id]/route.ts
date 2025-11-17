@@ -5,10 +5,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 // GET - Get a single vacancy by ID
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     await mongooseConnect();
-    const vacancy = await VacancyModel.findById(params.id);
+    const { id } = await context.params;
+    const vacancy = await VacancyModel.findById(id);
 
     if (!vacancy) {
       return NextResponse.json({ error: 'Vacancy not found' }, { status: 404 });
@@ -22,12 +23,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT - Update a vacancy
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     await mongooseConnect();
     const body = await request.json();
 
-    const vacancy = await VacancyModel.findByIdAndUpdate(params.id, body, {
+    const { id } = await context.params;
+    const vacancy = await VacancyModel.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
     });
@@ -44,10 +46,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE - Delete a vacancy
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     await mongooseConnect();
-    const vacancy = await VacancyModel.findByIdAndDelete(params.id);
+    const { id } = await context.params;
+    const vacancy = await VacancyModel.findByIdAndDelete(id);
 
     if (!vacancy) {
       return NextResponse.json({ error: 'Vacancy not found' }, { status: 404 });

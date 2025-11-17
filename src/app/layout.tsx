@@ -1,3 +1,5 @@
+import '@ant-design/v5-patch-for-react-19';
+
 import React from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { Analytics } from '@vercel/analytics/react';
@@ -7,7 +9,6 @@ import ApolloWrapper from '@/apollo/client-side-components';
 
 import { NextAuthProvider } from './providers';
 
-import '@ant-design/v5-patch-for-react-19';
 import '@/styles/global.css';
 
 export const metadata: Metadata = {
