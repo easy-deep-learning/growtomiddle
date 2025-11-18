@@ -4,12 +4,16 @@
     "ADMINUSERNAME",
     "BASICAUTH",
     "configdb",
+    "dbaeumer",
+    "devcontainers",
     "healthcheck",
     "INITDB",
     "mkcert",
     "mongosh",
+    "NONROOT",
     "nosniff",
     "SAMEORIGIN",
+    "seccomp",
     "simpledotcss"
   ],
   "git.ignoreLimitWarning": true

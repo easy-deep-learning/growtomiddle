@@ -2,7 +2,7 @@
   "name": "growtomiddle-dev",
   "build": {
     "dockerfile": "Dockerfile",
-    "context": ".devcontainer",
+    "context": "..",
     "args": {
       "VARIANT": "22-bookworm",
       "PNPM_VERSION": "9.0.0"
@@ -11,19 +11,12 @@
   "workspaceFolder": "/app",
   "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind,consistency=cached",
   "remoteUser": "node",
-  "overrideCommand": true,
-  "runArgs": [
-    "--cap-add=SYS_PTRACE",
-    "--security-opt=seccomp=unconfined"
-  ],
-  "mounts": [
-    "source=pnpm-store,target=/home/node/.local/share/pnpm/store,type=volume"
-  ],
-  "forwardPorts": [
-    3000,
-    27017
-  ],
-  "postCreateCommand": "corepack enable && pnpm install --frozen-lockfile",
+  "overrideCommand": false,
+  "runArgs": ["--cap-add=SYS_PTRACE", "--security-opt=seccomp=unconfined"],
+  "mounts": ["source=pnpm-store,target=/home/node/.local/share/pnpm/store,type=volume"],
+  "forwardPorts": [3000, 27017],
+  // was: "corepack enable && pnpm install..."
+  "postCreateCommand": "pnpm install --frozen-lockfile || pnpm install",
   "customizations": {
     "vscode": {
       "extensions": [
