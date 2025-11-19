@@ -47,6 +47,31 @@ services:
     entrypoint: /bin/sh
     command: -c "corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install && pnpm dev"
 
+  nextjs-scripts:
+    image: node:22-alpine
+    container_name: growtomiddle-nextjs-scripts
+    working_dir: /app
+    env_file:
+      - .env.local
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/growtomiddle?authSource=admin
+      - NEXTAUTH_URL=https://growtomiddle.lol/api/auth
+      - BASE_FETCH_URL=https://growtomiddle.lol
+      - NEXT_PUBLIC_GRAPHQL_ENDPOINT=https://growtomiddle.lol/api/graphql
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - growtomiddle-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    entrypoint: /bin/sh
+    command: -c "corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install && pnpm build"
+
+
   # Nginx reverse proxy with HTTPS
   nginx:
     image: nginx:alpine
