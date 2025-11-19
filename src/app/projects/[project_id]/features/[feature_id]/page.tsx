@@ -32,7 +32,7 @@ const FeaturePage: NextPage<PageParams> = (context) => {
   });
 
   if (error) {
-    console.log('error: ', error); // eslint-disable-line
+    console.error('Failed to load feature', error);
     return <div>{error.message}</div>;
   }
 

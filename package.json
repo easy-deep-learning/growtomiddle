@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:on-host": "MONGODB_URI=mongodb://localhost:27017/growtomiddle next dev",
     "build": "next experimental-compile",
     "build-prerender": "next build",
     "start": "next start",

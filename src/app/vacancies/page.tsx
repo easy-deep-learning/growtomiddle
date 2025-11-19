@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { IVacancy } from '@/database/models/Vacancy';
-import { message, Modal, Popconfirm } from 'antd';
+import { message, Modal } from 'antd';
 
 import { VacancyForm, VacancyList } from '@/components/Vacancy';
 
