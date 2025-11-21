@@ -1,7 +1,7 @@
-import type { IVacancy } from '@/database/models/Vacancy';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 
+import type { IVacancy } from '@/database/models/Vacancy';
 import { AuthPanel } from '@/components/AuthPanel';
 import { VacanciesDashboard } from '@/components/Vacancy';
 

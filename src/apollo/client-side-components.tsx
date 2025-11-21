@@ -1,20 +1,21 @@
 'use client';
 
+import React from 'react';
 import { ApolloLink, HttpLink } from '@apollo/client';
 import {
+  ApolloClient,
   ApolloNextAppProvider,
-  NextSSRApolloClient,
-  NextSSRInMemoryCache,
+  InMemoryCache,
   SSRMultipartLink,
-} from '@apollo/experimental-nextjs-app-support/ssr';
+} from '@apollo/client-integration-nextjs';
 
 const makeClient = () => {
   const httpLink = new HttpLink({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
   });
 
-  return new NextSSRApolloClient({
-    cache: new NextSSRInMemoryCache(),
+  return new ApolloClient({
+    cache: new InMemoryCache(),
     link:
       typeof window === 'undefined'
         ? ApolloLink.from([

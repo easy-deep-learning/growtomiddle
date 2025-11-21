@@ -10,10 +10,8 @@
     "^react$",
     "<THIRD_PARTY_MODULES>",
     "",
+    "@/database/(.*)$",
     "^@/components/(.*)$",
-    "^@/apollo/(.*)$",
-    "^@/lib/(.*)$",
-    "^@/hooks/(.*)$",
     "",
     "^[./]"
   ]
