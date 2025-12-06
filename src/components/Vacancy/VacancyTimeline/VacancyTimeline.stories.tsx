@@ -1,7 +1,8 @@
+import React from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import { VacancyTimeline, type VacancyStatus } from './VacancyTimeline';
+import { VacancyTimeline } from './VacancyTimeline';
 
 const meta: Meta<typeof VacancyTimeline> = {
   title: 'Components/Vacancy/VacancyTimeline',
@@ -17,7 +18,7 @@ const meta: Meta<typeof VacancyTimeline> = {
   },
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    (Story: React.ComponentType<Record<string, never>>) => (
       <AntdRegistry>
         <Story />
       </AntdRegistry>

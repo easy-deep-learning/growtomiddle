@@ -42,12 +42,6 @@ export const VacancyForm: React.FC<VacancyFormProps> = ({
           : undefined,
     };
 
-    // Remove helper fields
-    delete vacancyData.salaryFrom;
-    delete vacancyData.salaryTo;
-    delete vacancyData.salaryCurrency;
-    delete vacancyData.salaryGross;
-
     onSubmit(vacancyData);
   };
 

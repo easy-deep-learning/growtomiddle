@@ -1,4 +1,3 @@
-import { headers } from 'next/headers';
 import Link from 'next/link';
 
 import type { IVacancy } from '@/database/models/Vacancy';
