@@ -93,7 +93,7 @@ export const VacancyCard: React.FC<VacancyCardProps> = ({
         </Button>,
       ]}
     >
-      <Space direction="vertical" size="small" style={{ width: '100%' }}>
+      <Space orientation="vertical" size="small" style={{ width: '100%' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <Title level={4} style={{ margin: 0 }}>
             {vacancy.title}
