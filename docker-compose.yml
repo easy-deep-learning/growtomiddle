@@ -71,7 +71,6 @@ services:
     entrypoint: /bin/sh
     command: -c "corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm install && pnpm build"
 
-
   # Nginx reverse proxy with HTTPS
   nginx:
     image: nginx:alpine

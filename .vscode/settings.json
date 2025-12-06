@@ -14,7 +14,9 @@
     "nosniff",
     "SAMEORIGIN",
     "seccomp",
-    "simpledotcss"
+    "sentryclirc",
+    "simpledotcss",
+    "vercel"
   ],
   "git.ignoreLimitWarning": true
 }

@@ -1,8 +1,9 @@
 'use client';
 
-import type { IVacancy } from '@/database/models/Vacancy';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Empty, List, Space, Spin, Tabs } from 'antd';
+import { Button, Empty, Flex, Space, Spin, Tabs } from 'antd';
+
+import type { IVacancy } from '@/database/models/Vacancy';
 
 import { VacancyCard } from './VacancyCard';
 
@@ -30,42 +31,42 @@ export const VacancyList: React.FC<VacancyListProps> = ({
     {
       key: 'all',
       label: `All (${allVacancies.length})`,
-      children: (
-        <List
-          dataSource={allVacancies}
-          renderItem={(vacancy) => (
-            <List.Item key={vacancy._id}>
+      children:
+        allVacancies.length === 0 ? (
+          <Empty description="No vacancies found" />
+        ) : (
+          <Flex vertical gap="middle">
+            {allVacancies.map((vacancy) => (
               <VacancyCard
+                key={vacancy._id}
                 vacancy={vacancy}
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onToggleSave={onToggleSave}
               />
-            </List.Item>
-          )}
-          locale={{ emptyText: <Empty description="No vacancies found" /> }}
-        />
-      ),
+            ))}
+          </Flex>
+        ),
     },
     {
       key: 'saved',
       label: `Saved (${savedVacancies.length})`,
-      children: (
-        <List
-          dataSource={savedVacancies}
-          renderItem={(vacancy) => (
-            <List.Item key={vacancy._id}>
+      children:
+        savedVacancies.length === 0 ? (
+          <Empty description="No saved vacancies" />
+        ) : (
+          <Flex vertical gap="middle">
+            {savedVacancies.map((vacancy) => (
               <VacancyCard
+                key={vacancy._id}
                 vacancy={vacancy}
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onToggleSave={onToggleSave}
               />
-            </List.Item>
-          )}
-          locale={{ emptyText: <Empty description="No saved vacancies" /> }}
-        />
-      ),
+            ))}
+          </Flex>
+        ),
     },
   ];
 

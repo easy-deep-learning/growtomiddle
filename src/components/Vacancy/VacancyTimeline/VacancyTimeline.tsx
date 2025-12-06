@@ -3,6 +3,7 @@
 import React from 'react';
 import { CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Timeline, Typography } from 'antd';
+
 import styles from './VacancyTimeline.module.css';
 
 const { Text } = Typography;
@@ -99,4 +100,3 @@ export const VacancyTimeline: React.FC<VacancyTimelineProps> = ({
     </div>
   );
 };
-

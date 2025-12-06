@@ -9,9 +9,10 @@
  *  }
  */
 
+import mongoose, { Document, Schema } from 'mongoose';
+
 import type { ISkill } from '@/database/models/Skill';
 import SkillModel from '@/database/models/Skill';
-import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ITask {
   _id: string;

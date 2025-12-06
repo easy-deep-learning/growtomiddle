@@ -26,9 +26,10 @@
  *  }
  */
 
+import mongoose, { Document, Schema } from 'mongoose';
+
 import type { ITask } from '@/database/models/Task';
 import TaskModel from '@/database/models/Task';
-import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IFeature {
   _id: string;

@@ -9,8 +9,9 @@
  *  }
  */
 
-import { IFeature } from '@/database/models/Feature';
 import mongoose, { Document, Schema } from 'mongoose';
+
+import { IFeature } from '@/database/models/Feature';
 
 export interface IProject {
   _id: string;

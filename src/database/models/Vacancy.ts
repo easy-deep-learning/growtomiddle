@@ -26,8 +26,7 @@ export interface IVacancy {
 }
 
 export interface IVacancyDocument
-  extends Omit<IVacancy, '_id' | 'createdAt' | 'updatedAt'>,
-    Document {
+  extends Omit<IVacancy, '_id' | 'createdAt' | 'updatedAt'>, Document {
   createdAt: Date;
   updatedAt: Date;
 }

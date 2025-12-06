@@ -1,8 +1,9 @@
 'use client';
 
-import type { IVacancy } from '@/database/models/Vacancy';
 import { BookOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Card, Space, Tag, Typography } from 'antd';
+
+import type { IVacancy } from '@/database/models/Vacancy';
 
 const { Title, Text, Paragraph } = Typography;
 

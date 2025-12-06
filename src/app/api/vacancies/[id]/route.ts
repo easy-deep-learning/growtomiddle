@@ -1,6 +1,7 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import VacancyModel from '@/database/models/Vacancy';
 import mongooseConnect from '@/database/mongooseConnect';
-import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 

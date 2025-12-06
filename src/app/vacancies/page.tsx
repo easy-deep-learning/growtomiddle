@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { IVacancy } from '@/database/models/Vacancy';
 import { message, Modal } from 'antd';
 
+import type { IVacancy } from '@/database/models/Vacancy';
 import { VacancyForm, VacancyList } from '@/components/Vacancy';
 
 export default function VacanciesPage() {

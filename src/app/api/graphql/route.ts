@@ -1,9 +1,10 @@
-import FeatureModel, { IFeature } from '@/database/models/Feature';
-import ProjectModel, { IProject } from '@/database/models/Project';
-import mongooseConnect from '@/database/mongooseConnect';
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { gql } from 'graphql-tag';
+
+import FeatureModel, { IFeature } from '@/database/models/Feature';
+import ProjectModel, { IProject } from '@/database/models/Project';
+import mongooseConnect from '@/database/mongooseConnect';
 
 const resolvers = {
   Query: {

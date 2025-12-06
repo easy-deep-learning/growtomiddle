@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import type { Meta, StoryObj } from '@storybook/react';
+
 import { VacancyTimeline, type VacancyStatus } from './VacancyTimeline';
 
 const meta: Meta<typeof VacancyTimeline> = {
@@ -136,4 +137,3 @@ export const AllStages: Story = {
     },
   },
 };
-

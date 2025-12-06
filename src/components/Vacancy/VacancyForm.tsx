@@ -1,7 +1,8 @@
 'use client';
 
-import type { IVacancy } from '@/database/models/Vacancy';
 import { Button, Col, Form, Input, InputNumber, Row, Select, Space, Switch } from 'antd';
+
+import type { IVacancy } from '@/database/models/Vacancy';
 
 const { TextArea } = Input;
 const { Option } = Select;
