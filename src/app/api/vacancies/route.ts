@@ -10,23 +10,17 @@ export async function GET(request: NextRequest) {
   try {
     await mongooseConnect();
     const { searchParams } = new URL(request.url);
-    const isSaved = searchParams.get('isSaved');
+    const pageParam = searchParams.get('page');
     const limitParam = searchParams.get('limit');
+    const isSavedParam = searchParams.get('isSaved');
+    const page = pageParam ? Number(pageParam) : 1;
+    const limit = limitParam ? Number(limitParam) : 10;
 
-    const query: Record<string, unknown> = {};
-    if (isSaved !== null) {
-      query.isSaved = isSaved === 'true';
-    }
-
-    let findQuery = VacancyModel.find(query).sort({ createdAt: -1 });
-    if (limitParam) {
-      const limit = Number(limitParam);
-      if (!Number.isNaN(limit) && limit > 0) {
-        findQuery = findQuery.limit(Math.min(limit, 50));
-      }
-    }
-
-    const vacancies = await findQuery;
+    const vacancies = await VacancyModel.find({ isSaved: isSavedParam === 'true' })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
     return NextResponse.json(vacancies);
   } catch (error) {
     console.error('Error fetching vacancies:', error);

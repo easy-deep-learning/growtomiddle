@@ -56,7 +56,7 @@ export const VacanciesDashboard: React.FC<VacanciesDashboardProps> = ({ vacancie
                       Added {format(new Date(vacancy.createdAt), 'dd.MM.yyyy')}
                     </Text>
                   </div>
-                  <Link href={`/vacancies`} style={{ whiteSpace: 'nowrap' }}>
+                  <Link href={`/vacancies/${vacancy._id}`} style={{ whiteSpace: 'nowrap' }}>
                     Details
                   </Link>
                 </div>

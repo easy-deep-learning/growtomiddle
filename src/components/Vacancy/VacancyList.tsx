@@ -2,6 +2,7 @@
 
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Empty, Flex, Space, Spin, Tabs } from 'antd';
+import Link from 'next/link';
 
 import type { IVacancy } from '@/database/models/Vacancy';
 
@@ -37,13 +38,15 @@ export const VacancyList: React.FC<VacancyListProps> = ({
         ) : (
           <Flex vertical gap="middle">
             {allVacancies.map((vacancy) => (
-              <VacancyCard
-                key={vacancy._id}
-                vacancy={vacancy}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onToggleSave={onToggleSave}
-              />
+              <Link href={`/vacancies/${vacancy._id}`} key={vacancy._id}>
+                <VacancyCard
+                  key={vacancy._id}
+                  vacancy={vacancy}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onToggleSave={onToggleSave}
+                />
+              </Link>
             ))}
           </Flex>
         ),

@@ -8,6 +8,7 @@
     "dbaeumer",
     "devcontainers",
     "healthcheck",
+    "hoverable",
     "INITDB",
     "mkcert",
     "mongosh",
