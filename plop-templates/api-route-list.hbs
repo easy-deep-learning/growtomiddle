@@ -5,7 +5,7 @@ import mongooseConnect from '@/database/mongooseConnect';
 
 export const dynamic = 'force-dynamic';
 
-// GET - List all {{lowercase name}}s
+// GET - List all {{pascalCase name}}s
 export async function GET(request: NextRequest) {
   try {
     await mongooseConnect();
@@ -15,31 +15,31 @@ export async function GET(request: NextRequest) {
     const page = pageParam ? Number(pageParam) : 1;
     const limit = limitParam ? Number(limitParam) : 10;
 
-    const {{lowercase name}}s = await {{pascalCase name}}Model.find()
+    const {{pascalCase name}}s = await {{pascalCase name}}Model.find()
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();
-    return NextResponse.json({{lowercase name}}s);
+    return NextResponse.json({{pascalCase name}}s);
   } catch (error) {
-    console.error('Error fetching {{lowercase name}}s:', error);
+    console.error('Error fetching {{pascalCase name}}s:', error);
     return NextResponse.json({ error: 'Failed to fetch {{lowercase name}}s' }, { status: 500 });
   }
 }
 
-// POST - Create a new {{lowercase name}}
+// POST - Create a new {{pascalCase name}}
 export async function POST(request: NextRequest) {
   try {
     await mongooseConnect();
     const body = await request.json();
 
-    const {{lowercase name}} = new {{pascalCase name}}Model(body);
-    await {{lowercase name}}.save();
+    const {{pascalCase name}} = new {{pascalCase name}}Model(body);
+    await {{pascalCase name}}.save();
 
-    return NextResponse.json({{lowercase name}}, { status: 201 });
+    return NextResponse.json({{pascalCase name}}, { status: 201 });
   } catch (error) {
-    console.error('Error creating {{lowercase name}}:', error);
-    return NextResponse.json({ error: 'Failed to create {{lowercase name}}' }, { status: 500 });
+    console.error('Error creating {{pascalCase name}}:', error);
+    return NextResponse.json({ error: 'Failed to create {{pascalCase name}}' }, { status: 500 });
   }
 }
 

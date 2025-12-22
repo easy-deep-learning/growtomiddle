@@ -8,23 +8,23 @@ import type { I{{pascalCase modelName}} } from '@/database/models/{{pascalCase m
 // import { {{pascalCase modelName}}Form, {{pascalCase modelName}}List } from '@/components/{{pascalCase modelName}}';
 
 export default function {{pascalCase name}}Page() {
-  const [{{lowercase modelName}}s, set{{pascalCase modelName}}s] = useState<I{{pascalCase modelName}}[]>([]);
+  const [{{pascalCase modelName}}s, set{{pascalCase modelName}}s] = useState<I{{pascalCase modelName}}[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [editing{{pascalCase modelName}}, setEditing{{pascalCase modelName}}] = useState<I{{pascalCase modelName}} | undefined>();
   const [formLoading, setFormLoading] = useState(false);
 
-  // Fetch {{lowercase modelName}}s
+  // Fetch {{pascalCase modelName}}s
   const fetch{{pascalCase modelName}}s = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/{{lowercase modelName}}s');
-      if (!response.ok) throw new Error('Failed to fetch {{lowercase modelName}}s');
+      const response = await fetch('/api/{{pascalCase modelName}}s');
+      if (!response.ok) throw new Error('Failed to fetch {{pascalCase modelName}}s');
       const data = await response.json();
       set{{pascalCase modelName}}s(data);
     } catch (error) {
-      console.error('Error fetching {{lowercase modelName}}s:', error);
-      message.error('Failed to load {{lowercase modelName}}s');
+      console.error('Error fetching {{pascalCase modelName}}s:', error);
+      message.error('Failed to load {{pascalCase modelName}}s');
     } finally {
       setLoading(false);
     }
@@ -34,15 +34,15 @@ export default function {{pascalCase name}}Page() {
     fetch{{pascalCase modelName}}s();
   }, []);
 
-  // Create new {{lowercase modelName}}
+  // Create new {{pascalCase modelName}}
   const handleCreate = () => {
     setEditing{{pascalCase modelName}}(undefined);
     setModalVisible(true);
   };
 
-  // Edit {{lowercase modelName}}
-  const handleEdit = ({{lowercase modelName}}: I{{pascalCase modelName}}) => {
-    setEditing{{pascalCase modelName}}({{lowercase modelName}});
+  // Edit {{pascalCase modelName}}
+  const handleEdit = ({{pascalCase modelName}}: I{{pascalCase modelName}}) => {
+    setEditing{{pascalCase modelName}}({{pascalCase modelName}});
     setModalVisible(true);
   };
 
@@ -50,7 +50,7 @@ export default function {{pascalCase name}}Page() {
   const handleSubmit = async (values: Partial<I{{pascalCase modelName}}>) => {
     try {
       setFormLoading(true);
-      const url = editing{{pascalCase modelName}} ? `/api/{{lowercase modelName}}s/${editing{{pascalCase modelName}}._id}` : '/api/{{lowercase modelName}}s';
+      const url = editing{{pascalCase modelName}} ? `/api/{{pascalCase modelName}}s/${editing{{pascalCase modelName}}._id}` : '/api/{{pascalCase modelName}}s';
       const method = editing{{pascalCase modelName}} ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -61,7 +61,7 @@ export default function {{pascalCase name}}Page() {
         body: JSON.stringify(values),
       });
 
-      if (!response.ok) throw new Error('Failed to save {{lowercase modelName}}');
+      if (!response.ok) throw new Error('Failed to save {{pascalCase modelName}}');
 
       message.success(
         editing{{pascalCase modelName}} ? '{{pascalCase modelName}} updated successfully' : '{{pascalCase modelName}} created successfully'
@@ -70,27 +70,27 @@ export default function {{pascalCase name}}Page() {
       setEditing{{pascalCase modelName}}(undefined);
       fetch{{pascalCase modelName}}s();
     } catch (error) {
-      console.error('Error saving {{lowercase modelName}}:', error);
-      message.error('Failed to save {{lowercase modelName}}');
+      console.error('Error saving {{pascalCase modelName}}:', error);
+      message.error('Failed to save {{pascalCase modelName}}');
     } finally {
       setFormLoading(false);
     }
   };
 
-  // Delete {{lowercase modelName}}
+  // Delete {{pascalCase modelName}}
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/{{lowercase modelName}}s/${id}`, {
+      const response = await fetch(`/api/{{pascalCase modelName}}s/${id}`, {
         method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('Failed to delete {{lowercase modelName}}');
+      if (!response.ok) throw new Error('Failed to delete {{pascalCase modelName}}');
 
       message.success('{{pascalCase modelName}} deleted successfully');
       fetch{{pascalCase modelName}}s();
     } catch (error) {
-      console.error('Error deleting {{lowercase modelName}}:', error);
-      message.error('Failed to delete {{lowercase modelName}}');
+      console.error('Error deleting {{pascalCase modelName}}:', error);
+      message.error('Failed to delete {{pascalCase modelName}}');
     }
   };
 
@@ -104,11 +104,11 @@ export default function {{pascalCase name}}Page() {
           <p>Loading...</p>
         ) : (
           <ul>
-            { {{lowercase modelName}}s.map(({{lowercase modelName}}) => (
-              <li key={ {{lowercase modelName}}._id }>
-                {/* TODO: Display {{lowercase modelName}} data */}
-                <button onClick={() => handleEdit({{lowercase modelName}})}>Edit</button>
-                <button onClick={() => handleDelete({{lowercase modelName}}._id)}>Delete</button>
+            { {{pascalCase modelName}}s.map(({{pascalCase modelName}}) => (
+              <li key={ {{pascalCase modelName}}._id }>
+                {/* TODO: Display {{pascalCase modelName}} data */}
+                <button onClick={() => handleEdit({{pascalCase modelName}})}>Edit</button>
+                <button onClick={() => handleDelete({{pascalCase modelName}}._id)}>Delete</button>
               </li>
             ))}
           </ul>
