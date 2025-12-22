@@ -1,0 +1,138 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { message, Modal } from 'antd';
+
+import type { I{{pascalCase modelName}} } from '@/database/models/{{pascalCase modelName}}';
+// TODO: Import your form and list components
+// import { {{pascalCase modelName}}Form, {{pascalCase modelName}}List } from '@/components/{{pascalCase modelName}}';
+
+export default function {{pascalCase name}}Page() {
+  const [{{lowercase modelName}}s, set{{pascalCase modelName}}s] = useState<I{{pascalCase modelName}}[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editing{{pascalCase modelName}}, setEditing{{pascalCase modelName}}] = useState<I{{pascalCase modelName}} | undefined>();
+  const [formLoading, setFormLoading] = useState(false);
+
+  // Fetch {{lowercase modelName}}s
+  const fetch{{pascalCase modelName}}s = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/{{lowercase modelName}}s');
+      if (!response.ok) throw new Error('Failed to fetch {{lowercase modelName}}s');
+      const data = await response.json();
+      set{{pascalCase modelName}}s(data);
+    } catch (error) {
+      console.error('Error fetching {{lowercase modelName}}s:', error);
+      message.error('Failed to load {{lowercase modelName}}s');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetch{{pascalCase modelName}}s();
+  }, []);
+
+  // Create new {{lowercase modelName}}
+  const handleCreate = () => {
+    setEditing{{pascalCase modelName}}(undefined);
+    setModalVisible(true);
+  };
+
+  // Edit {{lowercase modelName}}
+  const handleEdit = ({{lowercase modelName}}: I{{pascalCase modelName}}) => {
+    setEditing{{pascalCase modelName}}({{lowercase modelName}});
+    setModalVisible(true);
+  };
+
+  // Submit form (create or update)
+  const handleSubmit = async (values: Partial<I{{pascalCase modelName}}>) => {
+    try {
+      setFormLoading(true);
+      const url = editing{{pascalCase modelName}} ? `/api/{{lowercase modelName}}s/${editing{{pascalCase modelName}}._id}` : '/api/{{lowercase modelName}}s';
+      const method = editing{{pascalCase modelName}} ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) throw new Error('Failed to save {{lowercase modelName}}');
+
+      message.success(
+        editing{{pascalCase modelName}} ? '{{pascalCase modelName}} updated successfully' : '{{pascalCase modelName}} created successfully'
+      );
+      setModalVisible(false);
+      setEditing{{pascalCase modelName}}(undefined);
+      fetch{{pascalCase modelName}}s();
+    } catch (error) {
+      console.error('Error saving {{lowercase modelName}}:', error);
+      message.error('Failed to save {{lowercase modelName}}');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  // Delete {{lowercase modelName}}
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/{{lowercase modelName}}s/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete {{lowercase modelName}}');
+
+      message.success('{{pascalCase modelName}} deleted successfully');
+      fetch{{pascalCase modelName}}s();
+    } catch (error) {
+      console.error('Error deleting {{lowercase modelName}}:', error);
+      message.error('Failed to delete {{lowercase modelName}}');
+    }
+  };
+
+  return (
+    <div style=\{{ padding: '24px', maxWidth: '1200px', margin: '0 auto' \}}>
+      {/* TODO: Replace with your actual list component */}
+      <div>
+        <h1>{{pascalCase name}}</h1>
+        <button onClick={handleCreate}>Create New</button>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <ul>
+            { {{lowercase modelName}}s.map(({{lowercase modelName}}) => (
+              <li key={ {{lowercase modelName}}._id }>
+                {/* TODO: Display {{lowercase modelName}} data */}
+                <button onClick={() => handleEdit({{lowercase modelName}})}>Edit</button>
+                <button onClick={() => handleDelete({{lowercase modelName}}._id)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <Modal
+        title={editing{{pascalCase modelName}} ? 'Edit {{pascalCase modelName}}' : 'Create New {{pascalCase modelName}}'}
+        open={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+          setEditing{{pascalCase modelName}}(undefined);
+        }}
+        footer={null}
+        width={800}
+        destroyOnHidden
+      >
+        {/* TODO: Replace with your actual form component */}
+        <div>
+          <p>Form component goes here</p>
+          <button onClick={() => handleSubmit({})}>Submit</button>
+        </div>
+      </Modal>
+    </div>
+  );
+}
+
