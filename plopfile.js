@@ -47,22 +47,22 @@ export default function (plop) {
       const actions = [
         {
           type: 'add',
-          path: 'src/database/models/{{pascalCase name}}.ts',
+          path: 'dev-tools/src/database/models/{{pascalCase name}}.ts',
           templateFile: 'plop-templates/model.hbs',
         },
         {
           type: 'add',
-          path: 'src/database/datatypes/{{pascalCase name}}.ts',
+          path: 'dev-tools/src/database/datatypes/{{pascalCase name}}.ts',
           templateFile: 'plop-templates/datatype.hbs',
         },
         {
           type: 'add',
-          path: 'src/app/api/{{lowercase name}}s/route.ts',
+          path: 'dev-tools/src/app/api/{{lowercase name}}s/route.ts',
           templateFile: 'plop-templates/api-route-list.hbs',
         },
         {
           type: 'add',
-          path: 'src/app/api/{{lowercase name}}s/[id]/route.ts',
+          path: 'dev-tools/src/app/api/{{lowercase name}}s/[id]/route.ts',
           templateFile: 'plop-templates/api-route-detail.hbs',
         },
       ];
@@ -70,7 +70,7 @@ export default function (plop) {
       if (data.generatePage) {
         actions.push({
           type: 'add',
-          path: 'src/app/{{lowercase name}}s/page.tsx',
+          path: 'dev-tools/src/app/{{lowercase name}}s/page.tsx',
           templateFile: 'plop-templates/page.hbs',
         });
       }
@@ -105,7 +105,7 @@ export default function (plop) {
       const actions = [
         {
           type: 'add',
-          path: 'src/app/api/{{lowercase name}}s/route.ts',
+          path: 'dev-tools/src/app/api/{{lowercase name}}s/route.ts',
           templateFile: 'plop-templates/api-route-list.hbs',
         },
       ];
@@ -113,7 +113,7 @@ export default function (plop) {
       if (data.generateDetail) {
         actions.push({
           type: 'add',
-          path: 'src/app/api/{{lowercase name}}s/[id]/route.ts',
+          path: 'dev-tools/src/app/api/{{lowercase name}}s/[id]/route.ts',
           templateFile: 'plop-templates/api-route-detail.hbs',
         });
       }
@@ -141,7 +141,7 @@ export default function (plop) {
     actions: [
       {
         type: 'add',
-        path: 'src/database/models/{{pascalCase name}}.ts',
+        path: 'dev-tools/src/database/models/{{pascalCase name}}.ts',
         templateFile: 'plop-templates/model.hbs',
       },
     ],
@@ -166,7 +166,7 @@ export default function (plop) {
     actions: [
       {
         type: 'add',
-        path: 'src/database/datatypes/{{pascalCase name}}.ts',
+        path: 'dev-tools/src/database/datatypes/{{pascalCase name}}.ts',
         templateFile: 'plop-templates/datatype.hbs',
       },
     ],
@@ -202,8 +202,33 @@ export default function (plop) {
     actions: [
       {
         type: 'add',
-        path: 'src/app/{{lowercase name}}/page.tsx',
+        path: 'dev-tools/src/app/{{lowercase name}}/page.tsx',
         templateFile: 'plop-templates/page.hbs',
+      },
+    ],
+  });
+
+  // Generator: Mock Data
+  plop.setGenerator('mock-data', {
+    description: 'Generate mock data functions using Faker.js',
+    prompts: [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'Model name (singular, e.g., user, product):',
+        validate: (value) => {
+          if (!value || value.length === 0) {
+            return 'Model name is required';
+          }
+          return true;
+        },
+      },
+    ],
+    actions: [
+      {
+        type: 'add',
+        path: 'dev-tools/src/utils/mockData/{{pascalCase name}}.ts',
+        templateFile: 'plop-templates/mock-data.hbs',
       },
     ],
   });

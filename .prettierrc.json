@@ -10,6 +10,7 @@
     "^react$",
     "<THIRD_PARTY_MODULES>",
     "",
+    "^@/utils/(.*)$",
     "^@/database/(.*)$",
     "^@/components/(.*)$",
     "",

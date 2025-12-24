@@ -1,0 +1,37 @@
+import { faker } from '@faker-js/faker';
+import type { I{{pascalCase name}} } from '@/database/models/{{pascalCase name}}';
+  // TODO: Import your model and mongooseConnect
+  // import {{pascalCase name}}Model from '@/database/models/{{pascalCase name}}';
+  // import mongooseConnect from '@/database/mongooseConnect';
+
+/**
+ * Generate a single mock {{pascalCase name}} object
+ */
+export function generateMock{{pascalCase name}}(): Omit<I{{pascalCase name}}, '_id' | 'createdAt' | 'updatedAt'> {
+  return {
+    // TODO: Customize these fields based on your model
+    name: faker.person.fullName(),
+  };
+}
+
+/**
+ * Generate multiple mock {{pascalCase name}} objects
+ */
+export function generateMock{{pascalCase name}}s(count: number = 10): Omit<I{{pascalCase name}}, '_id' | 'createdAt' | 'updatedAt'>[] {
+  return Array.from({ length: count }, () => generateMock{{pascalCase name}}());
+}
+
+/**
+ * Generate mock {{pascalCase name}} data for seeding the database
+ * This function returns data ready to be inserted into MongoDB
+ */
+export async function seed{{pascalCase name}}s(count: number = 10): Promise<void> {
+  const {{pascalCase name}}s = generateMock{{pascalCase name}}s(count);
+  
+  // await mongooseConnect();
+  // await {{pascalCase name}}Model.insertMany({{pascalCase name}}s);
+  
+  console.log(`Generated ${count} mock {{pascalCase name}}s`);
+  return Promise.resolve();
+}
+

@@ -33,7 +33,9 @@ export default async function dbConnect() {
      * @see http://mongodb.github.io/node-mongodb-native/2.2/api/MongoClient.html#connect
      * ConnectOptions
      */
-    const options: ConnectOptions = {};
+    const options: ConnectOptions = {
+      dbName: process.env.MONGODB_DB,
+    };
 
     cached.promise = mongoose
       .connect(MONGODB_URI, options)

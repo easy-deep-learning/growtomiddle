@@ -95,6 +95,47 @@ pnpm generate
 # Model name: user (singular)
 ```
 
+### 6. `mock-data` - Mock Data Generator
+
+Generates mock data functions using [Faker.js](https://fakerjs.dev/) for testing and development.
+
+**Example:**
+```bash
+pnpm generate
+# Select: mock-data
+# Model name: product
+```
+
+This creates:
+- `src/utils/mockData/Product.ts` with functions to generate mock data
+
+**Usage:**
+```typescript
+import { generateMockProduct, generateMockProducts, seedProducts } from '@/utils/mockData/Product';
+
+// Generate a single mock product
+const product = generateMockProduct();
+
+// Generate multiple mock products
+const products = generateMockProducts(20);
+
+// Seed the database (after uncommenting the database code)
+await seedProducts(50);
+```
+
+**Helper Functions:**
+The project includes utility functions in `src/utils/mockData.ts`:
+- `randomFromArray<T>(array)` - Pick a random value from an array
+- `randomNumber(min, max)` - Generate a random number
+- `randomBoolean()` - Generate a random boolean
+- `randomDate(daysAgo)` - Generate a random date
+- `randomString(length)` - Generate a random string
+- `randomEmail()` - Generate a random email
+- `randomUrl()` - Generate a random URL
+- `randomSentence(wordCount)` - Generate a random sentence
+- `randomParagraph(sentenceCount)` - Generate a random paragraph
+- `randomItems<T>(generator, count)` - Generate multiple items
+
 ## Customization
 
 After generation, you'll need to:
@@ -113,4 +154,9 @@ Templates are located in `plop-templates/`:
 - `model.hbs` - Mongoose model template
 - `datatype.hbs` - TypeScript datatype template
 - `page.hbs` - Next.js page component template
+- `mock-data.hbs` - Mock data generator template using Faker.js
+
+## Example: Vacancy Mock Data
+
+See `src/utils/mockData/Vacancy.example.ts` for a complete example of how to generate mock data for a complex model with multiple fields, enums, and nested objects.
 

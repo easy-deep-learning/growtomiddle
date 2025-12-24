@@ -14,7 +14,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "typegen": "next typegen",
-    "generate": "plop"
+    "generate": "plop",
+    "seed:vacancies": "tsx scripts/seed-vacancies.ts"
   },
   "engines": {
     "node": "24"
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.3",
+    "@faker-js/faker": "^9.3.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@storybook/addon-a11y": "^10.1.10",
     "@storybook/addon-docs": "^10.1.10",
@@ -46,14 +48,20 @@
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
     "@vitest/browser-playwright": "^4.0.16",
     "@vitest/coverage-v8": "^4.0.16",
+    "dotenv": "^16.4.7",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-storybook": "^10.1.10",
     "playwright": "^1.57.0",
     "plop": "^4.0.1",
+    "prettier": "^3.7.4",
     "storybook": "^10.1.10",
+    "tsx": "^4.19.2",
     "typescript": "^5.9.3",
     "vitest": "^4.0.16"
   },
