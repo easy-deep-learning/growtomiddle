@@ -47,31 +47,31 @@ export default function (plop) {
       const actions = [
         {
           type: 'add',
-          path: 'dev-tools/src/database/models/{{pascalCase name}}.ts',
-          templateFile: 'plop-templates/model.hbs',
+          path: 'src/database/models/{{pascalCase name}}.ts',
+          templateFile: 'dev-tools/plop-templates/model.hbs',
         },
         {
           type: 'add',
-          path: 'dev-tools/src/database/datatypes/{{pascalCase name}}.ts',
-          templateFile: 'plop-templates/datatype.hbs',
+          path: 'src/database/datatypes/{{pascalCase name}}.ts',
+          templateFile: 'dev-tools/plop-templates/datatype.hbs',
         },
         {
           type: 'add',
-          path: 'dev-tools/src/app/api/{{lowercase name}}s/route.ts',
-          templateFile: 'plop-templates/api-route-list.hbs',
+          path: 'src/app/api/{{lowercase name}}s/route.ts',
+          templateFile: 'dev-tools/plop-templates/api-route-list.hbs',
         },
         {
           type: 'add',
-          path: 'dev-tools/src/app/api/{{lowercase name}}s/[id]/route.ts',
-          templateFile: 'plop-templates/api-route-detail.hbs',
+          path: 'src/app/api/{{lowercase name}}s/[id]/route.ts',
+          templateFile: 'dev-tools/plop-templates/api-route-detail.hbs',
         },
       ];
 
       if (data.generatePage) {
         actions.push({
           type: 'add',
-          path: 'dev-tools/src/app/{{lowercase name}}s/page.tsx',
-          templateFile: 'plop-templates/page.hbs',
+          path: 'src/app/{{lowercase name}}s/page.tsx',
+          templateFile: 'dev-tools/plop-templates/page.hbs',
         });
       }
 
@@ -105,16 +105,16 @@ export default function (plop) {
       const actions = [
         {
           type: 'add',
-          path: 'dev-tools/src/app/api/{{lowercase name}}s/route.ts',
-          templateFile: 'plop-templates/api-route-list.hbs',
+          path: 'src/app/api/{{lowercase name}}s/route.ts',
+          templateFile: 'dev-tools/plop-templates/api-route-list.hbs',
         },
       ];
 
       if (data.generateDetail) {
         actions.push({
           type: 'add',
-          path: 'dev-tools/src/app/api/{{lowercase name}}s/[id]/route.ts',
-          templateFile: 'plop-templates/api-route-detail.hbs',
+          path: 'src/app/api/{{lowercase name}}s/[id]/route.ts',
+          templateFile: 'dev-tools/plop-templates/api-route-detail.hbs',
         });
       }
 
@@ -141,8 +141,13 @@ export default function (plop) {
     actions: [
       {
         type: 'add',
-        path: 'dev-tools/src/database/models/{{pascalCase name}}.ts',
-        templateFile: 'plop-templates/model.hbs',
+        path: 'src/database/models/{{pascalCase name}}.ts',
+        templateFile: 'dev-tools/plop-templates/model.hbs',
+      },
+      {
+        type: 'add',
+        path: 'src/database/datatypes/{{pascalCase name}}.ts',
+        templateFile: 'dev-tools/plop-templates/datatype.hbs',
       },
     ],
   });
@@ -166,8 +171,27 @@ export default function (plop) {
     actions: [
       {
         type: 'add',
-        path: 'dev-tools/src/database/datatypes/{{pascalCase name}}.ts',
-        templateFile: 'plop-templates/datatype.hbs',
+        path: 'src/database/datatypes/{{pascalCase name}}.ts',
+        templateFile: 'dev-tools/plop-templates/datatype.hbs',
+      },
+    ],
+  });
+
+  // Generate: Controller
+  plop.setGenerator('controller', {
+    description: 'Generate a controller',
+    prompts: [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'Controller name (singular, e.g., user, product):',
+      },
+    ],
+    actions: [
+      {
+        type: 'add',
+        path: 'src/controllers/{{pascalCase name}}Controller.ts',
+        templateFile: 'dev-tools/plop-templates/controller.hbs',
       },
     ],
   });
@@ -202,8 +226,8 @@ export default function (plop) {
     actions: [
       {
         type: 'add',
-        path: 'dev-tools/src/app/{{lowercase name}}/page.tsx',
-        templateFile: 'plop-templates/page.hbs',
+        path: 'src/app/{{lowercase name}}/page.tsx',
+        templateFile: 'dev-tools/plop-templates/page.hbs',
       },
     ],
   });
@@ -227,8 +251,8 @@ export default function (plop) {
     actions: [
       {
         type: 'add',
-        path: 'dev-tools/src/utils/mockData/{{pascalCase name}}.ts',
-        templateFile: 'plop-templates/mock-data.hbs',
+        path: 'dev-tools/mocks-data/mockData/{{pascalCase name}}.ts',
+        templateFile: 'dev-tools/plop-templates/mock-data.hbs',
       },
     ],
   });

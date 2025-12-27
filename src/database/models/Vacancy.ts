@@ -25,13 +25,13 @@ export interface IVacancy {
   updatedAt: string;
 }
 
-export interface IVacancyDocument
+export interface VacancyDocument
   extends Omit<IVacancy, '_id' | 'createdAt' | 'updatedAt'>, Document {
   createdAt: Date;
   updatedAt: Date;
 }
 
-const VacancySchema = new Schema<IVacancyDocument>(
+const VacancySchema = new Schema<VacancyDocument>(
   {
     companyId: String,
     title: {
@@ -82,7 +82,7 @@ const VacancySchema = new Schema<IVacancyDocument>(
   }
 );
 
-const VacancyModel: mongoose.Model<IVacancyDocument> =
-  mongoose.models.Vacancy || mongoose.model<IVacancyDocument>('Vacancy', VacancySchema);
+const VacancyModel: mongoose.Model<VacancyDocument> =
+  mongoose.models.Vacancy || mongoose.model<VacancyDocument>('Vacancy', VacancySchema);
 
 export default VacancyModel;

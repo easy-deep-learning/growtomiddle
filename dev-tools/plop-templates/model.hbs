@@ -1,20 +1,10 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface I{{pascalCase name}} {
-  _id: string;
-  // TODO: Add your fields here
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { {{pascalCase name}} } from '@/database/datatypes/{{pascalCase name}}';
 
-export interface I{{pascalCase name}}Document
-  extends Omit<I{{pascalCase name}}, '_id' | 'createdAt' | 'updatedAt'>, Document {
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type {{pascalCase name}}Document = Document & Omit<{{pascalCase name}}, '_id' | 'createdAt' | 'updatedAt'>;
 
-const {{pascalCase name}}Schema = new Schema<I{{pascalCase name}}Document>(
+const {{pascalCase name}}Schema = new Schema<{{pascalCase name}}Document>(
   {
     // TODO: Add your schema fields here
     name: {
@@ -27,8 +17,9 @@ const {{pascalCase name}}Schema = new Schema<I{{pascalCase name}}Document>(
   }
 );
 
-const {{pascalCase name}}Model: mongoose.Model<I{{pascalCase name}}Document> =
-  mongoose.models.{{pascalCase name}} || mongoose.model<I{{pascalCase name}}Document>('{{pascalCase name}}', {{pascalCase name}}Schema);
+const {{pascalCase name}}Model: mongoose.Model<{{pascalCase name}}Document> =
+  mongoose.models.{{pascalCase name}} || mongoose.model<{{pascalCase name}}Document>('{{pascalCase name}}', {{pascalCase name}}Schema);
 
 export default {{pascalCase name}}Model;
+
 

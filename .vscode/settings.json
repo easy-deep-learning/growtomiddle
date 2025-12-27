@@ -5,6 +5,7 @@
     "autodocs",
     "BASICAUTH",
     "configdb",
+    "datatypes",
     "dbaeumer",
     "devcontainers",
     "esbuild",

@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
-import type { I{{pascalCase name}} } from '@/database/models/{{pascalCase name}}';
+import type { {{pascalCase name}} } from '@/database/datatypes/{{pascalCase name}}';
   // TODO: Import your model and mongooseConnect
-  // import {{pascalCase name}}Model from '@/database/models/{{pascalCase name}}';
+  // import {{pascalCase name}}Model from '@/database/datatypes/{{pascalCase name}}';
   // import mongooseConnect from '@/database/mongooseConnect';
 
 /**
  * Generate a single mock {{pascalCase name}} object
  */
-export function generateMock{{pascalCase name}}(): Omit<I{{pascalCase name}}, '_id' | 'createdAt' | 'updatedAt'> {
+export function generateMock{{pascalCase name}}(): Omit<{{pascalCase name}}, '_id' | 'createdAt' | 'updatedAt'> {
   return {
     // TODO: Customize these fields based on your model
     name: faker.person.fullName(),
@@ -17,7 +17,7 @@ export function generateMock{{pascalCase name}}(): Omit<I{{pascalCase name}}, '_
 /**
  * Generate multiple mock {{pascalCase name}} objects
  */
-export function generateMock{{pascalCase name}}s(count: number = 10): Omit<I{{pascalCase name}}, '_id' | 'createdAt' | 'updatedAt'>[] {
+export function generateMock{{pascalCase name}}s(count: number = 10): Omit<{{pascalCase name}}, '_id' | 'createdAt' | 'updatedAt'>[] {
   return Array.from({ length: count }, () => generateMock{{pascalCase name}}());
 }
 

@@ -3,7 +3,7 @@ import { auth } from '@/auth';
 import VacancyModel from '@/database/models/Vacancy';
 import mongooseConnect from '@/database/mongooseConnect';
 
-const getAll = async (params: { page: number; limit: number }) => {
+export const getAll = async (params: { page: number; limit: number }) => {
   await mongooseConnect();
 
   const session = await auth();
@@ -13,7 +13,5 @@ const getAll = async (params: { page: number; limit: number }) => {
     .sort({ createdAt: -1 })
     .skip((params.page - 1) * params.limit)
     .limit(params.limit)
-    .exec();
+    .lean();
 };
-
-export { getAll };
