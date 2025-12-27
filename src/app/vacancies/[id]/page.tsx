@@ -2,9 +2,10 @@ import { format } from 'date-fns';
 
 import VacancyModel from '@/database/models/Vacancy';
 
-export default async function VacancyPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const vacancy = await VacancyModel.findById(id).lean();
+export default async function VacancyPage(props: PageProps<'/vacancies/[id]'>) {
+  const { id } = await props.params;
+
+  const vacancy = await VacancyModel.findById(id);
 
   return (
     <div className="VacancyPage">

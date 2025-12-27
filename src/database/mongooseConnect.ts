@@ -16,9 +16,11 @@ if (MONGODB_URI === '') {
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
  * during API Route usage.
- * @todo: types
  */
-type MongoConnectionsCached = { connection: any; promise: Promise<void | typeof mongoose> | null };
+type MongoConnectionsCached = {
+  connection: mongoose.Mongoose | null;
+  promise: Promise<mongoose.Mongoose | null> | null;
+};
 
 let cached: MongoConnectionsCached = { connection: null, promise: null };
 
@@ -33,16 +35,20 @@ export default async function dbConnect() {
      * @see http://mongodb.github.io/node-mongodb-native/2.2/api/MongoClient.html#connect
      * ConnectOptions
      */
-    const options: ConnectOptions = {
-      dbName: process.env.MONGODB_DB,
-    };
+    const options: ConnectOptions = {};
 
-    cached.promise = mongoose
-      .connect(MONGODB_URI, options)
-      .then((mongoose) => mongoose)
-      .catch((error) => console.error(error));
+    mongoose.connection.on('error', (err) => {
+      console.error('Connection error:', err);
+    });
+
+    const uri = `${process.env.MONGODB_URI}/${process.env.MONGODB_DB}?authSource=${process.env.MONGODB_AUTH_DB}`;
+
+    cached.promise = mongoose.connect(uri, options).catch((error) => {
+      console.error('Connection established error:', error);
+      return null;
+    });
+
+    cached.connection = await cached.promise;
+    return cached.connection;
   }
-
-  cached.connection = await cached.promise;
-  return cached.connection;
 }
