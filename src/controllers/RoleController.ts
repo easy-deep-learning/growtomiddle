@@ -4,18 +4,37 @@ import { Role } from '@/database/datatypes/Role';
 import RoleModel from '@/database/models/Role';
 import mongooseConnect from '@/database/mongooseConnect';
 
-// Get all Roles with pagination
-export const getAll = async (params: { page: number; limit: number }) => {
+type GetAllParams = {
+  page?: number;
+  limit?: number;
+  sort?: string;
+};
+
+const DEFAULT_LIMIT = 25;
+
+export const getAll = async (
+  params: GetAllParams = { page: 0, limit: DEFAULT_LIMIT, sort: 'createdAt' }
+) => {
   await mongooseConnect();
 
   const session = await auth();
   // Optionally do something with the session here
 
-  return await RoleModel.find()
-    .sort({ createdAt: -1 })
-    .skip((params.page - 1) * params.limit)
-    .limit(params.limit)
-    .lean();
+  const query = RoleModel.find();
+
+  if (params?.limit) {
+    query.limit(params.limit);
+  }
+
+  if (params?.page) {
+    query.skip((params.page - 1) * (params.limit ?? DEFAULT_LIMIT));
+  }
+
+  if (params?.sort) {
+    query.sort(params.sort);
+  }
+
+  return await query.lean();
 };
 
 /**
@@ -42,18 +61,6 @@ export const create = async (data: any) => {
   const doc = new RoleModel(data);
   await doc.save();
   return doc;
-};
-
-/**
- * Create multiple Roles
- */
-export const createMany = async (data: Omit<Role, '_id' | 'createdAt' | 'updatedAt'>[]) => {
-  await mongooseConnect();
-
-  const session = await auth();
-
-  const result = await RoleModel.insertMany(data);
-  return result;
 };
 
 /**
