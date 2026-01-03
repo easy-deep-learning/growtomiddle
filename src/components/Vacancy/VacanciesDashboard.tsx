@@ -5,12 +5,12 @@ import { Button, Card, Empty, Flex, Tag, Typography } from 'antd';
 import { format } from 'date-fns';
 import Link from 'next/link';
 
-import type { IVacancy } from '@/database/models/Vacancy';
+import type { VacancyDocument } from '@/database/models/Vacancy';
 
 const { Title, Text } = Typography;
 
 interface VacanciesDashboardProps {
-  vacancies: IVacancy[];
+  vacancies: VacancyDocument[];
 }
 
 export const VacanciesDashboard: React.FC<VacanciesDashboardProps> = ({ vacancies }) => {

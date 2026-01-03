@@ -1,11 +1,15 @@
 import { format } from 'date-fns';
 
-import VacancyModel from '@/database/models/Vacancy';
+import { getById } from '@/controllers/VacancyController';
 
 export default async function VacancyPage(props: PageProps<'/vacancies/[id]'>) {
   const { id } = await props.params;
 
-  const vacancy = await VacancyModel.findById(id);
+  const vacancy = await getById(id);
+
+  if (!vacancy) {
+    return <div>Vacancy not found</div>;
+  }
 
   return (
     <div className="VacancyPage">

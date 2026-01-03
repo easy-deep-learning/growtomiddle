@@ -1,102 +1,68 @@
-'use client';
+import { BookOutlined } from '@ant-design/icons';
+import { Card, Space, Tag } from 'antd';
 
-import { BookOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Card, Space, Tag, Typography } from 'antd';
-
-import type { IVacancy } from '@/database/models/Vacancy';
-
-const { Title, Text, Paragraph } = Typography;
+import {
+  VacancyLevel,
+  VacancySize,
+  VacancyType,
+  type VacancyDocument,
+} from '@/database/models/Vacancy';
+import { Link, Paragraph, Text, Title } from '@/components/ServerSideAntD';
 
 interface VacancyCardProps {
-  vacancy: IVacancy;
-  onEdit: (vacancy: IVacancy) => void;
-  onDelete: (id: string) => void;
-  onToggleSave: (id: string, isSaved: boolean) => void;
+  vacancy: VacancyDocument;
 }
 
-export const VacancyCard: React.FC<VacancyCardProps> = ({
-  vacancy,
-  onEdit,
-  onDelete,
-  onToggleSave,
-}) => {
-  const formatSalary = () => {
-    if (!vacancy.salaryRange) return null;
-    const { from, to, currency = 'EUR', gross } = vacancy.salaryRange;
-    if (!from && !to) return null;
+const getSizeColor = (size: VacancySize) => {
+  switch (size) {
+    case VacancySize.SMALL:
+      return 'blue';
+    case VacancySize.MEDIUM:
+      return 'orange';
+    case VacancySize.LARGE:
+      return 'red';
+    default:
+      return 'default';
+  }
+};
 
-    const salary = to ? `${from || ''} - ${to}` : `${from}`;
-    return `${salary} ${currency}${gross ? ' (gross)' : ' (net)'}`;
-  };
+const getTypeColor = (type: VacancyType) => {
+  switch (type) {
+    case VacancyType.STARTUP:
+      return 'cyan';
+    case VacancyType.ENTERPRISE:
+      return 'purple';
+    case VacancyType.GOVERNMENT:
+      return 'green';
+    case VacancyType.NON_PROFIT:
+      return 'volcano';
+    default:
+      return 'default';
+  }
+};
 
-  const getSizeColor = (size: string) => {
-    switch (size) {
-      case 'small':
-        return 'blue';
-      case 'medium':
-        return 'orange';
-      case 'large':
-        return 'red';
-      default:
-        return 'default';
-    }
-  };
+const getLevelColor = (level?: VacancyLevel) => {
+  switch (level) {
+    case VacancyLevel.JUNIOR:
+      return 'lime';
+    case VacancyLevel.MIDDLE:
+      return 'orange';
+    case VacancyLevel.SENIOR:
+      return 'red';
+    case VacancyLevel.LEAD:
+      return 'magenta';
+    default:
+      return 'default';
+  }
+};
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'startup':
-        return 'cyan';
-      case 'enterprise':
-        return 'purple';
-      case 'government':
-        return 'green';
-      case 'non-profit':
-        return 'volcano';
-      default:
-        return 'default';
-    }
-  };
-
-  const getLevelColor = (level?: string) => {
-    switch (level) {
-      case 'junior':
-        return 'lime';
-      case 'middle':
-        return 'orange';
-      case 'senior':
-        return 'red';
-      case 'lead':
-        return 'magenta';
-      default:
-        return 'default';
-    }
-  };
-
+export const VacancyCard: React.FC<VacancyCardProps> = ({ vacancy }) => {
   return (
-    <Card
-      hoverable
-      style={{ marginBottom: 16 }}
-      actions={[
-        <Button
-          key="save"
-          type={vacancy.isSaved ? 'primary' : 'default'}
-          icon={<BookOutlined />}
-          onClick={() => onToggleSave(vacancy._id, !vacancy.isSaved)}
-        >
-          {vacancy.isSaved ? 'Saved' : 'Save'}
-        </Button>,
-        <Button key="edit" icon={<EditOutlined />} onClick={() => onEdit(vacancy)}>
-          Edit
-        </Button>,
-        <Button key="delete" danger icon={<DeleteOutlined />} onClick={() => onDelete(vacancy._id)}>
-          Delete
-        </Button>,
-      ]}
-    >
-      <Space orientation="vertical" size="small" style={{ width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+    <Card style={{ marginBottom: 16 }}>
+      <Space orientation="vertical" size="small">
+        <div>
           <Title level={4} style={{ margin: 0 }}>
-            {vacancy.title}
+            <Link href={`/vacancies/${vacancy._id}`}>{vacancy?.title}</Link>
           </Title>
           {vacancy.isSaved && (
             <Tag color="gold" icon={<BookOutlined />}>
@@ -114,7 +80,6 @@ export const VacancyCard: React.FC<VacancyCardProps> = ({
         </Space>
 
         {vacancy.location && <Text type="secondary">📍 {vacancy.location}</Text>}
-
         {vacancy.techStack && vacancy.techStack.length > 0 && (
           <div>
             <Text strong>Tech Stack: </Text>
@@ -125,8 +90,6 @@ export const VacancyCard: React.FC<VacancyCardProps> = ({
             </Space>
           </div>
         )}
-
-        {formatSalary() && <Text strong>💰 {formatSalary()}</Text>}
 
         {vacancy.descriptionSnippet && (
           <Paragraph ellipsis={{ rows: 2, expandable: false }}>

@@ -21,7 +21,9 @@
     "sentryclirc",
     "simpledotcss",
     "unrs",
-    "vercel"
+    "vercel",
+    "antd"
   ],
-  "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

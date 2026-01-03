@@ -1,22 +1,22 @@
-'use client';
-
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Empty, Flex, Space, Spin, Tabs } from 'antd';
 import Link from 'next/link';
 
-import type { IVacancy } from '@/database/models/Vacancy';
+import type { VacancyDocument } from '@/database/models/Vacancy';
 
 import { VacancyCard } from './VacancyCard';
 
 interface VacancyListProps {
-  vacancies: IVacancy[];
+  vacancies: VacancyDocument[];
 }
 
 export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
   return (
     <div>
+      <h1>Vacancies</h1>
+      <div>
+        <Link href="/vacancies/new">Add a Vacancy</Link>
+      </div>
       {vacancies.map((vacancy) => (
-        <VacancyCard key={vacancy._id} vacancy={vacancy} />
+        <VacancyCard key={vacancy._id.toString()} vacancy={vacancy} />
       ))}
     </div>
   );

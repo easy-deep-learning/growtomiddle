@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import type { IVacancy } from '@/database/models/Vacancy';
+import type { VacancyDocument } from '@/database/models/Vacancy';
 import { AuthPanel } from '@/components/AuthPanel';
 import { VacanciesDashboard } from '@/components/Vacancy';
 
-async function getLatestVacancies(baseUrl: string): Promise<IVacancy[]> {
+async function getLatestVacancies(baseUrl: string): Promise<VacancyDocument[]> {
   try {
     const response = await fetch(`${baseUrl}/api/vacancies?limit=5`, {
       cache: 'no-store',
@@ -14,7 +14,7 @@ async function getLatestVacancies(baseUrl: string): Promise<IVacancy[]> {
       return [];
     }
 
-    const data = (await response.json()) as IVacancy[];
+    const data = (await response.json()) as VacancyDocument[];
     return data;
   } catch (error) {
     console.error('Failed to fetch vacancies for dashboard', error);
