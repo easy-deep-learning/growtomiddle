@@ -1,3 +1,4 @@
+import { VacancyDocument } from '@/database/models/Vacancy';
 import { VacancyList } from '@/components/Vacancy';
 import { getAll } from '@/controllers/VacancyController';
 
@@ -10,5 +11,5 @@ export default async function VacanciesPage(props: PageProps<'/vacancies'>) {
 
   console.log('>>> vacancies', vacancies);
 
-  return <VacancyList vacancies={vacancies} />;
+  return <VacancyList vacancies={vacancies as unknown as VacancyDocument[]} />;
 }

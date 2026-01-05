@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 
 import { mongoDocToFrontend } from '@/utils/mongo-doc-to-frontend';
-import VacancyModel from '@/database/models/Vacancy';
+import VacancyModel, { Vacancy } from '@/database/models/Vacancy';
 import mongooseConnect from '@/database/mongooseConnect';
 import { auth } from '@/auth';
 
@@ -11,12 +11,13 @@ export const getAll = async (params: { page: number; limit: number }) => {
   const session = await auth();
   console.log('>>> session', session);
 
-  return await VacancyModel.find()
+  const docs = await VacancyModel.find()
     .sort({ createdAt: -1 })
     .skip((params.page - 1) * params.limit)
     .limit(params.limit)
-    .lean()
-    .transform((docs) => docs.map(mongoDocToFrontend));
+    .lean();
+
+  return docs.map(mongoDocToFrontend);
 };
 
 export const getById = async (id: string) => {
@@ -29,5 +30,16 @@ export const getById = async (id: string) => {
     return null;
   }
 
-  return await VacancyModel.findById(id).lean().transform(mongoDocToFrontend);
+  const doc = await VacancyModel.findById(id).lean();
+  return doc ? mongoDocToFrontend(doc) : null;
+};
+
+export const create = async (data: Omit<Vacancy, 'id' | 'createdAt' | 'updatedAt'>) => {
+  await mongooseConnect();
+
+  const session = await auth();
+  console.log('>>> session', session);
+
+  const doc = await VacancyModel.create(data);
+  return mongoDocToFrontend(doc);
 };

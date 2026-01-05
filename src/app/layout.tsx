@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <NextAuthProvider>
           <AntdRegistry>{children}</AntdRegistry>
         </NextAuthProvider>
+
         <Analytics />
       </body>
     </html>

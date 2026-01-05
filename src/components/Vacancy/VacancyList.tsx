@@ -16,7 +16,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
         <Link href="/vacancies/new">Add a Vacancy</Link>
       </div>
       {vacancies.map((vacancy) => (
-        <VacancyCard key={vacancy._id.toString()} vacancy={vacancy} />
+        <VacancyCard key={vacancy.id} vacancy={vacancy} />
       ))}
     </div>
   );

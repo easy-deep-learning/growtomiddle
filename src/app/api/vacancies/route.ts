@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import VacancyModel from '@/database/models/Vacancy';
 import mongooseConnect from '@/database/mongooseConnect';
+import { create as createVacancy, getAll } from '@/controllers/VacancyController';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,15 +12,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const pageParam = searchParams.get('page');
     const limitParam = searchParams.get('limit');
-    const isSavedParam = searchParams.get('isSaved');
     const page = pageParam ? Number(pageParam) : 1;
     const limit = limitParam ? Number(limitParam) : 10;
 
-    const vacancies = await VacancyModel.find({ isSaved: isSavedParam === 'true' })
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    const vacancies = await getAll({ page, limit });
     return NextResponse.json(vacancies);
   } catch (error) {
     console.error('Error fetching vacancies:', error);
@@ -34,8 +29,7 @@ export async function POST(request: NextRequest) {
     await mongooseConnect();
     const body = await request.json();
 
-    const vacancy = new VacancyModel(body);
-    await vacancy.save();
+    const vacancy = await createVacancy(body);
 
     return NextResponse.json(vacancy, { status: 201 });
   } catch (error) {

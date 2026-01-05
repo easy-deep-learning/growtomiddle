@@ -1,5 +1,7 @@
-import { format } from 'date-fns';
+import Link from 'next/link';
 
+import { VacancyDocument } from '@/database/models/Vacancy';
+import { VacancyCard } from '@/components/Vacancy/VacancyCard';
 import { getById } from '@/controllers/VacancyController';
 
 export default async function VacancyPage(props: PageProps<'/vacancies/[id]'>) {
@@ -12,15 +14,9 @@ export default async function VacancyPage(props: PageProps<'/vacancies/[id]'>) {
   }
 
   return (
-    <div className="VacancyPage">
-      <h1>{vacancy?.title}</h1>
-      <p>{vacancy?.descriptionSnippet}</p>
-      <p>{vacancy?.location}</p>
-      <p>
-        {vacancy?.salaryRange?.from} - {vacancy?.salaryRange?.to}
-      </p>
-      <p>{vacancy?.createdAt && format(vacancy?.createdAt, 'dd.MM.yyyy')}</p>
-      <p>{vacancy?.updatedAt && format(vacancy?.updatedAt, 'dd.MM.yyyy')}</p>
+    <div>
+      <Link href={`/vacancies/edit/${id}`}>Edit</Link>
+      <VacancyCard vacancy={vacancy as unknown as VacancyDocument} rows={10} expandable={true} />
     </div>
   );
 }

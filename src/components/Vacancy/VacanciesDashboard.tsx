@@ -31,7 +31,7 @@ export const VacanciesDashboard: React.FC<VacanciesDashboardProps> = ({ vacancie
         <Flex vertical gap="middle">
           {vacancies.map((vacancy) => (
             <Flex
-              key={vacancy._id}
+              key={vacancy.id}
               align="flex-start"
               justify="space-between"
               style={{

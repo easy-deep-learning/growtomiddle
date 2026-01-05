@@ -1,0 +1,4 @@
+Ask before large refactors
+Prefer minimal diffs
+Don’t change formatting unrelated to task
+When uncertain, search in-repo before guessing

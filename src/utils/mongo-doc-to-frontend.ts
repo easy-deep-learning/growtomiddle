@@ -1,16 +1,13 @@
-import { ObjectId } from 'mongoose';
-
-export const mongoDocToFrontend = <DocType>(
-  doc: DocType & {
-    _id: ObjectId;
-    createdAt: Date;
-    updatedAt: Date;
-  }
-): DocType & { id: string; createdAt: string; updatedAt: string } => {
+export const mongoDocToFrontend = <
+  DocType extends { _id: { toString(): string }; createdAt: Date; updatedAt: Date },
+>(
+  doc: DocType
+) => {
+  const { _id, createdAt, updatedAt, ...rest } = doc;
   return {
-    ...doc,
-    id: doc._id.toString(),
-    createdAt: doc.createdAt.toISOString(),
-    updatedAt: doc.updatedAt.toISOString(),
+    ...rest,
+    id: _id.toString(),
+    createdAt: createdAt.toISOString(),
+    updatedAt: updatedAt.toISOString(),
   };
 };
