@@ -43,3 +43,29 @@ export const create = async (data: Omit<Vacancy, 'id' | 'createdAt' | 'updatedAt
   const doc = await VacancyModel.create(data);
   return mongoDocToFrontend(doc);
 };
+
+export const updateById = async (
+  id: string,
+  data: Omit<Vacancy, 'id' | 'createdAt' | 'updatedAt'>
+) => {
+  await mongooseConnect();
+
+  const session = await auth();
+  console.log('>>> session', session);
+
+  const vacancy = await VacancyModel.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  }).lean();
+  return vacancy ? mongoDocToFrontend(vacancy) : null;
+};
+
+export const deleteById = async (id: string) => {
+  await mongooseConnect();
+
+  const session = await auth();
+  console.log('>>> session', session);
+
+  const vacancy = await VacancyModel.findByIdAndDelete(id).lean();
+  return vacancy ? mongoDocToFrontend(vacancy) : null;
+};

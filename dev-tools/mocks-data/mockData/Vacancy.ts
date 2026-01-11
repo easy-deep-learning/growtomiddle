@@ -8,39 +8,15 @@ import mongooseConnect from '@/database/mongooseConnect';
  */
 export function generateMockVacancy() {
   return {
-    companyId: faker.string.uuid(),
     title: faker.person.jobTitle(),
-    size: faker.helpers.arrayElement(['small', 'medium', 'large']),
-    type: faker.helpers.arrayElement([
-      'startup',
-      'enterprise',
-      'government',
-      'non-profit',
-      'other',
-    ]),
-    source: faker.helpers.arrayElement(['linkedin', 'xing', 'indeed', 'referral', 'other']),
     sourceUrl: faker.internet.url(),
     location: faker.location.city(),
-    employmentType: faker.helpers.arrayElement([
-      'full-time',
-      'part-time',
-      'contract',
-      'internship',
-    ]),
-    level: faker.helpers.arrayElement(['junior', 'middle', 'senior', 'lead']),
     techStack: faker.helpers.arrayElements(
       ['React', 'TypeScript', 'Node.js', 'Next.js', 'MongoDB', 'PostgreSQL', 'Docker', 'AWS'],
       { min: 2, max: 5 }
     ),
-    salaryRange: {
-      from: faker.number.int({ min: 30000, max: 100000 }),
-      to: faker.number.int({ min: 100000, max: 200000 }),
-      currency: 'EUR',
-      gross: true,
-    },
+    salary: faker.number.int({ min: 30000, max: 200000 }),
     descriptionSnippet: faker.lorem.paragraph(),
-    notes: faker.lorem.sentence(),
-    isSaved: faker.datatype.boolean(),
   };
 }
 

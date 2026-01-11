@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Button, Col, Form, Input, InputNumber, message, Row } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -23,9 +23,9 @@ const formSchema = z.object({
 });
 
 // Place outside component if not already
-const createVacancy = async (vacancyData: any) => {
+const createVacancy = async (vacancyData: any, method: 'POST' | 'PUT' = 'POST') => {
   const response = await fetch('/api/vacancies', {
-    method: 'POST',
+    method,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(vacancyData),
   });
@@ -36,6 +36,8 @@ const createVacancy = async (vacancyData: any) => {
 };
 
 export const VacancyForm: React.FC<VacancyFormProps> = ({ vacancy }) => {
+  console.log('>>> VacancyForm vacancy', vacancy);
+
   const {
     control,
     handleSubmit,
@@ -63,8 +65,12 @@ export const VacancyForm: React.FC<VacancyFormProps> = ({ vacancy }) => {
       descriptionSnippet: data.descriptionSnippet,
     };
 
-    const newVacancy = await createVacancy(vacancyData);
-    console.log('>>> newVacancy', newVacancy);
+    const newVacancy = await createVacancy(vacancyData, vacancy ? 'PUT' : 'POST');
+    if (vacancy) {
+      message.success('Vacancy updated successfully');
+    } else {
+      message.success('Vacancy created successfully');
+    }
   };
 
   return (
@@ -73,7 +79,11 @@ export const VacancyForm: React.FC<VacancyFormProps> = ({ vacancy }) => {
         name="title"
         control={control}
         render={({ field }) => (
-          <Form.Item name="title" label="Title" help={errors.title?.message}>
+          <Form.Item
+            label="Title"
+            help={errors.title?.message}
+            validateStatus={errors.title ? 'error' : ''}
+          >
             <Input placeholder="e.g., Senior Frontend Developer" {...field} />
           </Form.Item>
         )}
@@ -85,7 +95,11 @@ export const VacancyForm: React.FC<VacancyFormProps> = ({ vacancy }) => {
             name="sourceUrl"
             control={control}
             render={({ field }) => (
-              <Form.Item name="sourceUrl" label="Source URL" help={errors.sourceUrl?.message}>
+              <Form.Item
+                label="Source URL"
+                help={errors.sourceUrl?.message}
+                validateStatus={errors.sourceUrl ? 'error' : ''}
+              >
                 <Input placeholder="https://..." {...field} />
               </Form.Item>
             )}
@@ -98,7 +112,11 @@ export const VacancyForm: React.FC<VacancyFormProps> = ({ vacancy }) => {
             name="location"
             control={control}
             render={({ field }) => (
-              <Form.Item name="location" label="Location" help={errors.location?.message}>
+              <Form.Item
+                label="Location"
+                help={errors.location?.message}
+                validateStatus={errors.location ? 'error' : ''}
+              >
                 <Input placeholder="e.g., Berlin, Germany" {...field} />
               </Form.Item>
             )}
@@ -111,7 +129,11 @@ export const VacancyForm: React.FC<VacancyFormProps> = ({ vacancy }) => {
             name="salary"
             control={control}
             render={({ field }) => (
-              <Form.Item name="salary" label="Salary" help={errors.salary?.message}>
+              <Form.Item
+                label="Salary"
+                help={errors.salary?.message}
+                validateStatus={errors.salary ? 'error' : ''}
+              >
                 <InputNumber style={{ width: '100%' }} placeholder="Salary" min={0} {...field} />
               </Form.Item>
             )}
@@ -124,7 +146,11 @@ export const VacancyForm: React.FC<VacancyFormProps> = ({ vacancy }) => {
             name="techStack"
             control={control}
             render={({ field }) => (
-              <Form.Item name="techStack" label="Tech Stack" help={errors.techStack?.message}>
+              <Form.Item
+                label="Tech Stack"
+                help={errors.techStack?.message}
+                validateStatus={errors.techStack ? 'error' : ''}
+              >
                 <Input placeholder="Comma-separated: React, TypeScript, Node.js" {...field} />
               </Form.Item>
             )}
@@ -137,9 +163,9 @@ export const VacancyForm: React.FC<VacancyFormProps> = ({ vacancy }) => {
         control={control}
         render={({ field }) => (
           <Form.Item
-            name="descriptionSnippet"
             label="Description"
             help={errors.descriptionSnippet?.message}
+            validateStatus={errors.descriptionSnippet ? 'error' : ''}
           >
             <TextArea rows={4} placeholder="Brief description of the position..." {...field} />
           </Form.Item>

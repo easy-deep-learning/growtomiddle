@@ -15,7 +15,7 @@
     "build-storybook": "storybook build",
     "typegen": "next typegen",
     "generate": "plop",
-    "seed:vacancies": "tsx scripts/seed-vacancies.ts"
+    "seed:vacancies": "tsx dev-tools/scripts/seed-vacancies.ts"
   },
   "engines": {
     "node": "24"

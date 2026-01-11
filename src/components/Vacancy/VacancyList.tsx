@@ -15,6 +15,7 @@ export const VacancyList: React.FC<VacancyListProps> = ({ vacancies }) => {
       <div>
         <Link href="/vacancies/new">Add a Vacancy</Link>
       </div>
+      count: {vacancies.length}
       {vacancies.map((vacancy) => (
         <VacancyCard key={vacancy.id} vacancy={vacancy} />
       ))}
